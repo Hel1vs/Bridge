@@ -1,5 +1,5 @@
 # Load data ---------------------------------------------------------------
-setwd("~/disks/local/COMMIT_bridge")
+setwd("~/disks/y/Project/E555163_COMMIT/Data/Database/Snapshots/Scripts/R/Bridge/Bridge")
 config <- "config_bridge" #"config_COMMIT"
 scencateg <- "scen_categ_bridge"  #"scen_categ_COMMIT"
 variables <- "variables_bridge"  #"variables_xCut"
@@ -8,7 +8,7 @@ addvars <- F
 datafile <-"commit_bridge_compare_20200804-105208" #commit_cd-links_compare_20191015-114544
 source("load_data.R") 
 
-# check whethere there's only one scenario per category for each model
+# check whether there's only one scenario per category for each model
 check=all[,list(unique(scenario)),by=c("model","Category")]
 View(check) #TODO Check Bridge IPAC included in graphs?
 check2=check[,list(length(unique(V1))),by=c("model","Category")]
