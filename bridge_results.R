@@ -1011,7 +1011,58 @@ ggsave(file=paste(cfg$outdir,"/F4a_Carbon_price_bar.png",sep=""),F4a,width=18,he
 # Figure 4b policy costs
 
 # Figure 4c Investments
+# potential indicators:
+# i.	Investment|Energy supply 
+# ii.	Total investments 
+# iii.	Investment|Energy Efficiency 
+# iv.	Investment|Energy Supply|CO2 Transport and Storage 
+# v.	Investment|Energy Supply|Electricity|Transmission and Distribution 
+# vi.	Investment|Energy Supply|Electricity|Electricity Storage 
+# vii.	Investment|Energy Supply|Electricity|Nuclear 
+# viii.	Investment|Energy Supply|Extraction|Bioenergy 
+# ix.	Investment|Energy Supply|Electricity|Non-Biomass Renewables
+# x.	Investment|Energy Supply|Hydrogen|Fossil
+# xi.	Investment|Energy Supply|Hydrogen|Renewable
+# xii.	Investment|Energy Supply|Electricity|Fossil  - or better:
+#   1.	Investment|Energy Supply|Electricity|Oil|w/o CCS
+# 2.	Investment|Energy Supply|Electricity|Gas|w/o CCS
+# 3.	Investment|Energy Supply|Electricity|Coal|w/o CCS
+# xiii.	Investment|Energy Supply|Extraction|Fossil 
+# xiv.	Investment|Infrastructure|Residential and Commercial|Building Retrofits (because of the protocol)
+# xv.	Investment|Energy Demand|Transportation|Passenger|Road|LDV|EV (because of the protocol)
 
+vars=c("Investment|Energy Supply|Electricity|Non-Biomass Renewables","Investment|Energy Supply|Electricity|Fossil") 
+scens <- c("CurPol","NDCplus","Bridge","2Deg2020")
 
+INVbar=all[variable%in%vars&Category%in%scens&region%in%regio&period%in%years] 
+INVbarm=INVbar[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Category","variable","period")]
+INVbar$period=as.factor(INVbar$period)
+INVbarm$period=as.factor(INVbarm$period)
+INVbar$Category = factor(INVbar$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020")) 
+INVbarm$Category = factor(INVbarm$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020"))
 
+F4c1 = ggplot()
+F4c1 = F4c1 + geom_bar(data=INVbarm[variable=="Investment|Energy Supply|Electricity|Fossil"],aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
+F4c1 = F4c1 + geom_point(data=INVbar, aes(x=period,y=value,shape=model,colour=Category,group=Category),size=3,position=position_dodge(width=0.66))
+F4c1 = F4c1 + geom_errorbar(data=INVbarm,aes(x=period,ymin=min,ymax=max,colour=Category),position=position_dodge(width=0.66))
+F4c1 = F4c1 + scale_shape_manual(values=cfg$man_shapes)
+F4c1 = F4c1 + scale_color_manual(values=plotstyle(scens))
+F4c1 = F4c1 + scale_fill_manual(values=plotstyle(scens))
+F4c1 = F4c1 + theme_bw() + theme(axis.text.y=element_text(size=16)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=18)) +
+  theme(axis.text.x = element_text(size=14)) + theme(legend.text=element_text(size=16),legend.title=element_text(size=18))
+F4c1 = F4c1 + ylab(paste(unique(INVbar[variable=="Investment|Energy Supply|Electricity|Fossil"]$variable),"[",unique(INVbar$unit),"]"))
+F4c1
+ggsave(file=paste(cfg$outdir,"/F4c_Investments_fossil_bar.png",sep=""),F4c1,width=18,height=12,dpi=300)
 
+F4c2 = ggplot()
+F4c2 = F4c2 + geom_bar(data=INVbarm[variable=="Investment|Energy Supply|Electricity|Non-Biomass Renewables"],aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
+F4c2 = F4c2 + geom_point(data=INVbar, aes(x=period,y=value,shape=model,colour=Category,group=Category),size=3,position=position_dodge(width=0.66))
+F4c2 = F4c2 + geom_errorbar(data=INVbarm,aes(x=period,ymin=min,ymax=max,colour=Category),position=position_dodge(width=0.66))
+F4c2 = F4c2 + scale_shape_manual(values=cfg$man_shapes)
+F4c2 = F4c2 + scale_color_manual(values=plotstyle(scens))
+F4c2 = F4c2 + scale_fill_manual(values=plotstyle(scens))
+F4c2 = F4c2 + theme_bw() + theme(axis.text.y=element_text(size=16)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=18)) +
+  theme(axis.text.x = element_text(size=14)) + theme(legend.text=element_text(size=16),legend.title=element_text(size=18))
+F4c2 = F4c2 + ylab(paste(unique(INVbar[variable=="Investment|Energy Supply|Electricity|Non-Biomass Renewables"]$variable),"[",unique(INVbar$unit),"]"))
+F4c2
+ggsave(file=paste(cfg$outdir,"/F4c_Investments_NBR_bar.png",sep=""),F4c2,width=18,height=12,dpi=300)
