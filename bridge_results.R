@@ -5,7 +5,7 @@ scencateg <- "scen_categ_bridge"  #"scen_categ_COMMIT"
 variables <- "variables_bridge"  #"variables_xCut"
 adjust <- "adjust_reporting_COMMIT"
 addvars <- F
-datafile <-"commit_bridge_compare_20200804-105208" #commit_cd-links_compare_20191015-114544
+datafile <-"commit_bridge_compare_20200817-093157" #commit_cd-links_compare_20191015-114544
 source("load_data.R") 
 
 # check whether there's only one scenario per category for each model
@@ -943,6 +943,22 @@ F3aSI2 = F3aSI2 + theme_bw() + theme(axis.text.y=element_text(size=16)) + theme(
 F3aSI2 = F3aSI2 + theme(legend.position="bottom")
 F3aSI2
 ggsave(file=paste(cfg$outdir,"/F3aSI2_GHG_all_global_models_world_GPP-Bridge-notax_funnel.png",sep=""),F3aSI2,width=16,height=12,dpi=200)
+
+scens=c("Bridge","GPP")
+mods=c("IMAGE 3.0","MESSAGEix-GLOBIOM_1.0") #,"AIM/CGE" "PROMETHEUS"
+range=all[variable%in%vars & Category%in%scens&!Scope=="national"&region=="World"&model%in%mods,list(min=min(value,na.rm=T),max=max(value,na.rm=T),med=median(value,na.rm=T)),by=c("Category","variable","period")]
+F3aSI3 = ggplot(all[variable%in%vars & Category%in%scens&!Scope=="national"&region=="World"&model%in%mods]) 
+F3aSI3 = F3aSI3 + geom_line(aes(x=period,y=value,colour=Category, linetype=model),size=1.5)
+#F3aSI3 = F3aSI3 + geom_ribbon(data=range,aes(x=period,ymin=min, ymax=max,fill=Category),alpha=0.5)
+F3aSI3 = F3aSI3 + xlim(2010,2051)+ scale_y_continuous(breaks=c(0,10000,20000,30000,40000,50000,60000,70000,80000),limits=c(0,85000))
+F3aSI3 = F3aSI3 + scale_colour_manual(values=plotstyle(scens))
+F3aSI3 = F3aSI3 + scale_fill_manual(values=plotstyle(scens))
+F3aSI3 = F3aSI3 + ylab(paste(unique(all[variable%in%vars]$variable),"[",unique(all[variable%in%vars]$unit),"]"))+ xlab("")
+F3aSI3 = F3aSI3 + theme_bw() + theme(axis.text.y=element_text(size=16)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=18)) +
+  theme(axis.text.x = element_text(size=16,angle=90)) + theme(legend.text=element_text(size=16),legend.title=element_text(size=18))
+F3aSI3 = F3aSI3 + theme(legend.position="bottom")
+F3aSI3
+ggsave(file=paste(cfg$outdir,"/F3aSI3_GHG_IMAGE-MESSAGE_world_GPP-Bridge_funnel.png",sep=""),F3aSI3,width=16,height=12,dpi=200)
 
 # Figure 3b Emissions relative to NDC
 
