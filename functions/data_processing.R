@@ -119,11 +119,11 @@ add_variables <- function(all,scens){
     all <- calcVariable(all,'`Transport FE per capita` ~ `Final Energy|Transportation`/`Population` ' , newUnit='TJ/cap')
     all <- calcVariable(all,'`Industry FE per capita` ~ `Final Energy|Industry`/`Population` ' , newUnit='TJ/cap')
     all <- calcVariable(all,'`Buildings FE per capita` ~ `Final Energy|Residential and Commercial`/`Population` ' , newUnit='TJ/cap')
-    
+
     all <- calcVariable(all,'`Secondary Energy|Electricity|Non-fossil` ~ (`Secondary Energy|Electricity|Coal|w/ CCS`)+(`Secondary Energy|Electricity|Gas|w/ CCS`)+(`Secondary Energy|Electricity|Biomass`)+(`Secondary Energy|Electricity|Hydro`)+(`Secondary Energy|Electricity|Solar`)+(`Secondary Energy|Electricity|Wind`)+(`Secondary Energy|Electricity|Geothermal`)+(`Secondary Energy|Electricity|Nuclear`)' , newUnit='EJ/yr')
     all <- calcVariable(all,'`Secondary Energy|Electricity|Fossil` ~ (`Secondary Energy|Electricity`) - (`Secondary Energy|Electricity|Non-fossil`)' , newUnit='EJ/yr')
     all <- calcVariable(all,'`Secondary Energy|Electricity|Non-fossil share` ~ 100*((`Secondary Energy|Electricity|Non-fossil`))/(`Secondary Energy|Electricity`)' , newUnit='%')
-    
+
     all <- calcVariable(all,'`Final Energy|Residential and Commercial|Non-fossil` ~ (1/100)*(`Secondary Energy|Electricity|Non-fossil share`)*(`Final Energy|Residential and Commercial|Electricity`)+
                                                                                     (`Final Energy|Residential and Commercial|Solids|Biomass`)-
                                                                                     (`Final Energy|Residential and Commercial|Solids|Biomass|Traditional`)' , newUnit='EJ/yr')
