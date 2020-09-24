@@ -45,8 +45,8 @@ ylab <-  bquote(paste("Emissions [Mt", CO[2],"eq]"))
 titletag <- "Waterfall_"
 file.prefix <- "Fig2_sector_"
 
-catsnat <- c("Bridge","NDCplus")
-labcat <- c("Bridge","NDCplus")
+catsnat <- c("Bridge","NDCplus") #c("2Deg2020","Bridge")
+labcat <- c("Bridge","NDCplus") #c("2Deg2020","Bridge") 
 
 #choose reference scenario INDC or NoPOL
 reference_cat <- catsnat[2]
@@ -209,7 +209,7 @@ for(icat in c(1)){
                          labels=c(tt[1], paste0(tt[2],"\n",labcat[2]), "Supply","Industry","Buildings","Transport","Industrial processes","AFOLU","Non-CO2",paste0(tt[2],"\n",labcat[icat])))
     }}
     
-    ggsave(filename=paste0("~/disks/y/Project/E555163_COMMIT/Data/Database/Snapshots/Scripts/R/COMMIT_bridge/output/",file.prefix,unique(cdata$model),"-",labcat[icat],"_",tt[2],".png"),width=5, height=3.5)  
-
+    ggsave(filename=paste0("~/disks/y/Project/E555163_COMMIT/Data/Database/Snapshots/Scripts/R/Bridge/Bridge/output/",file.prefix,unique(cdata$model),"-",labcat[icat],"_",tt[2],".png"),width=5, height=3.5)  
+    
   }
 }
