@@ -870,7 +870,7 @@ ggsave(file=paste(cfg$outdir,"/F1_gridarrange_alt.png",sep=""),F1alt,width=24,he
 ### Figure elements
 # Figure 2a Sectors
 # select data
-cdata=all[model=="COPPE-COFFEE 1.0"&region=="World"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, PROMETHEUS, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0, TIAM_Grantham_v3.2
+cdata=all[model=="TIAM_Grantham_v3.2"&region=="World"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, PROMETHEUS, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0, TIAM_Grantham_v3.2
 model=unique(cdata$model)
 
 # add non-CO2
