@@ -193,8 +193,9 @@ for(icat in c(1)){
                                  "Emissions|CO2|Non-Energy"="Non-Energy CO2","Emissions|Non-CO2"="Non-CO2","total"="Total","total-dummy"="",
                                  "Emissions|CO2|Industrial Processes"="Industrial processes","Emissions|CO2|AFOLU"="AFOLU"),
                         name="Sector",guide=F) +
+      geom_hline(yintercept=0)+
       ggtitle(unique(cdata$model))+ #paste(country,"- 2050 emissions in reference scenario vs. decarbonisation scenario")
-      scale_alpha(guide = "none")+#coord_cartesian(ylim=c(-1000,12000))+
+      scale_alpha(guide = "none")+coord_cartesian(ylim=c(-10000,60000))+
       ylab(ylab)+xlab("") + theme_bw() + theme(axis.text.x = element_text(angle=90))+
       # scale_x_continuous(breaks=unique(dtn_all$bar_position),minor_breaks = NULL,
       #                      labels=c(tt[1], paste0(tt[2],"\n",labcat[2]), "Supply","Industry","Buildings","Transport","Industrial processes","AFOLU","Non-CO2",paste0(tt[2],"\n",labcat[icat]))) #bquote(paste("Non-", CO[2]))
