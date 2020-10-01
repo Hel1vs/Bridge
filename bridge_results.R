@@ -5,7 +5,7 @@ scencateg <- "scen_categ_bridge"  #"scen_categ_COMMIT"
 variables <- "variables_bridge"  #"variables_xCut"
 adjust <- "adjust_reporting_COMMIT"
 addvars <- F
-datafile <-"commit_bridge_compare_20200909-093248" #commit_cd-links_compare_20191015-114544
+datafile <-"commit_bridge_compare_20201001-123452" #commit_cd-links_compare_20191015-114544
 source("load_data.R") 
 
 # check whether there's only one scenario per category for each model
@@ -863,7 +863,7 @@ F1d=F1d+theme(axis.text.x=element_text(size=22),axis.text.y=element_text(size=22
 F1e=F1e+theme(axis.text.x=element_text(size=22),axis.text.y=element_text(size=22))
 lay<-rbind(c(1,2,3),c(4,5,6))
 F1alt=grid.arrange(F1a,F1b,F1c2,F1d,F1e,legend,layout_matrix=lay)
-ggsave(file=paste(cfg$outdir,"/F1_gridarrange_alt.png",sep=""),F1alt,width=24,height=14,dpi=300)
+ggsave(file=paste(cfg$outdir,"/F1_gridarrange_alt.png",sep=""),F1alt,width=24,height=14,dpi=200)
 
   # Waterfall ---------------------------------------------------------------
 
@@ -1086,8 +1086,8 @@ INVbarm$Category = factor(INVbarm$Category,levels=c("CurPol","NDCplus","NDCMCS",
 
 F4c1 = ggplot()
 F4c1 = F4c1 + geom_bar(data=INVbarm[variable=="Investment|Energy Supply|Electricity|Fossil"],aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
-F4c1 = F4c1 + geom_point(data=INVbar, aes(x=period,y=value,shape=model,colour=Category,group=Category),size=3,position=position_dodge(width=0.66))
-F4c1 = F4c1 + geom_errorbar(data=INVbarm,aes(x=period,ymin=min,ymax=max,colour=Category),position=position_dodge(width=0.66))
+F4c1 = F4c1 + geom_point(data=INVbar[variable=="Investment|Energy Supply|Electricity|Fossil"], aes(x=period,y=value,shape=model,colour=Category,group=Category),size=3,position=position_dodge(width=0.66))
+F4c1 = F4c1 + geom_errorbar(data=INVbarm[variable=="Investment|Energy Supply|Electricity|Fossil"],aes(x=period,ymin=min,ymax=max,colour=Category),position=position_dodge(width=0.66))
 F4c1 = F4c1 + scale_shape_manual(values=cfg$man_shapes)
 F4c1 = F4c1 + scale_color_manual(values=plotstyle(scens))
 F4c1 = F4c1 + scale_fill_manual(values=plotstyle(scens))
@@ -1099,8 +1099,8 @@ ggsave(file=paste(cfg$outdir,"/F4c_Investments_fossil_bar.png",sep=""),F4c1,widt
 
 F4c2 = ggplot()
 F4c2 = F4c2 + geom_bar(data=INVbarm[variable=="Investment|Energy Supply|Electricity|Non-Biomass Renewables"],aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
-F4c2 = F4c2 + geom_point(data=INVbar, aes(x=period,y=value,shape=model,colour=Category,group=Category),size=3,position=position_dodge(width=0.66))
-F4c2 = F4c2 + geom_errorbar(data=INVbarm,aes(x=period,ymin=min,ymax=max,colour=Category),position=position_dodge(width=0.66))
+F4c2 = F4c2 + geom_point(data=INVbar[variable=="Investment|Energy Supply|Electricity|Non-Biomass Renewables"], aes(x=period,y=value,shape=model,colour=Category,group=Category),size=3,position=position_dodge(width=0.66))
+F4c2 = F4c2 + geom_errorbar(data=INVbarm[variable=="Investment|Energy Supply|Electricity|Non-Biomass Renewables"],aes(x=period,ymin=min,ymax=max,colour=Category),position=position_dodge(width=0.66))
 F4c2 = F4c2 + scale_shape_manual(values=cfg$man_shapes)
 F4c2 = F4c2 + scale_color_manual(values=plotstyle(scens))
 F4c2 = F4c2 + scale_fill_manual(values=plotstyle(scens))
