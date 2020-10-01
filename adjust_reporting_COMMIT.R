@@ -119,6 +119,13 @@ all=rbind(all,nucelecaus)
 
 
 
+
+# Fix TIAM reporting ------------------------------------------------------
+CO2TIAM=all[variable=="Emissions|CO2|Energy"&model=="TIAM_Grantham_v3.2"]
+CO2TIAM$variable<-"Emissions|CO2"
+all=rbind(all,CO2TIAM)
+
+
 # Add 2015 for MESSAGE ----------------------------------------------------
 mesg=spread(all[period%in%c(2010,2020)&model%in%c("MESSAGEix-GLOBIOM_1.0","TIAM_Grantham_v3.2")],period,value)
 mesg = mesg%>%mutate(`2015`=(`2010`+`2020`)/2)
