@@ -1109,3 +1109,55 @@ F4c2 = F4c2 + theme_bw() + theme(axis.text.y=element_text(size=16)) + theme(stri
 F4c2 = F4c2 + ylab(paste(unique(INVbar[variable=="Investment|Energy Supply|Electricity|Non-Biomass Renewables"]$variable),"[",unique(INVbar$unit),"]"))
 F4c2
 ggsave(file=paste(cfg$outdir,"/F4c_Investments_NBR_bar.png",sep=""),F4c2,width=18,height=12,dpi=300)
+
+# National model figures --------------------------------------------------
+
+vars = c("Secondary Energy|Electricity|Wind")
+TEST = 
+  scens <- c("BAU","CurPol","NDCplus","NDCMCS","GPP","Bridge","2Deg2030","2Deg2020")
+ylab = "Final energy - electricity (EJ/yr)"
+file_pre = "test1_a"
+
+a<-plot_lineNationalScens(reg = "AUS", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab, title="Australia (TIMES-AUS)",file_pre = file_pre) #,ylim=c(-300,1200) 
+b<-plot_lineNationalScens(reg = "BRA", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab, title="Brazil (BLUES)",file_pre = file_pre,nolegend=T) #,ylim=c(-300,1200) 
+ca<-plot_lineNationalScens(reg = "CAN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                           ylab = ylab, title="Canada (GCAM_Canada)", file_pre = file_pre)
+c<-plot_lineNationalScens(reg = "CHN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab, title="China (IPAC)", file_pre = file_pre)
+e<-plot_lineNationalScens(reg = "EU", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab, title="EU (PRIMES: -, GEM-E3: --)", file_pre = file_pre) #,ylim=c(0,8000)
+j<-plot_lineNationalScens(reg = "JPN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab,title="Japan (AIM/E-NIES)", file_pre = file_pre) #,ylim=c(-200,1600)
+r<-plot_lineNationalScens(reg = "RUS", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab, title="Russia (RU-TIMES)",file_pre = file_pre) #,ylim=c(0,2500)
+i<-plot_lineNationalScens(reg = "IND", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab, title="India (IND-MARKAL)", file_pre = file_pre) #,ylim=c(0,15000)
+id<-plot_lineNationalScens(reg = "IDN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                           ylab = ylab, title="Indonesia (DDPP Energy)", file_pre = file_pre) #,ylim=c(0,15000)
+u<-plot_lineNationalScens(reg = "USA", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab, title="USA (GCAM_USA)", file_pre = file_pre) #,ylim=c(-500,8000)
+k<-plot_lineNationalScens(reg = "ROK", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab, title="Korea (AIM/CGE[Korea])", file_pre = file_pre) #,ylim=c(-500,8000)
+w<-plot_lineNationalScens(reg = "World", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab, title="World", file_pre = file_pre) #,ylim=c(-500,8000)
+
+tmp<-ggplot_gtable(ggplot_build(j))
+leg<-which(sapply(tmp$grobs,function(x) x$name) =="guide-box")
+legend<-tmp$grobs[[leg]]
+a=a+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+b=b+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+c=c+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+ca=ca+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+e=e+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+i=i+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+id=id+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+j=j+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+r=r+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+u=u+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+k=k+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+w=w+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+lay<-rbind(c(1,2,3,4,5,6),c(7,8,9,10,11,12))
+h=grid.arrange(a,b,c,ca,e,i,id,j,r,u,k,legend,layout_matrix=lay)
+ggsave(file=paste(cfg$outdir,"/1st_test.png",sep=""),h,width=24,height=14,dpi=200)
