@@ -1030,7 +1030,7 @@ ggsave(file=paste(cfg$outdir,"/F3c-GHG-emissions-reduction.png",sep=""),F3c,widt
 vars=c("Price|Carbon")
 scens <- c("CurPol","NDCplus","Bridge","2Deg2020")
 cpricebar=all[variable%in%vars & Category%in%scens&!Scope=="national"&region%in%c("R5OECD90+EU","R5LAM","R5MAF")&period%in%c(2030,2050)]
-cpricebarm=cpricebar[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Category","variable","period")]
+cpricebarm=cpricebar[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Category","region","variable","period")]
 
 cpricebar$period=as.factor(cpricebar$period)
 cpricebarm$period=as.factor(cpricebarm$period)
@@ -1050,8 +1050,28 @@ F4a = F4a + ylab("Carbon price (US$2010/tCO2")
 F4a
 ggsave(file=paste(cfg$outdir,"/F4a_Carbon_price_bar.png",sep=""),F4a,width=18,height=12,dpi=300)
 
-
 # Figure 4b policy costs
+costsGDP = fread("data/policy costs.csv",sep=";", header=T)
+costsGDP = data.table(gather(costsGDP,period,value,c(`2030`,`2050`)))
+costsGDP = spread(costsGDP,Scenario,value)
+costsGDP = costsGDP%>%mutate(Bridgevs2020 = ((Bridge_V4 / `2Deg2020_V4`)-1)*100, Bridgevs2030 = ((Bridge_V4 / `2deg2030_v4` )-1)*100)
+costsGDP = data.table(gather(costsGDP,Scenario,value,c('2Deg2020_V4','2deg2030_v4','Bridge_V4','Bridgevs2020','Bridgevs2030')))
+costsGDP = costsGDP[Scenario%in%c('Bridgevs2020','Bridgevs2030')]
+
+costsGDPm=costsGDP[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Scenario","period")]
+
+F4b = ggplot()
+F4b = F4b + geom_bar(data=costsGDPm,aes(x=period,y=median,fill=Scenario),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
+F4b = F4b + geom_point(data=costsGDP, aes(x=period,y=value,shape=Model,colour=Scenario,group=Scenario),size=3,position=position_dodge(width=0.66))
+F4b = F4b + geom_errorbar(data=costsGDPm,aes(x=period,ymin=min,ymax=max,colour=Scenario),position=position_dodge(width=0.66))
+F4b = F4b + scale_shape_manual(values=cfg$man_shapes)
+F4b = F4b + scale_color_manual(values=c("Bridgevs2020"="#56B4E9","Bridgevs2030"="#2860E9"),labels=c("Bridgevs2020"="Bridge vs 2Deg2020","Bridgevs2030"="Bridge vs 2Deg2030"))
+F4b = F4b + scale_fill_manual(values=c("Bridgevs2020"="#56B4E9","Bridgevs2030"="#2860E9"),labels=c("Bridgevs2020"="Bridge vs 2Deg2020","Bridgevs2030"="Bridge vs 2Deg2030"))
+F4b = F4b + theme_bw() + theme(axis.text.y=element_text(size=16)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=18)) +
+  theme(axis.text.x = element_text(size=14)) + theme(legend.text=element_text(size=16),legend.title=element_text(size=18))
+F4b = F4b + ylab("GDP loss in Bridge relative to 2Deg2020 or 2Deg2030 (%)")
+F4b
+ggsave(file=paste(cfg$outdir,"/F4b_policy_costs_GDP_bar.png",sep=""),F4b,width=18,height=12,dpi=300)
 
 # Figure 4c Investments
 # potential indicators:
