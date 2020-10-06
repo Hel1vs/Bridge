@@ -4,7 +4,7 @@ config <- "config_bridge" #"config_COMMIT"
 scencateg <- "scen_categ_bridge"  #"scen_categ_COMMIT"
 variables <- "variables_bridge"  #"variables_xCut"
 adjust <- "adjust_reporting_COMMIT"
-addvars <- F
+addvars <- T
 datafile <-"commit_bridge_compare_20201001-123452" #commit_cd-links_compare_20191015-114544
 source("load_data.R") 
 
