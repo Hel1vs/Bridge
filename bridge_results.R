@@ -602,10 +602,11 @@ cpricebar$Category = factor(cpricebar$Category,levels=c("CurPol","NDCMCS","NDCpl
 cpricebarm$Category = factor(cpricebarm$Category,levels=c("CurPol","NDCMCS","NDCplus","GPP","Bridge","2Deg2020","2Deg2030"))
 
 m14c = ggplot()
-m14c = m14c + geom_bar(data=cpricebarm,aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
+m14c = m14c + geom_bar(data=cpricebarm[Category%in%c("CurPol","NDCplus","Bridge","2Deg2020","2Deg2030")],aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
 # m14c = m14c + geom_pointrange(data=emisredm[Category%in%c("CurPol","GPP","Bridge")&variable=="Rate of Change| Emissions|Kyoto Gases"],
 #                         aes(ymin=min,ymax=max,y=median, x=period, colour=Category),alpha=0.5,size=5,fatten=1,position=position_dodge(width=0.66)) #,show.legend = F
-m14c = m14c + geom_point(data=cpricebar, aes(x=period,y=value,shape=model,colour=Category,group=Category),size=3,position=position_dodge(width=0.66))
+m14c = m14c + geom_point(data=cpricebar[Category%in%c("CurPol","NDCplus","Bridge","2Deg2020","2Deg2030")], aes(x=period,y=value,shape=model,colour=Category,group=Category),size=3,position=position_dodge(width=0.66))
+m14c = m14c + ylim(0,2000)
 m14c = m14c + scale_shape_manual(values=cfg$man_shapes)
 m14c = m14c + scale_color_manual(values=plotstyle(scens))
 m14c = m14c + scale_fill_manual(values=plotstyle(scens))
