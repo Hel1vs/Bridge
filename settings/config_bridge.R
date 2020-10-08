@@ -56,7 +56,7 @@ cfg$man_shapes=c("AIM V2.1" = 2, #global
                  "REMIND_MAGPIE" = 9, #SSPs
                  "REMIND-MAgPIE 1.7-3.0" = 9, #global
                  "*RU-TIMES 3.2" = 1, #national
-                 "TIAM_Grantham_v3.2" = 2, #global
+                 "TIAM_Grantham_v3.2" = 5, #global
                  "*TIMES-AUS" = 1, #national
                  "WITCH-GLOBIOM" = 10, #SSPs
                  "WITCH2013" = 10, #MILES
