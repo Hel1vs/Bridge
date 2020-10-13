@@ -46,7 +46,7 @@ titletag <- "Waterfall_"
 file.prefix <- "Fig2_sector_"
 
 catsnat <- c("Bridge","NDCplus") #c("2Deg2020","Bridge")
-labcat <- c("Bridge","NDCplus") #c("2Deg2020","Bridge") 
+labcat <-  c("Bridge","NDCplus") #c("2Deg2020","Bridge")
 
 #choose reference scenario INDC or NoPOL
 reference_cat <- catsnat[2]
