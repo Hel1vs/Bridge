@@ -1130,3 +1130,18 @@ F4c2 = F4c2 + theme_bw() + theme(axis.text.y=element_text(size=16)) + theme(stri
 F4c2 = F4c2 + ylab(paste(unique(INVbar[variable=="Investment|Energy Supply|Electricity|Non-Biomass Renewables"]$variable),"[",unique(INVbar$unit),"]"))
 F4c2
 ggsave(file=paste(cfg$outdir,"/F4c_Investments_NBR_bar.png",sep=""),F4c2,width=18,height=12,dpi=300)
+
+
+# Check budgets -----------------------------------------------------------
+source("functions/calcBudget.R")
+all <- calcBudget(all,'Emissions|CO2','Carbon budget')
+all <- calcBudget(all,'Emissions|CO2|Energy and Industrial Processes','Carbon budget|Energy and Industry')
+all <- calcBudget(all,'Emissions|CO2|Energy','Carbon budget|Energy')
+
+budget = all[variable%in%c("Carbon budget","Carbon budget|Energy and Industry","Carbon budget|Energy")]
+budgetsel= budget[region=='World'&Scope=="global"&period==2100&variable=="Carbon budget"&Category%in%c("Bridge","2Deg2020")] #"Bridge_notax","2Deg2030"
+
+# source("functions/calcBudget_2015.R")
+# all <- calcBudget_2015(all,'Emissions|CO2','Carbon budget_2015')
+# all <- calcBudget_2015(all,'Emissions|CO2|Energy and Industrial Processes','Carbon budget_2015|Energy and Industry')
+# all <- calcBudget_2015(all,'Emissions|CO2|Energy','Carbon budget_2015|Energy')
