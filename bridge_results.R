@@ -5,7 +5,7 @@ scencateg <- "scen_categ_bridge"  #"scen_categ_COMMIT"
 variables <- "variables_bridge"  #"variables_xCut"
 adjust <- "adjust_reporting_COMMIT"
 addvars <- F
-datafile <-"commit_bridge_compare_20201001-123452" #commit_cd-links_compare_20191015-114544
+datafile <-"commit_bridge_compare_20201013-092239" #commit_cd-links_compare_20191015-114544
 source("load_data.R") 
 
 # check whether there's only one scenario per category for each model
@@ -871,7 +871,7 @@ ggsave(file=paste(cfg$outdir,"/F1_gridarrange_alt.png",sep=""),F1alt,width=24,he
 ### Figure elements
 # Figure 2a Sectors
 # select data
-cdata=all[model=="TIAM_Grantham_v3.2"&region=="World"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, PROMETHEUS, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0, TIAM_Grantham_v3.2
+cdata=all[model=="COPPE-COFFEE 1.0"&region=="World"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, PROMETHEUS, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0, TIAM_Grantham_v3.2
 model=unique(cdata$model)
 
 # add non-CO2
@@ -892,7 +892,7 @@ if(unique(cdata$model=="AIM/CGE")){cdata$model<-"AIM-CGE"}
 source("waterfall_bridge.R")
 
 # Figure 2b countries
-cdata=all[model=="WITCH 5.0"&region%in%c("R5ASIA","R5LAM","R5REF","R5OECD90+EU","R5MAF")&variable=="Emissions|Kyoto Gases"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0
+cdata=all[model=="COPPE-COFFEE 1.0"&region%in%c("R5ASIA","R5LAM","R5REF","R5OECD90+EU","R5MAF")&variable=="Emissions|Kyoto Gases"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0
 if(unique(cdata$model=="AIM/CGE")){cdata$model<-"AIM-CGE"}
 source("waterfall_bridge_regions.R")
 

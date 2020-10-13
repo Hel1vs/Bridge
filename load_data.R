@@ -107,7 +107,7 @@ if (file.exists(paste0("data/",cfg$infile,reg,"_proc.Rdata")) & !b.procdata) {
   all <- all[!c(MODEL %in% c("IMAGE 3.0","AIM/Enduse[Japan]","AIM/CGE","PROMETHEUS","PRIMES_V1")&SCENARIO%in%c("2Deg2020_V1","2Deg2030_V1","BAU_V1","Bridge_V1","CurPol_V1","GPP_V1","NDCMCS_V1"))]
   all <- all[!c(MODEL %in% c("IMAGE 3.0","PROMETHEUS","AIM/Enduse[Japan]","BLUES")&SCENARIO%in%c("2Deg2020_V2","2DEG2020_V2","2Deg2030_V2","BAU_V2","Bridge_V2","CurPol_V2","GPP_V2","NDCMCS_V2",
                                                         "2Deg2020_V3","2Deg2030_V3","BAU_V3","Bridge_V3","CurPol_V3","GPP_V3","NDCMCS_V3"))]
-  all <- all[!c(MODEL %in% c("TIAM_Grantham_v3.2")& SCENARIO %in%c("BAU_v4","CurPol_v4","NDCPlus_v4","GPP_v4","Bridge_v4","2Deg2020_v4","2Deg2030_v4"))]
+  all <- all[!c(MODEL %in% c("TIAM_Grantham_v3.2","COPPE-COFFEE 1.0")& SCENARIO %in%c("BAU_v4","CurPol_v4","NDCPlus_v4","GPP_v4","Bridge_v4","2Deg2020_v4","2Deg2030_v4","BAU_V4", "CurPol_V4","GPP_V4", "Bridge_V4", "2Deg2020_V4", "NDCplus_V4"))]
   all <- all[!c(MODEL %in% c("DDPP Energy")&SCENARIO%in%c("BAU"))]
   #CD-LINKS scenarios used until new ones are submitted for GCAM-USA, India MARKAL, RU-TIMES, so delete for the other models that also have CD-LINKS scenarios
   all <- all[!c(MODEL%in%c("AIM/Enduse[Japan]","BLUES","COPPE-COFFEE 1.0","IMAGE 3.0","REMIND-MAgPIE 1.7-3.0","MESSAGEix-GLOBIOM_1.0") & SCENARIO%in%c("NoPOL","NPi2020_low","INDC2030_low"))] #"CD-LINKS-NoPOL_V3","CD-LINKS-NoPOL_V4","NoPOL","CD-LINKS-NPi_V3","CD-LINKS-NPi_V4","NPi","CD-LINKS-INDC_V4","INDC","CD-LINKS-NPi2020_low_V3","CD-LINKS-NPi2020_low_V4","NPi2020_low","CD-LINKS-INDC2030_low_V3","CD-LINKS-INDC2030_low_V4","INDC2030_low"

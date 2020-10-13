@@ -6,6 +6,7 @@ BAU_V3,BAU,-
 BAU_V4,BAU,-
 BAU_v4,BAU,-
 BAU_v6,BAU,-
+BAU_V5,BAU,-
 BAU_NOPOLICY_world,BAU,-
 BAU_NOPOLICY_can,BAU,-
 BaU,BAU,-
@@ -16,6 +17,7 @@ CurPol_V3,CurPol,BAU
 CurPol_V4,CurPol,BAU
 CurPol_v4,CurPol,BAU
 CurPol_v6,CurPol,BAU
+CurPol_V5,CurPol,BAU
 Current_Policy_can,CurPol,BAU_NOPOLICY_can
 NDCMCS,NDCMCS,BAU
 NDCMCS_V1,NDCMCS,BAU
@@ -31,6 +33,7 @@ NDCPlus_V4,NDCplus,BAU
 NDCPlus_v4,NDCplus,BAU
 NDCplus,NDCplus,BAU
 NDCplus_v6,NDCplus,BAU
+NDCplus_V5,NDCplus,BAU
 NDC_2050convergence_V4,NDCplus-conv,BAU
 NDC_2050convergence_v4,NDCplus-conv,BAU
 NDC2050convergence,NDCplus-conv,BAU
@@ -41,6 +44,7 @@ GPP_V3,GPP,BAU
 GPP_V4,GPP,BAU
 GPP_v4,GPP,BAU
 GPP_v6,GPP,BAU
+GPP_V5,GPP,BAU
 GPP_notax_V4,GPP_notax,BAU
 GPPnotax,GPP_notax,BAU
 NDC_MCS_GP_world,GPP,BAU_NOPOLICY_world
@@ -52,6 +56,7 @@ Bridge_V3,Bridge,BAU
 Bridge_V4,Bridge,BAU
 Bridge_v4,Bridge,BAU
 Bridge_v6,Bridge,BAU
+Bridge_V5,Bridge,BAU
 Bridge_notax_V4,Bridge_notax,BAU
 Bridgenotax,Bridge_notax,BAU
 NDC_MCS_GP_BG_world,Bridge,BAU_NOPOLICY_world
@@ -66,6 +71,7 @@ SR15-PEP_2C_full_goodpractice,Bridge,BAU
 2deg2020_v4,2Deg2020,BAU
 2Deg2020_v4,2Deg2020,BAU
 2Deg2020_v6,2Deg2020,BAU
+2Deg2020_V5,2Deg2020,BAU
 2degree2020,2Deg2020,BAU
 2DEG2020_V4,2Deg2020,BAU
 SR15-PEP_2C_full_netzero,2Deg2020,BAU
@@ -80,6 +86,7 @@ Bridge-2020-2C,2Deg2020,BAU
 2deg2030_v4,2Deg2030,BAU
 2Deg2030_v4,2Deg2030,BAU
 2Deg2030_v6,2Deg2030,BAU
+2Deg2030_v5,2Deg2030,BAU
 NDC_MCS_GP_BG_2D_world,2Deg2030,BAU_NOPOLICY_world
 NDC_MCS_GP_BG_2D_can,2Deg2030,BAU_NOPOLICY_can
 SR15-PEP_2C_full_NDC,2Deg2030,BAU
