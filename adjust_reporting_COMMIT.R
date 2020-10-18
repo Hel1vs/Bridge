@@ -148,4 +148,9 @@ PECE=all[Category=="NDCMCS"&model=="PECE V2.0"]
 PECE$Category<-"CurPol"
 all=rbind(all,PECE)
 
+# Copy BAU as CurPol for IPAC ---------------------------------------------
+ipac=all[Category=="BAU"&model=="IPAC-AIM/technology V1.0"]
+ipac$Category<-"CurPol"
+all=rbind(all,ipac)
+
 

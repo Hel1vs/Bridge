@@ -1,11 +1,11 @@
 # Load data ---------------------------------------------------------------
-setwd("~/disks/y/Project/E555163_COMMIT/Data/Database/Snapshots/Scripts/R/Bridge/Bridge")
+# setwd("~/disks/y/Project/E555163_COMMIT/Data/Database/Snapshots/Scripts/R/Bridge/Bridge")
 config <- "config_bridge" #"config_COMMIT"
 scencateg <- "scen_categ_bridge"  #"scen_categ_COMMIT"
 variables <- "variables_bridge"  #"variables_xCut"
 adjust <- "adjust_reporting_COMMIT"
-addvars <- T
-datafile <-"commit_bridge_compare_20201001-123452" #commit_cd-links_compare_20191015-114544
+addvars <- F
+datafile <-"commit_bridge_compare_20201013-092239" #commit_cd-links_compare_20191015-114544
 source("load_data.R") 
 
 # check whether there's only one scenario per category for each model
@@ -35,9 +35,112 @@ all$period<-as.numeric(as.character(all$period))
 #write.csv(wp2,"WP2_China.csv")
 
 
+# National model figures --------------------------------------------------
+
+vars = c("Emissions|Kyoto Gases")
+xlim2010=c(2010,2050)
+scens <- c("CurPol","NDCplus","NDCMCS","GPP","Bridge","2Deg2030")
+ylab = "GHG emissions (MtCO2eq/year)"
+file_pre = "test1_a"
+
+a<-plot_lineNationalScens(reg = "AUS", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab, title="Australia (TIMES-AUS)",file_pre = file_pre, xlim=xlim2010) #,ylim=c(-300,1200) 
+b<-plot_lineNationalScens(reg = "BRA", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab, title="Brazil (BLUES)",file_pre = file_pre,nolegend=T, xlim=xlim2010) #,ylim=c(-300,1200) 
+ca<-plot_lineNationalScens(reg = "CAN", dt = all, vars = "Emissions|CO2", scensnat = scens, scensglob = scens,
+                           ylab = "CO2 Emissions (MtCO2/year)", title="Canada (GCAM_Canada)", file_pre = file_pre, xlim=xlim2010)
+c<-plot_lineNationalScens(reg = "CHN", dt = all, vars = "Emissions|CO2", scensnat = scens, scensglob = scens,
+                          ylab = "CO2 Emissions (MtCO2/year)", title="China (IPAC)", file_pre = file_pre, xlim=xlim2010)
+e<-plot_lineNationalScens(reg = "EU", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab, title="EU (PRIMES: -, GEM-E3: --)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(0,8000)
+j<-plot_lineNationalScens(reg = "JPN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab,title="Japan (AIM/E-NIES)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(-200,1600)
+r<-plot_lineNationalScens(reg = "RUS", dt = all, vars = "Emissions|CO2|Energy", scensnat = scens, scensglob = scens,
+                          ylab = "CO2 Emissions (MtCO2/year)", title="Russia (RU-TIMES)",file_pre = file_pre, xlim=xlim2010) #,ylim=c(0,2500)
+i<-plot_lineNationalScens(reg = "IND", dt = all, vars = "Emissions|CO2", scensnat = scens, scensglob = scens,
+                          ylab = "CO2 Emissions (MtCO2/year)", title="India (IND-MARKAL)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(0,15000)
+id<-plot_lineNationalScens(reg = "IDN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                           ylab = ylab, title="Indonesia (DDPP Energy)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(0,15000)
+u<-plot_lineNationalScens(reg = "USA", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab, title="USA (GCAM_USA)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(-500,8000)
+k<-plot_lineNationalScens(reg = "ROK", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab, title="Korea (AIM/CGE[Korea])", file_pre = file_pre, xlim=xlim2010) #,ylim=c(-500,8000)
+#w<-plot_lineNationalScens(reg = "World", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+#                          ylab = ylab, title="World", file_pre = file_pre) #,ylim=c(-500,8000)
+
+tmp<-ggplot_gtable(ggplot_build(j))
+leg<-which(sapply(tmp$grobs,function(x) x$name) =="guide-box")
+legend<-tmp$grobs[[leg]]
+a=a+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+b=b+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+c=c+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+ca=ca+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+e=e+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+i=i+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+id=id+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+j=j+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+r=r+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+u=u+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+k=k+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+#w=w+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+lay<-rbind(c(1,2,3,4,5,6),c(7,8,9,10,11,12))
+h=grid.arrange(a,b,c,ca,e,i,id,j,r,u,k,legend,layout_matrix=lay)
+ggsave(file=paste(cfg$outdir,"/1st_test.png",sep=""),h,width=24,height=14,dpi=200)
+
+vars = "Final Energy"
+scens <- c("CurPol","NDCplus","NDCMCS","GPP","Bridge","2Deg2030")
+ylab = "Final energy (EJ/yr)"
+file_pre = "Final_energy"
+xlim2010=c(2010,2050)
+
+a<-plot_lineNationalScens(reg = "AUS", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab, title="Australia (TIMES-AUS)",file_pre = file_pre, xlim=xlim2010) #,ylim=c(-300,1200) 
+b<-plot_lineNationalScens(reg = "BRA", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab, title="Brazil (BLUES)",file_pre = file_pre,nolegend=T, xlim=xlim2010) #,ylim=c(-300,1200) 
+ca<-plot_lineNationalScens(reg = "CAN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                           ylab = ylab, title="Canada (GCAM_Canada)", file_pre = file_pre, xlim=xlim2010)
+c<-plot_lineNationalScens(reg = "CHN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab, title="China (IPAC)", file_pre = file_pre, xlim=xlim2010)
+e<-plot_lineNationalScens(reg = "EU", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab, title="EU (PRIMES: -, GEM-E3: --)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(0,8000)
+j<-plot_lineNationalScens(reg = "JPN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab,title="Japan (AIM/E-NIES)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(-200,1600)
+r<-plot_lineNationalScens(reg = "RUS", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab, title="Russia (RU-TIMES)",file_pre = file_pre, xlim=xlim2010) #,ylim=c(0,2500)
+i<-plot_lineNationalScens(reg = "IND", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab, title="India (IND-MARKAL)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(0,15000)
+id<-plot_lineNationalScens(reg = "IDN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                           ylab = ylab, title="Indonesia (DDPP Energy)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(0,15000)
+u<-plot_lineNationalScens(reg = "USA", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab, title="USA (GCAM_USA)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(-500,8000)
+k<-plot_lineNationalScens(reg = "ROK", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab, title="Korea (AIM/CGE[Korea])", file_pre = file_pre, xlim=xlim2010) #,ylim=c(-500,8000)
+w<-plot_lineNationalScens(reg = "World", dt = all, vars = vars, scensnat = scens, scensglob = scens,
+                          ylab = ylab, title="World", file_pre = file_pre, xlim=xlim2010) #,ylim=c(-500,8000)
+
+tmp<-ggplot_gtable(ggplot_build(j))
+leg<-which(sapply(tmp$grobs,function(x) x$name) =="guide-box")
+legend<-tmp$grobs[[leg]]
+a=a+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+b=b+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+c=c+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+ca=ca+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+e=e+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+i=i+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+id=id+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+j=j+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+r=r+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+u=u+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+k=k+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+w=w+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
+lay<-rbind(c(1,2,3,4,5,6),c(7,8,9,10,11,12))
+h=grid.arrange(a,b,c,ca,e,i,id,j,r,u,k,legend,layout_matrix=lay)
+ggsave(file=paste(cfg$outdir,"/Final_energy_natscens_gridarrange.png",sep=""),h,width=24,height=14,dpi=200)
+
+
 # Plot emissions ----------------------------------------------------------
 vars = "Emissions|Kyoto Gases"
-scens <- c("BAU","CurPol","NDCplus","NDCMCS","GPP","Bridge","2Deg2030","2Deg2020")
+scens <- c("CurPol","NDCplus","NDCMCS","GPP","Bridge","2Deg2030")
 # scensglob <- c("NPi","2030_low") 
 # scensnat <- c("NPi","2030_low")
 
@@ -222,6 +325,18 @@ m = m + ylab(paste(unique(all[variable%in%vars]$variable),"[",unique(all[variabl
 m = m + theme_bw()
 m
 ggsave(file=paste(cfg$outdir,"/CO2_all_national_models.png",sep=""),m,width=18,height=10,dpi=200)
+
+vars = "Emissions|CO2|Energy"
+m = ggplot(all[variable%in%vars & Category%in%scens&!Scope=="global"&!region%in%c("TUR","World","R5OECD90+EU")]) 
+m = m + geom_line(aes(x=period,y=value,colour=Category))
+m = m + xlim(2005,2050)
+m = m + scale_colour_manual(values=plotstyle(scens))
+#e = e + scale_linetype_manual(values=cfg$man_lines)# TODO use plotstyle for linetypes per model or cfg$man_lines?
+m = m + facet_wrap(~region,scales="free_y")
+m = m + ylab(paste(unique(all[variable%in%vars]$variable),"[",unique(all[variable%in%vars]$unit),"]"))
+m = m + theme_bw()
+m
+ggsave(file=paste(cfg$outdir,"/CO2_energy_all_national_models.png",sep=""),m,width=18,height=10,dpi=200)
 
 # plot build-up
 vars = "Emissions|Kyoto Gases"
@@ -1110,54 +1225,3 @@ F4c2 = F4c2 + ylab(paste(unique(INVbar[variable=="Investment|Energy Supply|Elect
 F4c2
 ggsave(file=paste(cfg$outdir,"/F4c_Investments_NBR_bar.png",sep=""),F4c2,width=18,height=12,dpi=300)
 
-# National model figures --------------------------------------------------
-
-vars = c("Secondary Energy|Electricity|Wind")
-TEST = 
-  scens <- c("BAU","CurPol","NDCplus","NDCMCS","GPP","Bridge","2Deg2030","2Deg2020")
-ylab = "Final energy - electricity (EJ/yr)"
-file_pre = "test1_a"
-
-a<-plot_lineNationalScens(reg = "AUS", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                          ylab = ylab, title="Australia (TIMES-AUS)",file_pre = file_pre) #,ylim=c(-300,1200) 
-b<-plot_lineNationalScens(reg = "BRA", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                          ylab = ylab, title="Brazil (BLUES)",file_pre = file_pre,nolegend=T) #,ylim=c(-300,1200) 
-ca<-plot_lineNationalScens(reg = "CAN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                           ylab = ylab, title="Canada (GCAM_Canada)", file_pre = file_pre)
-c<-plot_lineNationalScens(reg = "CHN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                          ylab = ylab, title="China (IPAC)", file_pre = file_pre)
-e<-plot_lineNationalScens(reg = "EU", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                          ylab = ylab, title="EU (PRIMES: -, GEM-E3: --)", file_pre = file_pre) #,ylim=c(0,8000)
-j<-plot_lineNationalScens(reg = "JPN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                          ylab = ylab,title="Japan (AIM/E-NIES)", file_pre = file_pre) #,ylim=c(-200,1600)
-r<-plot_lineNationalScens(reg = "RUS", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                          ylab = ylab, title="Russia (RU-TIMES)",file_pre = file_pre) #,ylim=c(0,2500)
-i<-plot_lineNationalScens(reg = "IND", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                          ylab = ylab, title="India (IND-MARKAL)", file_pre = file_pre) #,ylim=c(0,15000)
-id<-plot_lineNationalScens(reg = "IDN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                           ylab = ylab, title="Indonesia (DDPP Energy)", file_pre = file_pre) #,ylim=c(0,15000)
-u<-plot_lineNationalScens(reg = "USA", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                          ylab = ylab, title="USA (GCAM_USA)", file_pre = file_pre) #,ylim=c(-500,8000)
-k<-plot_lineNationalScens(reg = "ROK", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                          ylab = ylab, title="Korea (AIM/CGE[Korea])", file_pre = file_pre) #,ylim=c(-500,8000)
-w<-plot_lineNationalScens(reg = "World", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                          ylab = ylab, title="World", file_pre = file_pre) #,ylim=c(-500,8000)
-
-tmp<-ggplot_gtable(ggplot_build(j))
-leg<-which(sapply(tmp$grobs,function(x) x$name) =="guide-box")
-legend<-tmp$grobs[[leg]]
-a=a+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
-b=b+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
-c=c+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
-ca=ca+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
-e=e+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
-i=i+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
-id=id+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
-j=j+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
-r=r+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
-u=u+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
-k=k+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
-w=w+theme(legend.position = "none")+theme(axis.text=element_text(size=16),plot.title = element_text(size=18))
-lay<-rbind(c(1,2,3,4,5,6),c(7,8,9,10,11,12))
-h=grid.arrange(a,b,c,ca,e,i,id,j,r,u,k,legend,layout_matrix=lay)
-ggsave(file=paste(cfg$outdir,"/1st_test.png",sep=""),h,width=24,height=14,dpi=200)
