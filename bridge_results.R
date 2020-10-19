@@ -363,7 +363,6 @@ scens = c("CurPol","NDCplus","Bridge","2Deg2030") #"NDCMCS",
 regio = c("World")
 regions = c("AUS","BRA","CAN","CHN","EU","IDN","IND","JPN","ROK","RUS","USA")
 regions2 = c("AUS","BRA","CAN","EU","JPN","ROK","RUS","USA")
-regdummy = c("BRA")
 year = c("2030")
 years = c("2030","2050")
 
@@ -371,7 +370,7 @@ years = c("2030","2050")
 vars=c("Primary Energy|Biomass|w/ CCS","Primary Energy|Biomass|w/o CCS","Primary Energy|Coal|w/ CCS","Primary Energy|Coal|w/o CCS","Primary Energy|Gas|w/ CCS","Primary Energy|Gas|w/o CCS",
        "Primary Energy|Geothermal","Primary Energy|Hydro","Primary Energy|Nuclear","Primary Energy|Oil|w/ CCS","Primary Energy|Oil|w/o CCS","Primary Energy|Other","Primary Energy|Solar","Primary Energy|Wind",
        "Primary Energy|Ocean","Primary Energy|Secondary Energy Trade")
-PEstack=all[variable%in%vars&Category%in%scens&!Scope=="global"& region%in%regdummy &period%in%2030]
+PEstack=all[variable%in%vars&Category%in%scens&!Scope=="global"& region%in%regions2 &period%in%2030]
 PEstack$Category = factor(PEstack$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2030"))
 
 F1f = ggplot(data=PEstack) #TODO different year? #[!Category=="NDCplus"]
