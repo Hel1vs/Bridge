@@ -76,7 +76,7 @@ add_variables <- function(all,scens){
   # all <- calcVariable(all,'`Renewables Share|TPES|Excl. Nuclear` ~ ( `Primary Energy|Solar` + `Primary Energy|Wind` + `Primary Energy|Hydro` + `Primary Energy|Biomass` + `Primary Energy|Geothermal` ) / `Primary Energy` * 100 ' , newUnit='%')
   # all <- calcVariable(all,'`Renewables Share|TPES|Excl. Nuclear & Geothermal` ~ ( `Primary Energy|Solar` + `Primary Energy|Wind` + `Primary Energy|Hydro` + `Primary Energy|Biomass`) / `Primary Energy` * 100 ' , newUnit='%')
   # 
-  # all <- calcVariable(all,'`Share of Elec in FE` ~  `Final Energy|Electricity`   / `Final Energy` * 100 ' , newUnit='%')
+ all <- calcVariable(all,'`Share of Elec in FE` ~  `Final Energy|Electricity`   / `Final Energy` * 100 ' , newUnit='%')
   # all <- calcVariable(all,'`Share of Elec in Transport` ~  `Final Energy|Transportation|Electricity`   / `Final Energy|Transportation` * 100 ' , newUnit='%')
   # # all <- calcVariable(all,'`Carbon Intensity of Electricity` ~ `Emissions|CO2|Energy|Supply|Electricity`/ `Secondary Energy|Electricity` ' , newUnit='kg CO2/GJ')
   all <- calcVariable(all,'`Carbon Intensity of FE` ~ `Emissions|CO2|FFI`/`Final Energy` ' , newUnit='kg CO2/GJ')
