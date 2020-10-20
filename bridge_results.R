@@ -5,7 +5,7 @@ scencateg <- "scen_categ_bridge"  #"scen_categ_COMMIT"
 variables <- "variables_bridge"  #"variables_xCut"
 adjust <- "adjust_reporting_COMMIT"
 addvars <- F
-datafile <-"commit_bridge_compare_20201013-092239" #commit_cd-links_compare_20191015-114544
+datafile <-"commit_bridge_compare_20201020-100908" #commit_cd-links_compare_20191015-114544
 source("load_data.R") 
 
 # check whether there's only one scenario per category for each model
@@ -475,7 +475,7 @@ ggsave(file=paste(cfg$outdir,"/FE-elec_natscens_gridarrange.png",sep=""),h,width
 
 #TODO - use addvars instead?
 vars=c("Secondary Energy|Electricity|Solar","Secondary Energy|Electricity|Wind","Secondary Energy|Electricity|Hydro","Secondary Energy|Electricity|Biomass","Secondary Energy|Electricity|Geothermal","Secondary Energy|Electricity")
-REN = all[variable%in%vars & Category%in%c("BAU","CurPol","NDCplus","NDCMCS","GPP","Bridge","2Deg2030","2Deg2020")&!Scope=="national"&region=="World"]
+REN = all[variable%in%vars & Category%in%c("BAU","CurPol","NDCplus","NDCMCS","NDCplus-conv","GPP","Bridge","2Deg2030","2Deg2020")&!Scope=="national"&region=="World"]
 REN = spread(REN,variable,value)
 REN[model%in%c("IMAGE 3.0","PROMETHEUS","WITCH 5.0")]$`Secondary Energy|Electricity|Geothermal`<-"0"
 REN = REN%>%mutate(REN_elec=(`Secondary Energy|Electricity|Solar` + `Secondary Energy|Electricity|Wind` + `Secondary Energy|Electricity|Hydro` + `Secondary Energy|Electricity|Biomass` + `Secondary Energy|Electricity|Geothermal`) / `Secondary Energy|Electricity` * 100 )
@@ -866,12 +866,170 @@ lay<-rbind(c(1,2,3),c(4,5,6))
 F1alt=grid.arrange(F1a,F1b,F1c2,F1d,F1e,legend,layout_matrix=lay)
 ggsave(file=paste(cfg$outdir,"/F1_gridarrange_alt.png",sep=""),F1alt,width=24,height=14,dpi=200)
 
+### Repeat but for NDC convergence
+scens = c("CurPol","NDCplus-conv","Bridge","2Deg2020")
+
+# Figure 1a share of REN
+REbar=REN[Category%in%scens&region%in%regio&period%in%years] 
+REbarm=REbar[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Category","variable","period")]
+REbar$period=as.factor(REbar$period)
+REbarm$period=as.factor(REbarm$period)
+REbar$Category = factor(REbar$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020")) #,"NDCMCS"
+REbarm$Category = factor(REbarm$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020"))
+
+F1a = ggplot()
+F1a = F1a + geom_bar(data=REbarm,aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
+F1a = F1a + geom_point(data=REbar, aes(x=period,y=value,shape=model,colour=Category,group=Category),size=3,position=position_dodge(width=0.66))
+F1a = F1a + geom_errorbar(data=REbarm,aes(x=period,ymin=min,ymax=max,colour=Category),position=position_dodge(width=0.66))
+F1a = F1a + geom_text(aes(x="2030",y=88),label ="a)",size=10)
+F1a = F1a + scale_shape_manual(values=cfg$man_shapes)
+F1a = F1a + scale_color_manual(values=plotstyle(scens))
+F1a = F1a + scale_fill_manual(values=plotstyle(scens))
+F1a = F1a + xlab("")
+F1a = F1a + theme_bw() + theme(axis.text.y=element_text(size=18)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=18)) +
+  theme(axis.text.x = element_text(size=18)) + theme(legend.text=element_text(size=16),legend.title=element_text(size=18))
+F1a = F1a +ylab("Share of renewables in electricity (%)")
+F1a
+
+# Figure 1b share of electric transport
+EVbar=all[variable%in%c("Final Energy|Transportation|Electricity","Final Energy|Transportation")&Category%in%scens&!Scope=="national"& region%in%regio &period%in%years]
+EVbar = spread(EVbar,variable,value)
+EVbar = EVbar%>%mutate(EVshare= `Final Energy|Transportation|Electricity`/`Final Energy|Transportation` * 100 )
+EVbar = data.table(gather(EVbar,variable,value,c("Final Energy|Transportation|Electricity","Final Energy|Transportation","EVshare")))
+EVbar = EVbar[variable=="EVshare"]
+EVbar$unit <- "%"
+
+EVbarm=EVbar[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Category","variable","period")]
+EVbar$period=as.factor(EVbar$period)
+EVbarm$period=as.factor(EVbarm$period)
+EVbar$Category = factor(EVbar$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020")) #,"NDCMCS"
+EVbarm$Category = factor(EVbarm$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020"))
+
+F1b = ggplot()
+F1b = F1b + geom_bar(data=EVbarm,aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
+F1b = F1b + geom_point(data=EVbar, aes(x=period,y=value,shape=model,colour=Category,group=Category),size=3,position=position_dodge(width=0.66))
+F1b = F1b + geom_errorbar(data=EVbarm,aes(x=period,ymin=min,ymax=max,colour=Category),position=position_dodge(width=0.66))
+F1b = F1b + geom_text(aes(x="2030",y=30),label ="b)",size=10)
+F1b = F1b + scale_shape_manual(values=cfg$man_shapes)
+F1b = F1b + scale_color_manual(values=plotstyle(scens))
+F1b = F1b + scale_fill_manual(values=plotstyle(scens))
+F1b = F1b + xlab("")
+F1b = F1b + theme_bw() + theme(axis.text.y=element_text(size=18)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=18)) +
+  theme(axis.text.x = element_text(size=18)) + theme(legend.text=element_text(size=11),legend.title=element_text(size=12))
+F1b = F1b + ylab(paste("Share of electricity in transportation final energy demand","[",unique(EVbar$unit),"]"))
+F1b
+
+# Figure 1c industrial process & F-gas emissions
+IEbar=all[variable%in%c("Emissions|CO2|Industrial Processes","Emissions|F-Gases")&Category%in%scens&!Scope=="national"& region%in%regio &period%in%c(2015,2030,2050)]
+IEbar$unit<-"Mt CO2-equiv/yr"
+IEbar = spread(IEbar,variable,value)
+IEbar=na.omit(IEbar)
+IEbar = IEbar%>%mutate(IEtotal= `Emissions|CO2|Industrial Processes`+`Emissions|F-Gases` )
+IEbar = data.table(gather(IEbar,variable,value,c("Emissions|CO2|Industrial Processes","Emissions|F-Gases","IEtotal")))
+IEbar = IEbar[variable=="IEtotal"]
+IEbar = spread(IEbar,period,value)
+IEbar=na.omit(IEbar)
+IEbar = IEbar%>%mutate(rel50= ((`2050`-`2015`)/`2015`)*100,rel30=((`2030`-`2015`)/`2015`)*100)
+IEbar = data.table(gather(IEbar,period,value,c('2015','2030','2050','rel30','rel50')))
+IEbar = IEbar[period%in%c("rel50","rel30")]
+IEbar$unit <- "%"
+IEbar[period=="rel50"]$period<-2050
+IEbar[period=="rel30"]$period<-2030
+
+IEbarm=IEbar[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Category","variable","period")]
+IEbar$period=as.factor(IEbar$period)
+IEbarm$period=as.factor(IEbarm$period)
+IEbar$Category = factor(IEbar$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020")) #,"NDCMCS"
+IEbarm$Category = factor(IEbarm$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020"))
+
+F1c2 = ggplot()
+F1c2 = F1c2 + geom_bar(data=IEbarm,aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
+F1c2 = F1c2 + geom_point(data=IEbar, aes(x=period,y=value,shape=model,colour=Category,group=Category),size=3,position=position_dodge(width=0.66))
+F1c2 = F1c2 + geom_errorbar(data=IEbarm,aes(x=period,ymin=min,ymax=max,colour=Category),position=position_dodge(width=0.66))
+F1c2 = F1c2 + geom_text(aes(x="2030",y=80),label ="c)",size=10)
+F1c2 = F1c2 + scale_shape_manual(values=cfg$man_shapes)
+F1c2 = F1c2 + scale_color_manual(values=plotstyle(scens))
+F1c2 = F1c2 + scale_fill_manual(values=plotstyle(scens))
+F1c2 = F1c2 + xlab("")
+F1c2 = F1c2 + theme_bw() + theme(axis.text.y=element_text(size=18)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=18)) +
+  theme(axis.text.x = element_text(size=18)) + theme(legend.text=element_text(size=11),legend.title=element_text(size=12))
+F1c2 = F1c2 + ylab(paste("F-Gases and Industrial process CO2 emissions","[relative to 2015, ",unique(IEbar$unit),"]"))
+F1c2
+
+# Figure 1d Buildings share of electricity
+EBbar=all[variable%in%c("Final Energy|Residential and Commercial|Electricity","Final Energy|Residential and Commercial")&Category%in%scens&!Scope=="national"& region%in%regio &period%in%years]
+EBbar = spread(EBbar,variable,value)
+EBbar = EBbar%>%mutate(EBshare= `Final Energy|Residential and Commercial|Electricity`/`Final Energy|Residential and Commercial` * 100 )
+EBbar = data.table(gather(EBbar,variable,value,c("Final Energy|Residential and Commercial|Electricity","Final Energy|Residential and Commercial","EBshare")))
+EBbar = EBbar[variable=="EBshare"]
+EBbar$unit <- "%"
+
+EBbarm=EBbar[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Category","variable","period")]
+EBbar$period=as.factor(EBbar$period)
+EBbarm$period=as.factor(EBbarm$period)
+EBbar$Category = factor(EBbar$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020")) #,"NDCMCS"
+EBbarm$Category = factor(EBbarm$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020"))
+
+F1d = ggplot()
+F1d = F1d + geom_bar(data=EBbarm,aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
+F1d = F1d + geom_point(data=EBbar, aes(x=period,y=value,shape=model,colour=Category,group=Category),size=3,position=position_dodge(width=0.66))
+F1d = F1d + geom_errorbar(data=EBbarm,aes(x=period,ymin=min,ymax=max,colour=Category),position=position_dodge(width=0.66))
+F1d = F1d + geom_text(aes(x="2030",y=70),label ="d)",size=10)
+F1d = F1d + scale_shape_manual(values=cfg$man_shapes)
+F1d = F1d + scale_color_manual(values=plotstyle(scens))
+F1d = F1d + scale_fill_manual(values=plotstyle(scens))
+F1d = F1d + xlab("")
+F1d = F1d + theme_bw() + theme(axis.text.y=element_text(size=18)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=18)) +
+  theme(axis.text.x = element_text(size=18)) + theme(legend.text=element_text(size=11),legend.title=element_text(size=12))
+F1d = F1d + ylab(paste("Share of electricity in buildings final energy demand","[",unique(EBbar$unit),"]"))
+F1d
+
+# Figure 1e AFOLU
+AFbar=all[variable%in%c("Land Cover|Forest|Afforestation and Reforestation")&Category%in%scens&!Scope=="national"& region%in%regio &period%in%years]
+
+AFbarm=AFbar[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Category","variable","period")]
+AFbar$period=as.factor(AFbar$period)
+AFbarm$period=as.factor(AFbarm$period)
+AFbar$Category = factor(AFbar$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020")) #,"NDCMCS"
+AFbarm$Category = factor(AFbarm$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020"))
+
+F1e = ggplot()
+F1e = F1e + geom_bar(data=AFbarm,aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
+F1e = F1e + geom_point(data=AFbar, aes(x=period,y=value,shape=model,colour=Category,group=Category),size=3,position=position_dodge(width=0.66))
+F1e = F1e + geom_errorbar(data=AFbarm,aes(x=period,ymin=min,ymax=max,colour=Category),position=position_dodge(width=0.66))
+F1e = F1e + geom_text(aes(x="2030",y=450),label ="e)",size=10)
+F1e = F1e + scale_shape_manual(values=cfg$man_shapes)
+F1e = F1e + scale_color_manual(values=plotstyle(scens))
+F1e = F1e + scale_fill_manual(values=plotstyle(scens))
+F1e = F1e + xlab("")
+F1e = F1e + theme_bw() + theme(axis.text.y=element_text(size=18)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=18)) +
+  theme(axis.text.x = element_text(size=18)) + theme(legend.text=element_text(size=11),legend.title=element_text(size=12))
+F1e = F1e + ylab(paste("Afforestation and reforestation","[",unique(AFbar$unit),"]"))
+F1e
+
+## alternative: only panels a-e
+F1a=F1a+theme(legend.position = "right",legend.text=element_text(size=22),legend.title=element_text(size=24))
+tmp<-ggplot_gtable(ggplot_build(F1a))
+leg<-which(sapply(tmp$grobs,function(x) x$name) =="guide-box")
+legend<-tmp$grobs[[leg]]
+F1a=F1a+theme(legend.position = "none",axis.text.x=element_text(size=22),axis.text.y=element_text(size=22))
+F1b=F1b+theme(axis.text.x=element_text(size=22),axis.text.y=element_text(size=22))
+F1c2=F1c2+theme(axis.text.x=element_text(size=22),axis.text.y=element_text(size=22))
+F1d=F1d+theme(axis.text.x=element_text(size=22),axis.text.y=element_text(size=22))
+F1e=F1e+theme(axis.text.x=element_text(size=22),axis.text.y=element_text(size=22))
+lay<-rbind(c(1,2,3),c(4,5,6))
+F1alt=grid.arrange(F1a,F1b,F1c2,F1d,F1e,legend,layout_matrix=lay)
+ggsave(file=paste(cfg$outdir,"/F1_gridarrange_alt_NDCconvergence.png",sep=""),F1alt,width=24,height=14,dpi=200)
+
+#Back to normal scenario selection:
+scens = c("CurPol","NDCplus","Bridge","2Deg2020")
+
   # Waterfall ---------------------------------------------------------------
 
 ### Figure elements
 # Figure 2a Sectors
 # select data
-cdata=all[model=="COPPE-COFFEE 1.0"&region=="World"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, PROMETHEUS, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0, TIAM_Grantham_v3.2
+cdata=all[model=="AIM/CGE"&region=="World"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, PROMETHEUS, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0, TIAM_Grantham_v3.2
 model=unique(cdata$model)
 
 # add non-CO2
@@ -892,7 +1050,7 @@ if(unique(cdata$model=="AIM/CGE")){cdata$model<-"AIM-CGE"}
 source("waterfall_bridge.R")
 
 # Figure 2b countries
-cdata=all[model=="COPPE-COFFEE 1.0"&region%in%c("R5ASIA","R5LAM","R5REF","R5OECD90+EU","R5MAF")&variable=="Emissions|Kyoto Gases"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0
+cdata=all[model=="AIM/CGE"&region%in%c("R5ASIA","R5LAM","R5REF","R5OECD90+EU","R5MAF")&variable=="Emissions|Kyoto Gases"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0
 if(unique(cdata$model=="AIM/CGE")){cdata$model<-"AIM-CGE"}
 source("waterfall_bridge_regions.R")
 
@@ -987,6 +1145,23 @@ F3aSI3 = F3aSI3 + theme_bw() + theme(axis.text.y=element_text(size=16)) + theme(
 F3aSI3 = F3aSI3 + theme(legend.position="bottom")
 F3aSI3
 ggsave(file=paste(cfg$outdir,"/F3aSI3_GHG_IMAGE-MESSAGE_world_GPP-Bridge_funnel.png",sep=""),F3aSI3,width=16,height=12,dpi=200)
+
+# Convergence scenario
+scens=c("NDCplus-conv","NDCplus")
+mods=unique(all[Category=="NDCplus-conv"]$model)
+range=all[variable%in%vars & Category%in%scens&!Scope=="national"&region=="World"&model%in%mods,list(min=min(value,na.rm=T),max=max(value,na.rm=T),med=median(value,na.rm=T)),by=c("Category","variable","period")]
+F3aSI4 = ggplot(all[variable%in%vars & Category%in%scens&!Scope=="national"&region=="World"&model%in%mods&period%in%c(2010,2020,2030,2040,2050,2060,2070,2080,2090,2100)]) 
+F3aSI4 = F3aSI4 + geom_line(aes(x=period,y=value,colour=Category, linetype=model),size=1.5)
+F3aSI4 = F3aSI4 + geom_ribbon(data=range[period%in%c(2010,2020,2030,2040,2050,2060,2070,2080,2090,2100)],aes(x=period,ymin=min, ymax=max,fill=Category),alpha=0.5)
+F3aSI4 = F3aSI4 + scale_x_continuous(breaks=c(2030,2040,2050,2060,2070,2080,2090,2100),limits=c(2030,2100))+ scale_y_continuous(breaks=c(0,10000,20000,30000,40000,50000,60000,70000,80000),limits=c(0,85000))
+F3aSI4 = F3aSI4 + scale_colour_manual(values=plotstyle(scens))
+F3aSI4 = F3aSI4 + scale_fill_manual(values=plotstyle(scens))
+F3aSI4 = F3aSI4 + ylab(paste(unique(all[variable%in%vars]$variable),"[",unique(all[variable%in%vars]$unit),"]"))+ xlab("")
+F3aSI4 = F3aSI4 + theme_bw() + theme(axis.text.y=element_text(size=16)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=18)) +
+  theme(axis.text.x = element_text(size=16,angle=90)) + theme(legend.text=element_text(size=16),legend.title=element_text(size=18))
+F3aSI4 = F3aSI4 + theme(legend.position="bottom")
+F3aSI4
+ggsave(file=paste(cfg$outdir,"/F3aSI4_GHG_all_global_models_world_NDCplus-convergence_funnel.png",sep=""),F3aSI4,width=16,height=12,dpi=200)
 
 # Figure 3b Emissions relative to NDC
 
