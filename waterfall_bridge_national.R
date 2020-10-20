@@ -19,7 +19,7 @@ factor.data.frame <- function(df) {
 #                 "Emissions|CO2|AFOLU",
 #                 "Emissions|Non-CO2")  
 
-if(model=="BLUES"){
+if(model=="*BLUES"){
   vars <- c(    "Emissions|CO2|Energy|Supply",
                 "Emissions|CO2|Energy|Demand|Industry",
                 "Emissions|CO2|Energy|Demand|Residential and Commercial",
