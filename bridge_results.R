@@ -1320,3 +1320,15 @@ budgetsel= budget[region=='World'&Scope=="global"&period==2100&variable=="Carbon
 # all <- calcBudget_2015(all,'Emissions|CO2','Carbon budget_2015')
 # all <- calcBudget_2015(all,'Emissions|CO2|Energy and Industrial Processes','Carbon budget_2015|Energy and Industry')
 # all <- calcBudget_2015(all,'Emissions|CO2|Energy','Carbon budget_2015|Energy')
+
+
+# Check gap closure -------------------------------------------------------
+gap = all[Scope=="global"&variable=="Emissions|Kyoto Gases"&region%in%c(regions,"World")&period%in%c(2030,2050)&Category%in%scens]
+gap$scenario <- NULL
+gap$Baseline <- NULL
+gap = spread(gap,Category,value)
+gap = gap%>%mutate(gap=NDCplus-`2Deg2020`,reduction=NDCplus-Bridge,closure=reduction/gap*100)
+gap2 = data.table(gather(gap,Category,value,c('2Deg2020','Bridge','CurPol','NDCplus','gap','reduction','closure')))
+gap2 =gap2[Category%in%c('gap','reduction','closure')]
+setnames(gap2,'Category','Indicator')
+gaprange = gap2[,list(median=median(value,na.rm=T),min=min(value,na.rm=T),max=max(value,na.rm=T)),by=c('Indicator','period','region')]
