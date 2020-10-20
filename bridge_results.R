@@ -391,16 +391,16 @@ ggsave(file=paste(cfg$outdir,"/2nd_test.png",sep=""),F1f,width=18,height=12,dpi=
   # national waterfall - tests ------------------------------------------------
 
 # select data
-cdata=all[model=="BLUES"&region=="BRA"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, PROMETHEUS, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0, TIAM_Grantham_v3.2
+cdata=all[model=="*BLUES"&region=="BRA"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, PROMETHEUS, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0, TIAM_Grantham_v3.2
 model=unique(cdata$model)
 
 # add non-CO2
-if(model=="BLUES"){ #if(!model%in%c("TIAM_Grantham_v3.2","PROMETHEUS")){
-  nonco2=cdata[variable%in%c("Emissions|CH4","Emissions|N2O","Emissions|F-Gases")]
+if(model=="*BLUES"){ #if(!model%in%c("TIAM_Grantham_v3.2","PROMETHEUS")){
+  nonco2=cdata[variable%in%c("Emissions|CH4","Emissions|N2O")] #,"Emissions|F-Gases"
   nonco2$unit<-NULL
   nonco2=spread(nonco2,variable,value)
-  nonco2=nonco2%>%mutate(`Emissions|Non-CO2`=((`Emissions|CH4`*25)+(`Emissions|N2O`*298/1000)+`Emissions|F-Gases`))
-  nonco2=data.table(gather(nonco2,variable,value,c("Emissions|CH4","Emissions|N2O","Emissions|F-Gases","Emissions|Non-CO2")))
+  nonco2=nonco2%>%mutate(`Emissions|Non-CO2`=((`Emissions|CH4`*25)+(`Emissions|N2O`*298/1000))) #+`Emissions|F-Gases`
+  nonco2=data.table(gather(nonco2,variable,value,c("Emissions|CH4","Emissions|N2O","Emissions|Non-CO2"))) #"Emissions|F-Gases",
   nonco2=nonco2[variable=="Emissions|Non-CO2"]
   nonco2$unit<-"Mt CO2-equiv/yr"
   setcolorder(nonco2,colnames(cdata))
