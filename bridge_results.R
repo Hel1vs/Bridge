@@ -18,8 +18,9 @@ View(check2)
 check3=check[Category=="NDCplus"]
 View(check3)
 all=all[!c(Category=="NDCMCS"&model%in%unique(check3$model))]
-# For REMIND, only global model with NDCMCS, label it NDCplus to show up in the same bar / statistics
-#all[model=="REMIND-MAgPIE 1.7-3.0"&Category=="NDCMCS"]$Category<-"NDCplus"
+
+# For models with NDCMCS instead of NDCplus, label it NDCplus to show up in the same bar / statistics
+all[Scope=="national"&!model%in%c("*BLUES","*India MARKAL","*RU-TIMES 3.2","*AIM/Enduse[Japan]")&Category=="NDCMCS"]$Category<-"NDCplus"
 
 # Load functions and library for plotting
 source("functions/plot_LineNationalScens.R")
@@ -376,7 +377,9 @@ PEstack$Category = factor(PEstack$Category,levels=c("CurPol","NDCplus","NDCMCS",
 F1f = ggplot(data=PEstack) #TODO different year? #[!Category=="NDCplus"]
 F1f = F1f + geom_bar(aes(x=Category,y=value,fill=variable),stat="identity", position="stack",width=0.5)
 #F1f = F1f + facet_wrap(~model,nrow=1,labeller = labeller(model=c("IMAGE 3.0"="IMAGE","REMIND-MAgPIE 1.7-3.0"="REMIND", "POLES GECO2019"="POLES","AIM/CGE"="AIM/CGE","COPPE-COFFEE 1.0"="COFFEE","PROMETHEUS"="PROMETHEUS","MESSAGEix-GLOBIOM_1.0"="MESSAGE","WITCH 5.0"="WITCH","TIAM_Grantham_v3.2"="TIAM")))
-F1f = F1f + facet_wrap(~model,nrow=1,labeller = labeller(model=c("BLUES"="Brasil")))
+F1f = F1f + facet_wrap(~model,nrow=1,labeller = labeller(model=c("*BLUES"="Brazil","*AIM/CGE[Korea]"="Korea","*GCAM-USA_COMMIT"="USA",
+                                                                 "*AIM/Enduse[Japan]"="Japan","*GCAM_Canada"="Canada","*RU-TIMES 3.2"="Russia",
+                                                                 "*TIMES-AUS"="Australia","*PRIMES_V1"="EU")))
 F1f = F1f + scale_fill_manual(values=plotstyle(vars))
 F1f = F1f + theme_bw() + theme(axis.text.y=element_text(size=18)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=18)) +
   theme(axis.text.x = element_text(size=18,angle=90)) + theme(legend.text=element_text(size=11),legend.title=element_text(size=12)) + theme(panel.spacing = unit(0, "lines"))
