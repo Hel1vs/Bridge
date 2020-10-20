@@ -21,10 +21,8 @@ factor.data.frame <- function(df) {
 
 if(model=="*BLUES"){
   vars <- c(    "Emissions|CO2|Energy|Supply",
-                "Emissions|CO2|Energy|Demand|Industry",
-                "Emissions|CO2|Energy|Demand|Residential and Commercial",
-                "Emissions|CO2|Energy|Demand|Transportation",
-                "Emissions|CO2|Industrial Processes")  
+                "Emissions|CO2|Industrial Processes",
+                "Emissions|CO2|AFOLU")  
 }else{if(model=="TIAM_Grantham_v3.2"){
   vars <- c(    "Emissions|CO2|Energy|Supply",
                 "Emissions|CO2|Energy|Demand|Industry",
