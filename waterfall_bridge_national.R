@@ -19,31 +19,36 @@ factor.data.frame <- function(df) {
 #                 "Emissions|CO2|AFOLU",
 #                 "Emissions|Non-CO2")  
 
-if(model=="*BLUES"){
-  vars <- c(    "Emissions|CO2|Energy|Supply",
-                "Emissions|CO2|Energy|Demand|Industry",
-                "Emissions|CO2|Energy|Demand|Residential and Commercial",
-                "Emissions|CO2|Energy|Demand|Transportation",
-                "Emissions|CO2|Industrial Processes")  
-}else{if(model=="TIAM_Grantham_v3.2"){
-  vars <- c(    "Emissions|CO2|Energy|Supply",
-                "Emissions|CO2|Energy|Demand|Industry",
-                "Emissions|CO2|Energy|Demand|Residential and Commercial",
-                "Emissions|CO2|Energy|Demand|Transportation")  
-}else{
+if(model%in%c("*BLUES","*AIM-CGE[Korea]","*GCAM-USA_COMMIT")){
   vars <- c(    "Emissions|CO2|Energy|Supply",
                 "Emissions|CO2|Energy|Demand|Industry",
                 "Emissions|CO2|Energy|Demand|Residential and Commercial",
                 "Emissions|CO2|Energy|Demand|Transportation",
                 "Emissions|CO2|Industrial Processes",
-                "Emissions|CO2|AFOLU",
-                "Emissions|Non-CO2") 
-}}
+                "Emissions|CO2|AFOLU")  
+}else{if(model=="*India MARKAL"){
+  vars <- c(    "Emissions|CO2|Energy|Supply",
+                "Emissions|CO2|Energy|Demand|Industry",
+                "Emissions|CO2|Energy|Demand|Residential and Commercial",
+                "Emissions|CO2|Energy|Demand|Transportation")  
+}else{if(model=="*TIMES-AUS"){
+  vars <- c(    "Emissions|CO2|Energy|Supply",
+                "Emissions|CO2|Energy|Demand|Industry",
+                "Emissions|CO2|Energy|Demand|Residential and Commercial",
+                "Emissions|CO2|Energy|Demand|Transportation",
+                "Emissions|CO2|AFOLU")
+}else{
+  vars <- c(    "Emissions|CO2|Energy|Supply",
+                "Emissions|CO2|Energy|Demand|Industry",
+                "Emissions|CO2|Energy|Demand|Residential and Commercial",
+                "Emissions|CO2|Energy|Demand|Transportation",
+                "Emissions|CO2|Industrial Processes") 
+}}}
 
 
 ylab <-  bquote(paste("Emissions [Mt", CO[2],"eq]"))
 titletag <- "Waterfall_"
-file.prefix <- "Fig2_sector_"
+file.prefix <- "Waterfall_sector_"
 
 catsnat <- c("Bridge","NDCplus") #c("2Deg2020","Bridge")
 labcat <- c("Bridge","NDCplus") #c("2Deg2020","Bridge") 
@@ -67,15 +72,15 @@ for(icat in c(1)){
     #last stack: ambitious mitigation scenario
     # dtn_9 <- filter(dtn, Category==catsnat[1], variable %in% vars, period == tt[2]) %>%
     #   mutate(bar_position = "10") %>% factor.data.frame()       
-    if(model=="PROMETHEUS"){
+    if(model%in%c("*BLUES","*AIM-CGE[Korea]","*GCAM-USA_COMMIT")){
       dtn_9 <- filter(dtn, Category==catsnat[1], variable %in% vars, period == tt[2]) %>%
-        mutate(bar_position = "8") %>% factor.data.frame()       
-    }else{if(model=="TIAM_Grantham_v3.2"){
+        mutate(bar_position = "9") %>% factor.data.frame()       
+    }else{if(model=="*India MARKAL"){
       dtn_9 <- filter(dtn, Category==catsnat[1], variable %in% vars, period == tt[2]) %>%
         mutate(bar_position = "7") %>% factor.data.frame()        
     }else{
       dtn_9 <- filter(dtn, Category==catsnat[1], variable %in% vars, period == tt[2]) %>%
-        mutate(bar_position = "10") %>% factor.data.frame()
+        mutate(bar_position = "8") %>% factor.data.frame()
     } }
     
     # calculating the difference
@@ -98,21 +103,15 @@ for(icat in c(1)){
     dtn_6 <- filter(dtn_tmp2, variable == vars[4], period == tt[2]) %>%
       mutate(value = diff_to_reference) %>% mutate(bar_position = "6")%>%  factor.data.frame()
     
-    if(!model%in%c("TIAM_Grantham_v3.2")){
+    if(!model%in%c("*India MARKAL")){
       dtn_7 <- filter(dtn_tmp2, variable == vars[5], period == tt[2]) %>%
         mutate(value = diff_to_reference) %>% mutate(bar_position = "7")%>%  factor.data.frame()
     }
     
-    if(!model%in%c("TIAM_Grantham_v3.2","PROMETHEUS")){
+    if(model%in%c("*BLUES","*AIM-CGE[Korea]","*GCAM-USA_COMMIT")){
       dtn_8 <- filter(dtn_tmp2, variable == vars[6], period == tt[2]) %>%
         mutate(value = diff_to_reference) %>% mutate(bar_position = "8")%>%  factor.data.frame()
     } 
-    
-    if(!model%in%c("TIAM_Grantham_v3.2","PROMETHEUS")){
-      dtn_10 <- filter(dtn_tmp2, variable == vars[7], period == tt[2]) %>%
-        mutate(value = diff_to_reference) %>% mutate(bar_position = "9")%>%  factor.data.frame()
-    }
-    
     
     # only region, value (and later variable) needed
     reduction <- c("region","value", "variable","bar_position")
@@ -124,14 +123,11 @@ for(icat in c(1)){
     dtn_4_reduced <- dtn_4[names(dtn_4) %in% reduction]
     dtn_5_reduced <- dtn_5[names(dtn_5) %in% reduction]
     dtn_6_reduced <- dtn_6[names(dtn_6) %in% reduction]
-    if(!model%in%c("TIAM_Grantham_v3.2")){
+    if(!model%in%c("*India MARKAL")){
       dtn_7_reduced <- dtn_7[names(dtn_7) %in% reduction]
     }
-    if(!model%in%c("TIAM_Grantham_v3.2","PROMETHEUS")){
+    if(model%in%c("*BLUES","*AIM-CGE[Korea]","*GCAM-USA_COMMIT")){
       dtn_8_reduced <- dtn_8[names(dtn_8) %in% reduction]
-    }
-    if(!model%in%c("TIAM_Grantham_v3.2","PROMETHEUS")){
-      dtn_10_reduced <- dtn_10[names(dtn_10) %in% reduction]
     }
     dtn_9_stack_reduced <- dtn_9[names(dtn_9) %in% reduction]
     
@@ -148,30 +144,26 @@ for(icat in c(1)){
     ydummy6<-data.frame("ydummy",sum(dtn_5_reduced[dtn_5_reduced$region == "ydummy",]$value)-sum(dtn_6_reduced$value),"total-dummy",6)
     names(ydummy6)<-reduction
     dtn_6_reduced = rbind(dtn_6_reduced,ydummy6)
-    if(!model%in%c("TIAM_Grantham_v3.2")){
+    if(!model%in%c("*India MARKAL")){
       ydummy7<-data.frame("ydummy",sum(dtn_6_reduced[dtn_6_reduced$region == "ydummy",]$value)-sum(dtn_7_reduced$value),"total-dummy",7)
       names(ydummy7)<-reduction
       dtn_7_reduced = rbind(dtn_7_reduced,ydummy7)
     }
-    if(!model%in%c("TIAM_Grantham_v3.2","PROMETHEUS")){
+    if(model%in%c("*BLUES","*AIM-CGE[Korea]","*GCAM-USA_COMMIT")){
       ydummy8<-data.frame("ydummy",sum(dtn_7_reduced[dtn_7_reduced$region == "ydummy",]$value)-sum(dtn_8_reduced$value),"total-dummy",8)
       names(ydummy8)<-reduction
       dtn_8_reduced = rbind(dtn_8_reduced,ydummy8)
     }
-    if(!model%in%c("TIAM_Grantham_v3.2","PROMETHEUS")){
-      ydummy10<-data.frame("ydummy",sum(dtn_8_reduced[dtn_8_reduced$region == "ydummy",]$value)-sum(dtn_10_reduced$value),"total-dummy",9)
-      names(ydummy10)<-reduction
-      dtn_10_reduced = rbind(dtn_10_reduced,ydummy10)
-    }
+
     
     #dtn_all=bind_rows(dtn_1_stack_reduced,dtn_2_stack_reduced, dtn_3_reduced, dtn_4_reduced, dtn_5_reduced, dtn_6_reduced,dtn_7_reduced,dtn_8_reduced, dtn_10_reduced,dtn_9_stack_reduced)
-    if(model%in%c("PROMETHEUS")){
-      dtn_all=bind_rows(dtn_1_stack_reduced,dtn_2_stack_reduced, dtn_3_reduced, dtn_4_reduced, dtn_5_reduced, dtn_6_reduced,dtn_7_reduced,dtn_9_stack_reduced)  
+    if(model%in%c("*BLUES","*AIM-CGE[Korea]","*GCAM-USA_COMMIT")){
+      dtn_all=bind_rows(dtn_1_stack_reduced,dtn_2_stack_reduced, dtn_3_reduced, dtn_4_reduced, dtn_5_reduced, dtn_6_reduced,dtn_7_reduced,dtn_8_reduced, dtn_9_stack_reduced)  
     }else{
-      if(model=="TIAM_Grantham_v3.2"){
+      if(model=="*India MARKAL"){
         dtn_all=bind_rows(dtn_1_stack_reduced,dtn_2_stack_reduced, dtn_3_reduced, dtn_4_reduced, dtn_5_reduced, dtn_6_reduced,dtn_9_stack_reduced)
       }else{
-        dtn_all=bind_rows(dtn_1_stack_reduced,dtn_2_stack_reduced, dtn_3_reduced, dtn_4_reduced, dtn_5_reduced, dtn_6_reduced,dtn_7_reduced,dtn_8_reduced, dtn_10_reduced,dtn_9_stack_reduced)
+        dtn_all=bind_rows(dtn_1_stack_reduced,dtn_2_stack_reduced, dtn_3_reduced, dtn_4_reduced, dtn_5_reduced, dtn_6_reduced,dtn_7_reduced,dtn_9_stack_reduced)
       }}
     
     dtn_all$alpha <- 0*dtn_all$value
@@ -195,22 +187,25 @@ for(icat in c(1)){
                         name="Sector",guide=F) +
       geom_hline(yintercept=0)+
       ggtitle(unique(cdata$model))+ #paste(country,"- 2050 emissions in reference scenario vs. decarbonisation scenario")
-      scale_alpha(guide = "none")+coord_cartesian(ylim=c(-10000,60000))+
+      scale_alpha(guide = "none")+#coord_cartesian(ylim=c(-10000,60000))+
       ylab(ylab)+xlab("") + theme_bw() + theme(axis.text.x = element_text(angle=90))+
       # scale_x_continuous(breaks=unique(dtn_all$bar_position),minor_breaks = NULL,
       #                      labels=c(tt[1], paste0(tt[2],"\n",labcat[2]), "Supply","Industry","Buildings","Transport","Industrial processes","AFOLU","Non-CO2",paste0(tt[2],"\n",labcat[icat]))) #bquote(paste("Non-", CO[2]))
-      if(model=="PROMETHEUS"){
+      if(model%in%c("*BLUES","*AIM-CGE[Korea]","*GCAM-USA_COMMIT")){
         scale_x_continuous(breaks=unique(dtn_all$bar_position),minor_breaks = NULL,
-                           labels=c(tt[1], paste0(tt[2],"\n",labcat[2]), "Supply","Industry","Buildings","Transport","Industrial Processes",paste0(tt[2],"\n",labcat[icat])))
-      }else{if(model=="TIAM_Grantham_v3.2"){
+                           labels=c(tt[1], paste0(tt[2],"\n",labcat[2]), "Supply","Industry","Buildings","Transport","Industrial Processes","AFOLU",paste0(tt[2],"\n",labcat[icat])))
+      }else{if(model=="*India MARKAL"){
         scale_x_continuous(breaks=unique(dtn_all$bar_position),minor_breaks = NULL,
                            labels=c(tt[1], paste0(tt[2],"\n",labcat[2]), "Supply","Industry","Buildings","Transport",paste0(tt[2],"\n",labcat[icat])))
+      }else{if(model=="*TIMES-AUS"){
+        scale_x_continuous(breaks=unique(dtn_all$bar_position),minor_breaks = NULL,
+                           labels=c(tt[1], paste0(tt[2],"\n",labcat[2]), "Supply","Industry","Buildings","Transport","AFOLU",paste0(tt[2],"\n",labcat[icat])))
       }else{
         scale_x_continuous(breaks=unique(dtn_all$bar_position),minor_breaks = NULL,
-                           labels=c(tt[1], paste0(tt[2],"\n",labcat[2]), "Supply","Industry","Buildings","Transport","Industrial processes","AFOLU","Non-CO2",paste0(tt[2],"\n",labcat[icat])))
-      }}
+                           labels=c(tt[1], paste0(tt[2],"\n",labcat[2]), "Supply","Industry","Buildings","Transport","Industrial processes",paste0(tt[2],"\n",labcat[icat])))
+      }}}
     
-    ggsave(filename=paste0("~/disks/y/Project/E555163_COMMIT/Data/Database/Snapshots/Scripts/R/Bridge/Bridge/output/",file.prefix,unique(cdata$model),"-",labcat[icat],"_",tt[2],".png"),width=5, height=3.5)  
+    ggsave(filename=paste0("~/disks/y/Project/E555163_COMMIT/Data/Database/Snapshots/Scripts/R/Bridge/Bridge/output/",file.prefix,unique(cdata$region),"-",unique(cdata$model),"-",labcat[icat],"_",tt[2],".png"),width=5, height=3.5)  
     
   }
 }
