@@ -141,6 +141,17 @@ FCOF$value<-0
 FCOF$variable<-"Emissions|F-Gases"
 all=rbind(all,FCOF)
 
+# Add Secondary|Geothermal for BLUES and AIM/CGE[Korea]--------------------------------------------------
+GeoBL=all[variable=="Secondary Energy|Electricity"&model=="BLUES"]
+GeoBL$value<-0
+GeoBL$variable<-"Secondary Energy|Electricity|Geothermal"
+all=rbind(all,GeoBL)
+GeoKr=all[variable=="Secondary Energy|Electricity"&model=="AIM/CGE[Korea]"]
+GeoKr$value<-0
+GeoKr$variable<-"Secondary Energy|Electricity|Geothermal"
+all=rbind(all,GeoKr)
+
+
 
 
 # Copy NDC as CurPol for PECE ---------------------------------------------
