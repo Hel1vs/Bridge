@@ -391,22 +391,11 @@ ggsave(file=paste(cfg$outdir,"/2nd_test.png",sep=""),F1f,width=18,height=12,dpi=
   # national waterfall - tests ------------------------------------------------
 
 # select data
-cdata=all[model=="*BLUES"&region=="BRA"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, PROMETHEUS, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0, TIAM_Grantham_v3.2
+cdata=all[model=="*AIM/Enduse[Japan]"&region=="JPN"]  #*IPAC-AIM/technology V1.0 *AIM/CGE[Korea] *GCAM-USA_COMMIT *AIM/Enduse[Japan] *BLUES *RU-TIMES 3.2 *PECE V2.0 *GCAM_Canada *PRIMES_V1 *India MARKAL *TIMES-AUS *DDPP Energy
 model=unique(cdata$model)
-
-# add non-CO2
-if(model=="*BLUES"){ #if(!model%in%c("TIAM_Grantham_v3.2","PROMETHEUS")){
-  nonco2=cdata[variable%in%c("Emissions|CH4","Emissions|N2O")] #,"Emissions|F-Gases"
-  nonco2$unit<-NULL
-  nonco2=spread(nonco2,variable,value)
-  nonco2=nonco2%>%mutate(`Emissions|Non-CO2`=((`Emissions|CH4`*25)+(`Emissions|N2O`*298/1000))) #+`Emissions|F-Gases`
-  nonco2=data.table(gather(nonco2,variable,value,c("Emissions|CH4","Emissions|N2O","Emissions|Non-CO2"))) #"Emissions|F-Gases",
-  nonco2=nonco2[variable=="Emissions|Non-CO2"]
-  nonco2$unit<-"Mt CO2-equiv/yr"
-  setcolorder(nonco2,colnames(cdata))
-  cdata=rbind(cdata,nonco2)
-}
-if(unique(cdata$model=="AIM/CGE")){cdata$model<-"AIM-CGE"}
+if(unique(cdata$model=="*AIM/CGE[Korea]")){cdata$model<-"*AIM-CGE[Korea]"}
+if(unique(cdata$model=="*IPAC-AIM/technology V1.0")){cdata$model<-"*IPAC-AIM-technology V1.0"}
+if(unique(cdata$model=="*AIM/Enduse[Japan]")){cdata$model<-"*AIM-Enduse[Japan]"}
 
 # source script
 source("waterfall_bridge_national.R")
