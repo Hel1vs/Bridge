@@ -26,7 +26,7 @@ if(model%in%c("*BLUES","*AIM-CGE[Korea]","*GCAM-USA_COMMIT")){
                 "Emissions|CO2|Energy|Demand|Transportation",
                 "Emissions|CO2|Industrial Processes",
                 "Emissions|CO2|AFOLU")  
-}else{if(model=="*India MARKAL"){
+}else{if(model%in%c("*India MARKAL","*RU-TIMES 3.2","*GCAM_Canada")){
   vars <- c(    "Emissions|CO2|Energy|Supply",
                 "Emissions|CO2|Energy|Demand|Industry",
                 "Emissions|CO2|Energy|Demand|Residential and Commercial",
@@ -42,7 +42,7 @@ if(model%in%c("*BLUES","*AIM-CGE[Korea]","*GCAM-USA_COMMIT")){
                 "Emissions|CO2|Energy|Demand|Industry",
                 "Emissions|CO2|Energy|Demand|Residential and Commercial",
                 "Emissions|CO2|Energy|Demand|Transportation",
-                "Emissions|CO2|Industrial Processes") 
+                "Emissions|CO2|Industrial Processes") # ,  "Emissions|CO2|Industrial Processes"
 }}}
 
 
@@ -50,8 +50,8 @@ ylab <-  bquote(paste("Emissions [Mt", CO[2],"eq]"))
 titletag <- "Waterfall_"
 file.prefix <- "Waterfall_sector_"
 
-catsnat <- c("Bridge","NDCplus") #c("2Deg2020","Bridge")
-labcat <- c("Bridge","NDCplus") #c("2Deg2020","Bridge") 
+catsnat <- c("GPP","NDCplus") #c("2Deg2020","Bridge")
+labcat <- c("GPP","NDCplus") #c("2Deg2020","Bridge") 
 
 #choose reference scenario INDC or NoPOL
 reference_cat <- catsnat[2]
@@ -75,7 +75,7 @@ for(icat in c(1)){
     if(model%in%c("*BLUES","*AIM-CGE[Korea]","*GCAM-USA_COMMIT")){
       dtn_9 <- filter(dtn, Category==catsnat[1], variable %in% vars, period == tt[2]) %>%
         mutate(bar_position = "9") %>% factor.data.frame()       
-    }else{if(model=="*India MARKAL"){
+    }else{if(model%in%c("*India MARKAL","*RU-TIMES 3.2","*GCAM_Canada")){
       dtn_9 <- filter(dtn, Category==catsnat[1], variable %in% vars, period == tt[2]) %>%
         mutate(bar_position = "7") %>% factor.data.frame()        
     }else{
@@ -103,7 +103,7 @@ for(icat in c(1)){
     dtn_6 <- filter(dtn_tmp2, variable == vars[4], period == tt[2]) %>%
       mutate(value = diff_to_reference) %>% mutate(bar_position = "6")%>%  factor.data.frame()
     
-    if(!model%in%c("*India MARKAL")){
+    if(!model%in%c("*India MARKAL","RU-TIMES 3.2","*GCAM_Canada")){
       dtn_7 <- filter(dtn_tmp2, variable == vars[5], period == tt[2]) %>%
         mutate(value = diff_to_reference) %>% mutate(bar_position = "7")%>%  factor.data.frame()
     }
@@ -144,7 +144,7 @@ for(icat in c(1)){
     ydummy6<-data.frame("ydummy",sum(dtn_5_reduced[dtn_5_reduced$region == "ydummy",]$value)-sum(dtn_6_reduced$value),"total-dummy",6)
     names(ydummy6)<-reduction
     dtn_6_reduced = rbind(dtn_6_reduced,ydummy6)
-    if(!model%in%c("*India MARKAL")){
+    if(!model%in%c("*India MARKAL","*RU-TIMES 3.2","*GCAM_Canada")){
       ydummy7<-data.frame("ydummy",sum(dtn_6_reduced[dtn_6_reduced$region == "ydummy",]$value)-sum(dtn_7_reduced$value),"total-dummy",7)
       names(ydummy7)<-reduction
       dtn_7_reduced = rbind(dtn_7_reduced,ydummy7)
@@ -160,7 +160,7 @@ for(icat in c(1)){
     if(model%in%c("*BLUES","*AIM-CGE[Korea]","*GCAM-USA_COMMIT")){
       dtn_all=bind_rows(dtn_1_stack_reduced,dtn_2_stack_reduced, dtn_3_reduced, dtn_4_reduced, dtn_5_reduced, dtn_6_reduced,dtn_7_reduced,dtn_8_reduced, dtn_9_stack_reduced)  
     }else{
-      if(model=="*India MARKAL"){
+      if(model%in%c("*India MARKAL","*RU-TIMES 3.2","*GCAM_Canada")){
         dtn_all=bind_rows(dtn_1_stack_reduced,dtn_2_stack_reduced, dtn_3_reduced, dtn_4_reduced, dtn_5_reduced, dtn_6_reduced,dtn_9_stack_reduced)
       }else{
         dtn_all=bind_rows(dtn_1_stack_reduced,dtn_2_stack_reduced, dtn_3_reduced, dtn_4_reduced, dtn_5_reduced, dtn_6_reduced,dtn_7_reduced,dtn_9_stack_reduced)
@@ -194,7 +194,7 @@ for(icat in c(1)){
       if(model%in%c("*BLUES","*AIM-CGE[Korea]","*GCAM-USA_COMMIT")){
         scale_x_continuous(breaks=unique(dtn_all$bar_position),minor_breaks = NULL,
                            labels=c(tt[1], paste0(tt[2],"\n",labcat[2]), "Supply","Industry","Buildings","Transport","Industrial Processes","AFOLU",paste0(tt[2],"\n",labcat[icat])))
-      }else{if(model=="*India MARKAL"){
+      }else{if(model%in%c("*India MARKAL","*RU-TIMES 3.2","*GCAM_Canada")){
         scale_x_continuous(breaks=unique(dtn_all$bar_position),minor_breaks = NULL,
                            labels=c(tt[1], paste0(tt[2],"\n",labcat[2]), "Supply","Industry","Buildings","Transport",paste0(tt[2],"\n",labcat[icat])))
       }else{if(model=="*TIMES-AUS"){
@@ -205,7 +205,7 @@ for(icat in c(1)){
                            labels=c(tt[1], paste0(tt[2],"\n",labcat[2]), "Supply","Industry","Buildings","Transport","Industrial processes",paste0(tt[2],"\n",labcat[icat])))
       }}}
     
-    ggsave(filename=paste0("~/disks/y/Project/E555163_COMMIT/Data/Database/Snapshots/Scripts/R/Bridge/Bridge/output/",file.prefix,unique(cdata$region),"-",unique(cdata$model),"-",labcat[icat],"_",tt[2],".png"),width=5, height=3.5)  
+    ggsave(filename=paste0("C:/Akademia/Projetos/Bridge_1/output/",file.prefix,unique(cdata$region),"-",labcat[icat],"_",tt[2],".png"),width=5, height=3.5)  
     
   }
 }
