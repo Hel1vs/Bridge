@@ -5,7 +5,7 @@ scencateg <- "scen_categ_bridge"  #"scen_categ_COMMIT"
 variables <- "variables_bridge"  #"variables_xCut"
 adjust <- "adjust_reporting_COMMIT"
 addvars <- T
-datafile <-"commit_bridge_compare_20201026-093320" #commit_cd-links_compare_20191015-114544
+datafile <-"commit_bridge_compare_20201103-181515" #commit_cd-links_compare_20191015-114544
 source("load_data.R") 
 
 # check whether there's only one scenario per category for each model
