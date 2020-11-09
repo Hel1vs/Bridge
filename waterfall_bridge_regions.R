@@ -99,6 +99,7 @@ for(icat in c(1)){
     dtn_all <- data.frame(dtn_all)
     
     dtn_all$bar_position <- as.numeric(dtn_all$bar_position)
+    dtn_all$value <- dtn_all$value/1000
     
     ### waterfall plot - TODO: add 2030 and 2050 in one graph? save plots in environment for grid arrange?
     #TODO: layout Filip
