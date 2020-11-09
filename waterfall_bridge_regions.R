@@ -13,7 +13,7 @@ factor.data.frame <- function(df) {
 
 vars <- c("R5ASIA","R5LAM","R5REF","R5OECD90+EU","R5MAF")  
 
-ylab <-  bquote(paste("Emissions [Mt", CO[2],"eq]"))
+ylab <-  bquote(paste("Emissions [Gt", CO[2],"eq]"))
 titletag <- "Waterfall_"
 file.prefix <- "Fig2_region_"
 
