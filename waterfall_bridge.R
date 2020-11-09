@@ -41,7 +41,7 @@ if(model=="PROMETHEUS"){
 }}
 
 
-ylab <-  bquote(paste("Emissions [Mt", CO[2],"eq]"))
+ylab <-  bquote(paste("Emissions [Gt", CO[2],"eq]"))
 titletag <- "Waterfall_"
 file.prefix <- "Fig2_sector_"
 
@@ -179,15 +179,16 @@ for(icat in c(1)){
     dtn_all <- data.frame(dtn_all)
     
     dtn_all$bar_position <- as.numeric(dtn_all$bar_position)
+    dtn_all$value <- dtn_all$value/1000
     
     ### waterfall plot - TODO: add 2030 and 2050 in one graph? save plots in environment for grid arrange?
     #TODO: layout Filip
     ggplot()+
       geom_bar(data = dtn_all, aes(x = bar_position, y = value , fill = variable ,alpha=alpha),stat='identity',width=0.7)+
-      scale_fill_manual(values=c("total"="#cc0000","Emissions|CO2|Energy|Demand|Residential and Commercial"="#7777ff","Emissions|CO2|Energy|Demand|Industry"="#bb7700",
-                                 "Emissions|CO2|Energy|Supply"="#993a44","Emissions|CO2|Energy|Demand|Transportation"="#222288","Emissions|CO2|Energy"="transparent",
-                                 "Emissions|CO2|Non-Energy"="#006400","Emissions|Non-CO2"="#a9a9a9","total-dummy"="transparent",
-                                 "Emissions|CO2|Industrial Processes"="#006400","Emissions|CO2|AFOLU"="#7cfc00"),
+      scale_fill_manual(values=c("total"="#cc0000","Emissions|CO2|Energy|Demand|Residential and Commercial"="#7777ff","Emissions|CO2|Energy|Demand|Industry"="#228888",
+                                 "Emissions|CO2|Energy|Supply"="#552288","Emissions|CO2|Energy|Demand|Transportation"="#222288","Emissions|CO2|Energy"="transparent",
+                                 "Emissions|CO2|Non-Energy"="#006400","Emissions|Non-CO2"="#7cfc00","total-dummy"="transparent",
+                                 "Emissions|CO2|Industrial Processes"="#a9a9a9","Emissions|CO2|AFOLU"="#006400"),
                         labels=c("Emissions|CO2|Energy|Demand|Transportation"="Transport","Emissions|CO2|Energy|Demand|Industry"="Industry",
                                  "Emissions|CO2|Energy|Demand|Residential and Commercial"="Buildings","Emissions|CO2|Energy|Supply"="Supply",
                                  "Emissions|CO2|Non-Energy"="Non-Energy CO2","Emissions|Non-CO2"="Non-CO2","total"="Total","total-dummy"="",
@@ -195,7 +196,7 @@ for(icat in c(1)){
                         name="Sector",guide=F) +
       geom_hline(yintercept=0)+
       ggtitle(unique(cdata$model))+ #paste(country,"- 2050 emissions in reference scenario vs. decarbonisation scenario")
-      scale_alpha(guide = "none")+coord_cartesian(ylim=c(-10000,60000))+
+      scale_alpha(guide = "none")+coord_cartesian(ylim=c(-10,60))+
       ylab(ylab)+xlab("") + theme_bw() + theme(axis.text.x = element_text(angle=90))+
       # scale_x_continuous(breaks=unique(dtn_all$bar_position),minor_breaks = NULL,
       #                      labels=c(tt[1], paste0(tt[2],"\n",labcat[2]), "Supply","Industry","Buildings","Transport","Industrial processes","AFOLU","Non-CO2",paste0(tt[2],"\n",labcat[icat]))) #bquote(paste("Non-", CO[2]))
