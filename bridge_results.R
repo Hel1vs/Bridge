@@ -1029,7 +1029,7 @@ scens = c("CurPol","NDCplus","Bridge","2Deg2020")
 ### Figure elements
 # Figure 2a Sectors
 # select data
-cdata=all[model=="AIM/CGE"&region=="World"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, PROMETHEUS, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0, TIAM_Grantham_v3.2
+cdata=all[model=="POLES GECO2019"&region=="World"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, PROMETHEUS, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0, TIAM_Grantham_v3.2
 model=unique(cdata$model)
 
 # add non-CO2
@@ -1050,12 +1050,12 @@ if(unique(cdata$model=="AIM/CGE")){cdata$model<-"AIM-CGE"}
 source("waterfall_bridge.R")
 
 # Figure 2b countries
-cdata=all[model=="AIM/CGE"&region%in%c("R5ASIA","R5LAM","R5REF","R5OECD90+EU","R5MAF")&variable=="Emissions|Kyoto Gases"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0
+cdata=all[model=="WITCH 5.0"&region%in%c("R5ASIA","R5LAM","R5REF","R5OECD90+EU","R5MAF")&variable=="Emissions|Kyoto Gases"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0
 if(unique(cdata$model=="AIM/CGE")){cdata$model<-"AIM-CGE"}
 source("waterfall_bridge_regions.R")
 
 # for PROMETHEUS and TIAM for CO2 instead of GHG
-cdata=all[model=="TIAM_Grantham_v3.2"&region%in%c("R5ASIA","R5LAM","R5REF","R5OECD90+EU","R5MAF")&variable=="Emissions|CO2"] #TIAM_Grantham_v3.2, PROMETHEUS
+cdata=all[model=="PROMETHEUS"&region%in%c("R5ASIA","R5LAM","R5REF","R5OECD90+EU","R5MAF")&variable=="Emissions|CO2"] #TIAM_Grantham_v3.2, PROMETHEUS
 source("waterfall_bridge_regions.R")
 
 ### Figure collection
@@ -1072,8 +1072,16 @@ plotdata=all[variable%in%vars & Category%in%scens&!Scope=="national"&region=="Wo
 #plotdata$period=as.numeric(as.character(plotdata$period))
 range=all[variable%in%vars & Category%in%scens&!Scope=="national"&region=="World",list(min=min(value,na.rm=T),max=max(value,na.rm=T),med=median(value,na.rm=T)),by=c("Category","variable","period")]
 #range$period=as.numeric(as.character(range$period))
+
+# emissions in Gt
+plotdata$value=plotdata$value/1000
+range$min=range$min/1000
+range$max=range$max/1000
+range$med=range$med/1000
+
 F3a = ggplot(plotdata) 
 F3a = F3a + geom_line(aes(x=period,y=value,colour=Category, linetype=model),size=1.5)
+F3a = F3a + geom_line(data=range,aes(x=period,y=med,colour=Category),size=2.5)
 F3a = F3a + geom_ribbon(data=range,aes(x=period,ymin=min, ymax=max,fill=Category),alpha=0.5)
 F3a = F3a + geom_segment(data=range[period %in% c(2050) & Category=="CurPol"], stat="identity", aes(x=2050, xend=2050, y=min, yend=max, size=1.5, colour=Category), show.legend=FALSE) 
 F3a = F3a + geom_segment(data=range[period %in% c(2050) & Category=="NDCplus"], stat="identity", aes(x=2050, xend=2050, y=min, yend=max, size=1.5, colour=Category), show.legend=FALSE) 
@@ -1085,12 +1093,12 @@ F3a = F3a + geom_point(data=range[period %in% c(2050)&Category%in%c("2Deg2020")]
 F3a = F3a + geom_point(data=range[period %in% c(2050)&Category%in%c("Bridge","CurPol","NDCplus")],aes(x=2050.2,y=med,colour=Category,size=1.5),show.legend = FALSE)
 F3a = F3a + geom_point(data=range[period %in% c(2030)&Category%in%c("2Deg2020")],aes(x=2030.7,y=med,colour=Category,size=1.5),show.legend = FALSE)
 F3a = F3a + geom_point(data=range[period %in% c(2030)&Category%in%c("Bridge")],aes(x=2030.2,y=med,colour=Category,size=1.5),show.legend = FALSE)
-F3a = F3a + xlim(2010,2051)+ scale_y_continuous(breaks=c(0,10000,20000,30000,40000,50000,60000,70000,80000),limits=c(0,85000))
+F3a = F3a + xlim(2010,2051)+ scale_y_continuous(breaks=c(0,10,20,30,40,50,60,70,80),limits=c(0,85))
 F3a = F3a + scale_colour_manual(values=plotstyle(scens))
 F3a = F3a + scale_fill_manual(values=plotstyle(scens))
 F3a = F3a + ylab(paste(unique(all[variable%in%vars]$variable),"[",unique(all[variable%in%vars]$unit),"]"))+ xlab("")
-F3a = F3a + theme_bw() + theme(axis.text.y=element_text(size=16)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=18)) +
-  theme(axis.text.x = element_text(size=16,angle=90)) + theme(legend.text=element_text(size=14),legend.title=element_text(size=14))
+F3a = F3a + theme_bw() + theme(axis.text.y=element_text(size=20)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=20)) +
+  theme(axis.text.x = element_text(size=20,angle=90)) + theme(legend.text=element_text(size=16),legend.title=element_blank(),legend.key.width = unit(1,"cm")) #legend.key.size = unit(1.5, "cm"),
 F3a = F3a + theme(legend.position="bottom")
 F3a
 ggsave(file=paste(cfg$outdir,"/F3a_GHG_all_global_models_world_CurPol-NDC-Bridge-2Deg2020_funnel.png",sep=""),F3a,width=16,height=12,dpi=200)
@@ -1238,14 +1246,14 @@ costsGDPm=costsGDP[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=me
 
 F4b = ggplot()
 F4b = F4b + geom_bar(data=costsGDPm,aes(x=period,y=median,fill=Scenario),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
-F4b = F4b + geom_point(data=costsGDP, aes(x=period,y=value,shape=Model,colour=Scenario,group=Scenario),size=3,position=position_dodge(width=0.66))
-F4b = F4b + geom_errorbar(data=costsGDPm,aes(x=period,ymin=min,ymax=max,colour=Scenario),position=position_dodge(width=0.66))
+F4b = F4b + geom_point(data=costsGDP, aes(x=period,y=value,shape=Model,colour=Scenario,group=Scenario),size=5,position=position_dodge(width=0.66))
+F4b = F4b + geom_errorbar(data=costsGDPm,aes(x=period,ymin=min,ymax=max,colour=Scenario),position=position_dodge(width=0.66),width=0.66)
 F4b = F4b + scale_shape_manual(values=cfg$man_shapes)
 F4b = F4b + scale_color_manual(values=c("Bridgevs2020"="#56B4E9","Bridgevs2030"="#2860E9"),labels=c("Bridgevs2020"="Bridge vs 2Deg2020","Bridgevs2030"="Bridge vs 2Deg2030"))
 F4b = F4b + scale_fill_manual(values=c("Bridgevs2020"="#56B4E9","Bridgevs2030"="#2860E9"),labels=c("Bridgevs2020"="Bridge vs 2Deg2020","Bridgevs2030"="Bridge vs 2Deg2030"))
-F4b = F4b + theme_bw() + theme(axis.text.y=element_text(size=16)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=18)) +
-  theme(axis.text.x = element_text(size=14)) + theme(legend.text=element_text(size=16),legend.title=element_text(size=18))
-F4b = F4b + ylab("GDP loss in Bridge relative to 2Deg2020 or 2Deg2030 (%)")
+F4b = F4b + theme_bw() + theme(axis.text.y=element_text(size=24)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=24)) +
+  theme(axis.text.x = element_text(size=24)) + theme(legend.text=element_text(size=24),legend.title=element_text(size=26))
+F4b = F4b + ylab("GDP loss in Bridge relative to 2Deg2020 or 2Deg2030 (%)")+xlab("")
 F4b
 ggsave(file=paste(cfg$outdir,"/F4b_policy_costs_GDP_bar.png",sep=""),F4b,width=18,height=12,dpi=300)
 
