@@ -1340,3 +1340,18 @@ gap2 = data.table(gather(gap,Category,value,c('2Deg2020','Bridge','CurPol','NDCp
 gap2 =gap2[Category%in%c('gap','reduction','closure')]
 setnames(gap2,'Category','Indicator')
 gaprange = gap2[,list(median=median(value,na.rm=T),min=min(value,na.rm=T),max=max(value,na.rm=T)),by=c('Indicator','period','region')]
+
+
+# Check AFOLU reductions --------------------------------------------------
+AFOLU = all[Scope=="global"&variable=="Emissions|CO2|AFOLU"&region%in%c(regions,"World")&period%in%c(2015,2030,2050)&Category%in%scens]
+AFOLU$scenario <- NULL
+AFOLU$Baseline <- NULL
+AFOLU = spread(AFOLU,period,value)
+AFOLU = AFOLU%>%mutate(red2030=(`2030`-`2015`)/`2015`*100,red2050=(`2050`-`2015`)/`2015`*100)
+AFOLU = data.table(gather(AFOLU,period,value,c('2015','2030','2050','red2030','red2050')))
+AFOLU =AFOLU[period%in%c('red2030','red2050')]
+AFOLU[period=="red2030"]$period<-2030
+AFOLU[period=="red2050"]$period<-2050
+AFOLU$variable<-"Reduction of AFOLU CO2 emissions"
+AFOLUrange = AFOLU[,list(median=median(value,na.rm=T),min=min(value,na.rm=T),max=max(value,na.rm=T)),by=c("Category",'variable','period','region')]
+
