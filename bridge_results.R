@@ -1055,7 +1055,7 @@ if(unique(cdata$model=="AIM/CGE")){cdata$model<-"AIM-CGE"}
 source("waterfall_bridge_regions.R")
 
 # for PROMETHEUS and TIAM for CO2 instead of GHG
-cdata=all[model=="PROMETHEUS"&region%in%c("R5ASIA","R5LAM","R5REF","R5OECD90+EU","R5MAF")&variable=="Emissions|CO2"] #TIAM_Grantham_v3.2, PROMETHEUS
+cdata=all[model=="TIAM_Grantham_v3.2"&region%in%c("R5ASIA","R5LAM","R5REF","R5OECD90+EU","R5MAF")&variable=="Emissions|CO2"] #TIAM_Grantham_v3.2, PROMETHEUS
 source("waterfall_bridge_regions.R")
 
 ### Figure collection
