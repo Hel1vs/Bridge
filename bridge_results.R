@@ -8,6 +8,12 @@ addvars <- F
 datafile <-"commit_bridge_compare_20201020-100908" #commit_cd-links_compare_20191015-114544
 source("load_data.R") 
 
+# Temporarily add missing REMIND data from separate file, to remove when database upload complete
+REMINDPE = fread("data/missingPE_REMIND1.csv",sep=";", header=TRUE)
+REMINDPE <- process_data(REMINDPE,scens)
+REMINDPE <- factor.data.frame(REMINDPE)
+all <- rbind(all,REMINDPE)
+
 # check whether there's only one scenario per category for each model
 check=all[,list(unique(scenario)),by=c("model","Category")]
 View(check) #TODO Check Bridge IPAC included in graphs?
