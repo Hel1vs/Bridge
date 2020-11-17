@@ -164,4 +164,25 @@ ipac=all[Category=="BAU"&model=="IPAC-AIM/technology V1.0"]
 ipac$Category<-"CurPol"
 all=rbind(all,ipac)
 
+# Adjustments DDPP ---------------------------------------------
+ddpp1=all[Category=="BaU"&model=="DDPP Energy"]
+ddpp1$Category<-"BAU"
+all=rbind(all,ddpp1)
+
+ddpp2=all[Category=="CM1"&model=="DDPP Energy"]
+ddpp2$Category<-"CurPol"
+all=rbind(all,ddpp2)
+
+ddpp3=all[Category=="CM2"&model=="DDPP Energy"]
+ddpp3$Category<-"NDCPlus"
+all=rbind(all,ddpp3)
+
+ddpp4=all[Category=="CM3"&model=="DDPP Energy"]
+ddpp4$Category<-"GPP"
+all=rbind(all,ddpp4)
+
+ddpp5=all[Category=="CM4"&model=="DDPP Energy"]
+ddpp5$Category<-"Bridge"
+all=rbind(all,ddpp5)
+
 

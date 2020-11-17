@@ -5,7 +5,7 @@ scencateg <- "scen_categ_bridge"  #"scen_categ_COMMIT"
 variables <- "variables_bridge"  #"variables_xCut"
 adjust <- "adjust_reporting_COMMIT"
 addvars <- T
-datafile <-"commit_bridge_compare_20201103-181515" #commit_cd-links_compare_20191015-114544
+datafile <-"commit_bridge_compare_20201110-164653" #commit_cd-links_compare_20191015-114544
 source("load_data.R") 
 
 # check whether there's only one scenario per category for each model
@@ -56,15 +56,15 @@ ca<-plot_lineNationalScens(reg = "CAN", dt = all, vars = "Emissions|CO2", scensn
 c<-plot_lineNationalScens(reg = "CHN", dt = all, vars = "Emissions|CO2", scensnat = scens, scensglob = scens,
                           ylab = "CO2 Emissions (MtCO2/year)", title="China (IPAC)", file_pre = file_pre, xlim=xlim2010)
 e<-plot_lineNationalScens(reg = "EU", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                          ylab = ylab, title="EU (PRIMES: -, GEM-E3: --)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(0,8000)
+                          ylab = ylab, title="EU (PRIMES)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(0,8000)
 j<-plot_lineNationalScens(reg = "JPN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab,title="Japan (AIM/E-NIES)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(-200,1600)
 r<-plot_lineNationalScens(reg = "RUS", dt = all, vars = "Emissions|CO2|Energy", scensnat = scens, scensglob = scens,
                           ylab = "CO2 Emissions (MtCO2/year)", title="Russia (RU-TIMES)",file_pre = file_pre, xlim=xlim2010) #,ylim=c(0,2500)
 i<-plot_lineNationalScens(reg = "IND", dt = all, vars = "Emissions|CO2", scensnat = scens, scensglob = scens,
                           ylab = "CO2 Emissions (MtCO2/year)", title="India (IND-MARKAL)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(0,15000)
-id<-plot_lineNationalScens(reg = "IDN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                           ylab = ylab, title="Indonesia (DDPP Energy)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(0,15000)
+id<-plot_lineNationalScens(reg = "IDN", dt = all, vars = "Emissions|CO2|Energy", scensnat = scens, scensglob = scens,
+                           ylab = "CO2 Emissions (MtCO2/year)", title="Indonesia (DDPP Energy)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(0,15000)
 u<-plot_lineNationalScens(reg = "USA", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab, title="USA (GCAM_USA)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(-500,8000)
 k<-plot_lineNationalScens(reg = "ROK", dt = all, vars = vars, scensnat = scens, scensglob = scens,
@@ -106,7 +106,7 @@ ca<-plot_lineNationalScens(reg = "CAN", dt = all, vars = vars, scensnat = scens,
 c<-plot_lineNationalScens(reg = "CHN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab, title="China (IPAC)", file_pre = file_pre, xlim=xlim2010)
 e<-plot_lineNationalScens(reg = "EU", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                          ylab = ylab, title="EU (PRIMES: -, GEM-E3: --)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(0,8000)
+                          ylab = ylab, title="EU (PRIMES)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(0,8000)
 j<-plot_lineNationalScens(reg = "JPN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab,title="Japan (AIM/E-NIES)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(-200,1600)
 r<-plot_lineNationalScens(reg = "RUS", dt = all, vars = vars, scensnat = scens, scensglob = scens,
@@ -158,7 +158,7 @@ ca<-plot_lineNationalScens(reg = "CAN", dt = all, vars = vars, scensnat = scens,
 c<-plot_lineNationalScens(reg = "CHN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab, title="China (IPAC)", file_pre = file_pre, xlim=xlim2010)
 e<-plot_lineNationalScens(reg = "EU", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                          ylab = ylab, title="EU (PRIMES: -, GEM-E3: --)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(0,8000)
+                          ylab = ylab, title="EU (PRIMES)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(0,8000)
 j<-plot_lineNationalScens(reg = "JPN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab,title="Japan (AIM/E-NIES)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(-200,1600)
 r<-plot_lineNationalScens(reg = "RUS", dt = all, vars = vars, scensnat = scens, scensglob = scens,
@@ -211,7 +211,7 @@ ca<-plot_lineNationalScens(reg = "CAN", dt = all, vars = vars, scensnat = scens,
 c<-plot_lineNationalScens(reg = "CHN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab, title="China (IPAC)", file_pre = file_pre, xlim=xlim2010)
 e<-plot_lineNationalScens(reg = "EU", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                          ylab = ylab, title="EU (PRIMES: -, GEM-E3: --)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(0,8000)
+                          ylab = ylab, title="EU (PRIMES)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(0,8000)
 j<-plot_lineNationalScens(reg = "JPN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab,title="Japan (AIM/E-NIES)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(-200,1600)
 r<-plot_lineNationalScens(reg = "RUS", dt = all, vars = vars, scensnat = scens, scensglob = scens,
@@ -264,7 +264,7 @@ ca<-plot_lineNationalScens(reg = "CAN", dt = all, vars = vars, scensnat = scens,
 c<-plot_lineNationalScens(reg = "CHN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab, title="China (IPAC)", file_pre = file_pre, xlim=xlim2010)
 e<-plot_lineNationalScens(reg = "EU", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                          ylab = ylab, title="EU (PRIMES: -, GEM-E3: --)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(0,8000)
+                          ylab = ylab, title="EU (PRIMES)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(0,8000)
 j<-plot_lineNationalScens(reg = "JPN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab,title="Japan (AIM/E-NIES)", file_pre = file_pre, xlim=xlim2010) #,ylim=c(-200,1600)
 r<-plot_lineNationalScens(reg = "RUS", dt = all, vars = vars, scensnat = scens, scensglob = scens,
@@ -319,7 +319,7 @@ ca<-plot_lineNationalScens(reg = "CAN", dt = all, vars = vars, scensnat = scens,
 c<-plot_lineNationalScens(reg = "CHN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab, title="China (IPAC)", file_pre = file_pre, xlim=xlim2010,ylim = ylimpercent)
 e<-plot_lineNationalScens(reg = "EU", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                          ylab = ylab, title="EU (PRIMES: -, GEM-E3: --)", file_pre = file_pre, xlim=xlim2010,ylim = ylimpercent) #,ylim=c(0,8000)
+                          ylab = ylab, title="EU (PRIMES)", file_pre = file_pre, xlim=xlim2010,ylim = ylimpercent) #,ylim=c(0,8000)
 j<-plot_lineNationalScens(reg = "JPN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab,title="Japan (AIM/E-NIES)", file_pre = file_pre, xlim=xlim2010,ylim = ylimpercent) #,ylim=c(-200,1600)
 r<-plot_lineNationalScens(reg = "RUS", dt = all, vars = vars, scensnat = scens, scensglob = scens,
@@ -370,7 +370,7 @@ ca<-plot_lineNationalScens(reg = "CAN", dt = all, vars = vars, scensnat = scens,
 c<-plot_lineNationalScens(reg = "CHN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab, title="China (IPAC)", file_pre = file_pre, xlim=xlim2010,ylim = ylimpercent)
 e<-plot_lineNationalScens(reg = "EU", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                          ylab = ylab, title="EU (PRIMES: -, GEM-E3: --)", file_pre = file_pre, xlim=xlim2010,ylim = ylimpercent) #,ylim=c(0,8000)
+                          ylab = ylab, title="EU (PRIMES)", file_pre = file_pre, xlim=xlim2010,ylim = ylimpercent) #,ylim=c(0,8000)
 j<-plot_lineNationalScens(reg = "JPN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab,title="Japan (AIM/E-NIES)", file_pre = file_pre, xlim=xlim2010,ylim = ylimpercent) #,ylim=c(-200,1600)
 r<-plot_lineNationalScens(reg = "RUS", dt = all, vars = vars, scensnat = scens, scensglob = scens,
@@ -421,7 +421,7 @@ ca<-plot_lineNationalScens(reg = "CAN", dt = all, vars = vars, scensnat = scens,
 c<-plot_lineNationalScens(reg = "CHN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab, title="China (IPAC)", file_pre = file_pre, xlim=xlim2010,ylim = ylimpercent)
 e<-plot_lineNationalScens(reg = "EU", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                          ylab = ylab, title="EU (PRIMES: -, GEM-E3: --)", file_pre = file_pre, xlim=xlim2010,ylim = ylimpercent) #,ylim=c(0,8000)
+                          ylab = ylab, title="EU (PRIMES)", file_pre = file_pre, xlim=xlim2010,ylim = ylimpercent) #,ylim=c(0,8000)
 j<-plot_lineNationalScens(reg = "JPN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab,title="Japan (AIM/E-NIES)", file_pre = file_pre, xlim=xlim2010,ylim = ylimpercent) #,ylim=c(-200,1600)
 r<-plot_lineNationalScens(reg = "RUS", dt = all, vars = vars, scensnat = scens, scensglob = scens,
@@ -471,7 +471,7 @@ ca<-plot_lineNationalScens(reg = "CAN", dt = all, vars = vars, scensnat = scens,
 c<-plot_lineNationalScens(reg = "CHN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab, title="China (IPAC)", file_pre = file_pre, xlim=xlim2010,ylim = ylimpercent)
 e<-plot_lineNationalScens(reg = "EU", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                          ylab = ylab, title="EU (PRIMES: -, GEM-E3: --)", file_pre = file_pre, xlim=xlim2010,ylim = ylimpercent) #,ylim=c(0,8000)
+                          ylab = ylab, title="EU (PRIMES)", file_pre = file_pre, xlim=xlim2010,ylim = ylimpercent) #,ylim=c(0,8000)
 j<-plot_lineNationalScens(reg = "JPN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab,title="Japan (AIM/E-NIES)", file_pre = file_pre, xlim=xlim2010,ylim = ylimpercent) #,ylim=c(-200,1600)
 r<-plot_lineNationalScens(reg = "RUS", dt = all, vars = vars, scensnat = scens, scensglob = scens,
@@ -594,7 +594,7 @@ ca<-plot_lineNationalScens(reg = "CAN", dt = all, vars = vars, scensnat = scens,
 c<-plot_lineNationalScens(reg = "CHN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = "GHG emissions [MtCO2e]", title="China (IPAC)", file_pre = "GHG")
 e<-plot_lineNationalScens(reg = "EU", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                          ylab = "GHG emissions [MtCO2e]", title="EU (PRIMES: -, GEM-E3: --)", file_pre = "GHG") #,ylim=c(0,8000)
+                          ylab = "GHG emissions [MtCO2e]", title="EU (PRIMES)", file_pre = "GHG") #,ylim=c(0,8000)
 j<-plot_lineNationalScens(reg = "JPN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = "GHG emissions [MtCO2e]",title="Japan (AIM/E-NIES)", file_pre = "GHG") #,ylim=c(-200,1600)
 r<-plot_lineNationalScens(reg = "RUS", dt = all, vars = vars, scensnat = scens, scensglob = scens,
@@ -644,7 +644,7 @@ ca<-plot_lineNationalScens(reg = "CAN", dt = all, vars = vars, scensnat = scens,
 c<-plot_lineNationalScens(reg = "CHN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab, title="China (IPAC)", file_pre = file_pre)
 e<-plot_lineNationalScens(reg = "EU", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                          ylab = ylab, title="EU (PRIMES: -, GEM-E3: --)", file_pre = file_pre) #,ylim=c(0,8000)
+                          ylab = ylab, title="EU (PRIMES)", file_pre = file_pre) #,ylim=c(0,8000)
 j<-plot_lineNationalScens(reg = "JPN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab,title="Japan (AIM/E-NIES)", file_pre = file_pre) #,ylim=c(-200,1600)
 r<-plot_lineNationalScens(reg = "RUS", dt = all, vars = vars, scensnat = scens, scensglob = scens,
@@ -694,7 +694,7 @@ ca<-plot_lineNationalScens(reg = "CAN", dt = all, vars = vars, scensnat = scens,
 c<-plot_lineNationalScens(reg = "CHN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab, title="China (IPAC)", file_pre = file_pre)
 e<-plot_lineNationalScens(reg = "EU", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                          ylab = ylab, title="EU (PRIMES: -, GEM-E3: --)", file_pre = file_pre) #,ylim=c(0,8000)
+                          ylab = ylab, title="EU (PRIMES)", file_pre = file_pre) #,ylim=c(0,8000)
 j<-plot_lineNationalScens(reg = "JPN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab,title="Japan (AIM/E-NIES)", file_pre = file_pre) #,ylim=c(-200,1600)
 r<-plot_lineNationalScens(reg = "RUS", dt = all, vars = vars, scensnat = scens, scensglob = scens,
@@ -994,7 +994,7 @@ ca<-plot_lineNationalScens(reg = "CAN", dt = all, vars = vars, scensnat = scens,
 c<-plot_lineNationalScens(reg = "CHN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab, title="China (IPAC)", file_pre = file_pre)
 e<-plot_lineNationalScens(reg = "EU", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                          ylab = ylab, title="EU (PRIMES: -, GEM-E3: --)", file_pre = file_pre) #,ylim=c(0,8000)
+                          ylab = ylab, title="EU (PRIMES)", file_pre = file_pre) #,ylim=c(0,8000)
 j<-plot_lineNationalScens(reg = "JPN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab,title="Japan (AIM/E-NIES)", file_pre = file_pre) #,ylim=c(-200,1600)
 r<-plot_lineNationalScens(reg = "RUS", dt = all, vars = vars, scensnat = scens, scensglob = scens,
@@ -1069,7 +1069,7 @@ ca<-plot_lineNationalScens(reg = "CAN", dt = all, vars = vars, scensnat = scens,
 c<-plot_lineNationalScens(reg = "CHN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab, title="China (IPAC)", file_pre = file_pre,ylim=c(0,1500))
 e<-plot_lineNationalScens(reg = "EU", dt = all, vars = vars, scensnat = scens, scensglob = scens,
-                          ylab = ylab, title="EU (PRIMES: -, GEM-E3: --)", file_pre = file_pre,ylim=c(0,1500)) 
+                          ylab = ylab, title="EU (PRIMES)", file_pre = file_pre,ylim=c(0,1500)) 
 j<-plot_lineNationalScens(reg = "JPN", dt = all, vars = vars, scensnat = scens, scensglob = scens,
                           ylab = ylab,title="Japan (AIM/E-NIES)", file_pre = file_pre,ylim=c(0,1500)) #,ylim=c(-200,1600)
 r<-plot_lineNationalScens(reg = "RUS", dt = all, vars = vars, scensnat = scens, scensglob = scens,
@@ -1426,7 +1426,7 @@ ggsave(file=paste(cfg$outdir,"/F1_gridarrange_alt.png",sep=""),F1alt,width=24,he
 ### Figure elements
 # Figure 2a Sectors
 # select data
-cdata=all[model=="TIAM_Grantham_v3.2"&region=="World"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, PROMETHEUS, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0, TIAM_Grantham_v3.2
+cdata=all[model=="COPPE-COFFEE 1.0"&region=="World"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, PROMETHEUS, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0, TIAM_Grantham_v3.2
 model=unique(cdata$model)
 
 # add non-CO2
@@ -1447,7 +1447,7 @@ if(unique(cdata$model=="AIM/CGE")){cdata$model<-"AIM-CGE"}
 source("waterfall_bridge.R")
 
 # Figure 2b countries
-cdata=all[model=="WITCH 5.0"&region%in%c("R5ASIA","R5LAM","R5REF","R5OECD90+EU","R5MAF")&variable=="Emissions|Kyoto Gases"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0
+cdata=all[model=="COPPE-COFFEE 1.0"&region%in%c("R5ASIA","R5LAM","R5REF","R5OECD90+EU","R5MAF")&variable=="Emissions|Kyoto Gases"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0
 if(unique(cdata$model=="AIM/CGE")){cdata$model<-"AIM-CGE"}
 source("waterfall_bridge_regions.R")
 

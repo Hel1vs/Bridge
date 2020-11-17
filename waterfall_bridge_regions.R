@@ -112,7 +112,7 @@ for(icat in c(1)){
       ylab(ylab)+xlab("") + theme_bw() + theme(axis.text.x = element_text(angle=90))+
       scale_x_continuous(breaks=unique(dtn_all$bar_position),minor_breaks = NULL,
                          labels=c(tt[1], paste0(tt[2],"\n",labcat[2]), "Asia","Latin America","Middle East and Africa","OECD90+EU","Reforming economies",paste0(tt[2],"\n",labcat[icat]))) #bquote(paste("Non-", CO[2]))
-    ggsave(filename=paste0("~/disks/y/Project/E555163_COMMIT/Data/Database/Snapshots/Scripts/R/Bridge/Bridge/output/",file.prefix,unique(cdata$model),"-",labcat[icat],"_",tt[2],".png"),width=5, height=3.5)  
+    ggsave(filename=paste0("C:/Akademia/Projetos/Bridge_1/output/waterfall/",file.prefix,unique(cdata$model),"-",labcat[icat],"_",tt[2],".png"),width=5, height=3.5)  
     
   }
 }

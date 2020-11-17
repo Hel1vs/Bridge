@@ -135,7 +135,7 @@ if (file.exists(paste0("data/",cfg$infile,reg,"_proc.Rdata")) & !b.procdata) {
   #set scope to "national" for national models
   all[all$model %in% cfg$models_nat,]$Scope <- "national"
   #special case GEM-E3: national model for EU, global for other regions
-  all[model=="GEM-E3"&region!="EU"]$Scope<-"global"
+  #all[model=="GEM-E3"&region!="EU"]$Scope<-"global"
   #change model name for national models, so that they appear first
   all<-data.table(all)
   if(!substr(cfg$models_nat[1],1,1)=="*"){
