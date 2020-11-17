@@ -14,7 +14,7 @@ cfg$infile    <- "commit_cd-links_compare_20191015-114544"
 
 # Name of corresponding national model(s)
 cfg$models_nat <- c("AIM/CGE[Korea]","AIM/Enduse[Japan]","BLUES","GCAM-USA_CDLINKS","GCAM_Canada",
-                    "IPAC-AIM/technology V1.0","India MARKAL","PRIMES_V1","RU-TIMES 3.2","GEM-E3_EU")
+                    "IPAC-AIM/technology V1.0","India MARKAL","PRIMES_V1","RU-TIMES 3.2") #,"GEM-E3_EU"
 
 
 

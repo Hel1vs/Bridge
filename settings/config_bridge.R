@@ -15,7 +15,7 @@ cfg$infile    <- "commit_bridge_compare_20200213-103752"
 # Name of corresponding national model(s)
 cfg$models_nat <- c("AIM/Enduse[Japan]","BLUES","GCAM_Canada","PRIMES_V1","AIM/CGE[Korea]",
                     "IPAC-AIM/technology V1.0","India MARKAL","DDPP Energy","DDPP AFOLU","GCAM-USA_COMMIT","PECE V2.0", #these still need to submit new/update/ more scenarios (heard from) #GCAM-USA_CDLINKS
-                    "RU-TIMES 3.2","GEM-E3_EU","TIMES-AUS") # these still need to submit (not heard from)
+                    "RU-TIMES 3.2","TIMES-AUS") # these still need to submit (not heard from) ,"GEM-E3_EU"
 
 # Name of directory plots are stored in
 cfg$outdir    <- "output"
