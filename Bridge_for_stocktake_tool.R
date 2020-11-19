@@ -5,7 +5,7 @@ scencateg <- "scen_categ_bridge"
 variables <- "variables_bridge"  
 adjust <- "adjust_reporting_COMMIT"
 addvars <- F
-datafile <-"commit_bridge_compare_20201020-100908" 
+datafile <-"commit_bridge_compare_20201118-093614" 
 source("load_data.R") 
 
 # check whether there's only one scenario per category for each model
@@ -42,5 +42,9 @@ all$period<-as.numeric(as.character(all$period))
 
 
 # Figure 12 - peak and net zero year --------------------------------------
-#012v_gst19.xlsx
+# 012v_gst19.xlsx --> 
+# scenario, region, year, variable, unit, statistic, value, source
+# Peak Year|CO2, Peak Year|Kyoto Gases, Zero Emissions Year|CO2, Zero Emissions Year|Kyoto Gases
+
+
 
