@@ -5,14 +5,8 @@ scencateg <- "scen_categ_bridge"  #"scen_categ_COMMIT"
 variables <- "variables_bridge"  #"variables_xCut"
 adjust <- "adjust_reporting_COMMIT"
 addvars <- F
-datafile <-"commit_bridge_compare_20201020-100908" #commit_cd-links_compare_20191015-114544
+datafile <-"commit_bridge_compare_20201119-151637" #commit_cd-links_compare_20191015-114544
 source("load_data.R") 
-
-# Temporarily add missing REMIND data from separate file, to remove when database upload complete
-REMINDPE = fread("data/missingPE_REMIND1.csv",sep=";", header=TRUE)
-REMINDPE <- process_data(REMINDPE,scens)
-REMINDPE <- factor.data.frame(REMINDPE)
-all <- rbind(all,REMINDPE)
 
 # check whether there's only one scenario per category for each model
 check=all[,list(unique(scenario)),by=c("model","Category")]
@@ -1056,7 +1050,7 @@ if(unique(cdata$model=="AIM/CGE")){cdata$model<-"AIM-CGE"}
 source("waterfall_bridge.R")
 
 # Figure 2b countries
-cdata=all[model=="WITCH 5.0"&region%in%c("R5ASIA","R5LAM","R5REF","R5OECD90+EU","R5MAF")&variable=="Emissions|Kyoto Gases"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0
+cdata=all[model=="POLES GECO2019"&region%in%c("R5ASIA","R5LAM","R5REF","R5OECD90+EU","R5MAF")&variable=="Emissions|Kyoto Gases"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0
 if(unique(cdata$model=="AIM/CGE")){cdata$model<-"AIM-CGE"}
 source("waterfall_bridge_regions.R")
 
