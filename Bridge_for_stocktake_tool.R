@@ -30,6 +30,37 @@ library(xlsx)
 all$period<-as.numeric(as.character(all$period))
 
 # Figure 1 - emissions ----------------------------------------------------
+# 001v_gst19.xlsx --> 
+# variable, scenario, region, unit, source, statistic, years as columns
+# Emissions|Kyoto Gases
+# max, mean, median, min, ninetyp, tenp, value
+
+kyoto = all[variable%in%c("Emissions|Kyoto Gases")]
+
+# national models
+kyotonational = kyoto[Scope=="national"]
+kyotonational$scenario <- NULL
+kyotonational$Baseline <- NULL
+kyotonational$Scope <- NULL
+kyotonational$model<-NULL
+setnames(kyotonational,"Category","scenario")
+kyotonational$source<-"COMMIT_national"
+kyotonational$statistic<-"value"
+setcolorder(kyotonational,c("variable","scenario","region","unit","source","statistic","value"))
+kyotonational = spread(kyotonational,period,value)
+
+# global models
+kyotorange=kyoto[Scope=="global",list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T),mean=mean(value,na.rm=T),ninetyp=quantile(value,probs=0.9,na.rm=T),tenp=quantile(value,probs=0.1,na.rm=T)),by=c("Category","region","variable","unit","period")]
+kyotorange=data.table(gather(kyotorange,statistic,value,c("min","max","median","mean","ninetyp","tenp")))
+kyotorange=kyotorange[period%in%c(2005:2050)]
+setnames(kyotorange,"Category","scenario")
+kyotorange$source<-"COMMIT_global"
+setcolorder(kyotorange,c("variable","scenario","region","unit","source","statistic","value"))
+kyotorange=spread(kyotorange,period,value)
+
+# together and save
+emisrange=rbind(kyotonational,kyotorange)
+write.xlsx2(emisrange,paste("Stocktaketool","/001v_gst20.xlsx",sep=""),sheetName="data",append=F,row.names = F)
 
 
 # Figure 2 ----------------------------------------------------------------
@@ -48,6 +79,7 @@ all$period<-as.numeric(as.character(all$period))
 # Peak Year|CO2, Peak Year|Kyoto Gases, Zero Emissions Year|CO2, Zero Emissions Year|Kyoto Gases
 # max, mean, median, min, ninetyp, tenp
 
+# peak year
 ghg = all[variable%in%c("Emissions|Kyoto Gases","Emissions|CO2")]
 peak = ghg[,list(value=as.numeric(period[which.max(value)])),by=c('scenario','Category','Baseline','model','region','variable','unit','Scope')]
 peakrange=peak[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T),mean=mean(value,na.rm=T),ninetyp=quantile(value,probs=0.9,na.rm=T),tenp=quantile(value,probs=0.1,na.rm=T)),by=c("Category","region","variable","unit")]
@@ -58,6 +90,7 @@ peakrange$variable=str_replace_all(peakrange$variable,"Emissions","Peak year")
 peakrange$source<-"COMMIT"
 write.xlsx2(peakrange,paste("Stocktaketool","/012v_gst20.xlsx",sep=""),sheetName="Peak Year",append=F,row.names = F)
 
+# net zero year
 poy=ghg[!duplicated(ghg[,list(model,Category,region,variable),with=TRUE]),!c('value','period'),with=FALSE] #"Scope","Baseline","scenario"
 poy=merge(poy,ghg[value<=0,min(period),by=c('model','Category','region','variable')],by=c('model','Category','region','variable'),all=TRUE)
 setnames(poy,"V1","value")
