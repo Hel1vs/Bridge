@@ -1075,14 +1075,15 @@ range=all[variable%in%vars & Category%in%scens&!Scope=="national"&region=="World
 
 # emissions in Gt
 plotdata$value=plotdata$value/1000
+plotdata$unit<-"Gt CO2-equiv/yr"
 range$min=range$min/1000
 range$max=range$max/1000
 range$med=range$med/1000
 
 F3a = ggplot(plotdata) 
-F3a = F3a + geom_line(aes(x=period,y=value,colour=Category, linetype=model),size=1.5)
+F3a = F3a + geom_line(aes(x=period,y=value,colour=Category, linetype=model),size=1)
 F3a = F3a + geom_line(data=range,aes(x=period,y=med,colour=Category),size=2.5)
-F3a = F3a + geom_ribbon(data=range,aes(x=period,ymin=min, ymax=max,fill=Category),alpha=0.5)
+F3a = F3a + geom_ribbon(data=range,aes(x=period,ymin=min, ymax=max,fill=Category),alpha=0.3)
 F3a = F3a + geom_segment(data=range[period %in% c(2050) & Category=="CurPol"], stat="identity", aes(x=2050, xend=2050, y=min, yend=max, size=1.5, colour=Category), show.legend=FALSE) 
 F3a = F3a + geom_segment(data=range[period %in% c(2050) & Category=="NDCplus"], stat="identity", aes(x=2050, xend=2050, y=min, yend=max, size=1.5, colour=Category), show.legend=FALSE) 
 F3a = F3a + geom_segment(data=range[period %in% c(2050) & Category=="Bridge"], stat="identity", aes(x=2050, xend=2050, y=min, yend=max, size=1.5, colour=Category), show.legend=FALSE) 
@@ -1096,7 +1097,7 @@ F3a = F3a + geom_point(data=range[period %in% c(2030)&Category%in%c("Bridge")],a
 F3a = F3a + xlim(2010,2051)+ scale_y_continuous(breaks=c(0,10,20,30,40,50,60,70,80),limits=c(0,85))
 F3a = F3a + scale_colour_manual(values=plotstyle(scens))
 F3a = F3a + scale_fill_manual(values=plotstyle(scens))
-F3a = F3a + ylab(paste(unique(all[variable%in%vars]$variable),"[",unique(all[variable%in%vars]$unit),"]"))+ xlab("")
+F3a = F3a + ylab(paste(unique(all[variable%in%vars]$variable),"[",unique(plotdata$unit),"]"))+ xlab("")
 F3a = F3a + theme_bw() + theme(axis.text.y=element_text(size=20)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=20)) +
   theme(axis.text.x = element_text(size=20,angle=90)) + theme(legend.text=element_text(size=16),legend.title=element_blank(),legend.key.width = unit(1,"cm")) #legend.key.size = unit(1.5, "cm"),
 F3a = F3a + theme(legend.position="bottom")
@@ -1189,6 +1190,8 @@ emisrednewm = emisrednew[,list(median=median(value,na.rm=T),min=min(value,na.rm=
                    by=c("Category","region","variable","unit","period")] #,min=min(value,na.rm=T),max=max(value,na.rm=T)
 emisrednew$Category = factor(emisrednew$Category,levels=c("CurPol","NDCplus","Bridge","2Deg2020"))
 emisrednewm$Category = factor(emisrednewm$Category,levels=c("CurPol","NDCplus","Bridge","2Deg2020"))
+emisrednew$region = factor(emisrednew$region,levels=c("AUS","CAN","EU","JPN","USA","BRA","CHN","IDN","IND","ROK","RUS","World"))
+emisrednewm$region = factor(emisrednewm$region,levels=c("AUS","CAN","EU","JPN","USA","BRA","CHN","IDN","IND","ROK","RUS","World"))
 
 F3c = ggplot()
 F3c = F3c + geom_bar(data=emisrednewm[Category%in%scens&variable=="Emissions|Kyoto Gases"&region%in%c(regions,"World")],
@@ -1198,7 +1201,7 @@ F3c = F3c + geom_point(data=emisrednew[Category%in%scens&variable=="Emissions|Ky
 F3c = F3c + scale_shape_manual(values=cfg$man_shapes)
 F3c = F3c + scale_fill_manual(values=plotstyle(scens))
 F3c = F3c + scale_colour_manual(values=plotstyle(scens))
-F3c = F3c + facet_wrap(~region,scales="free_y")
+F3c = F3c + facet_wrap(~region,scales="fixed")
 F3c = F3c + theme_bw() + theme(axis.text.y=element_text(size=16)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=18)) +
   theme(axis.text.x = element_text(size=14)) + theme(legend.text=element_text(size=11),legend.title=element_text(size=12))
 F3c = F3c + ylab("GHG emissions relative to 2015 (%)")
