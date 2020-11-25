@@ -63,7 +63,7 @@ emisrange=rbind(kyotonational,kyotorange)
 write.xlsx2(emisrange,paste("Stocktaketool","/001v_gst20.xlsx",sep=""),sheetName="data",append=F,row.names = F)
 
 
-# Figure 2 ----------------------------------------------------------------
+# Figure 2 - emissions by GHG source ----------------------------------------------------------------
 # 002v_gst19.xlsx --> 
 # variable, scenario, region, unit, source, statistic, years as columns
 # Emissions|CH4, CO2|AFOLU, N2O, F-Gases, CO2|Excl. AFOLU
@@ -71,18 +71,20 @@ write.xlsx2(emisrange,paste("Stocktaketool","/001v_gst20.xlsx",sep=""),sheetName
 
 emis = all[variable%in%c("Emissions|CH4","Emissions|CO2|AFOLU","Emissions|CO2","Emissions|N2O","Emissions|F-Gases")]
 
-# TODO convert all units to MtCO2equiv?
-units=emis[,list(unique(unit)),by="variable"]
-setnames(units,"V1","unit")
-unitnew=data.table("Emissions|CO2|Excl. AFOLU",unique(units[variable=="Emissions|CO2"]$unit))
-setnames(unitnew,"V1","variable")
-setnames(unitnew,"V2","unit")
-units=rbind(units,unitnew)
+# Not needed anymore, after converting all units to MtCO2equiv
+# units=emis[,list(unique(unit)),by="variable"]
+# setnames(units,"V1","unit")
+# unitnew=data.table("Emissions|CO2|Excl. AFOLU",unique(units[variable=="Emissions|CO2"]$unit))
+# setnames(unitnew,"V1","variable")
+# setnames(unitnew,"V2","unit")
+# units=rbind(units,unitnew)
 
 emis = spread(emis[,!c('unit'),with=FALSE],variable,value)
-emis = emis%>%mutate(`Emissions|CO2|Excl. AFOLU`=`Emissions|CO2`-`Emissions|CO2|AFOLU`)
+emis = emis%>%mutate(`Emissions|CO2|Excl. AFOLU`=`Emissions|CO2`-`Emissions|CO2|AFOLU`,
+                     `Emissions|CH4`=`Emissions|CH4`*25,`Emissions|N2O`=`Emissions|N2O`*298/1000)
 emis = data.table(gather(emis,variable,value,c("Emissions|CH4","Emissions|CO2|AFOLU","Emissions|CO2","Emissions|N2O","Emissions|F-Gases",`Emissions|CO2|Excl. AFOLU`)))
-emis=merge(emis,units,by="variable")
+emis$unit<-"Mt CO2-equiv/yr"
+#emis=merge(emis,units,by="variable")
 emissions=emis[Scope=="global",list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T),mean=mean(value,na.rm=T),ninetyp=quantile(value,probs=0.9,na.rm=T),tenp=quantile(value,probs=0.1,na.rm=T)),by=c("Category","region","variable","unit","period")]
 emissions=data.table(gather(emissions,statistic,value,c("min","max","median","mean","ninetyp","tenp")))
 emissions=emissions[period%in%c(2005:2050)]
@@ -100,6 +102,28 @@ write.xlsx2(emissions,paste("Stocktaketool","/002v_gst20.xlsx",sep=""),sheetName
 
 # Figure 4 ----------------------------------------------------------------
 
+
+
+
+# Figure 5 ----------------------------------------------------------------
+
+
+# Figure 6 ----------------------------------------------------------------
+
+
+# Figure 7 ----------------------------------------------------------------
+
+
+# Figure 8 ----------------------------------------------------------------
+
+
+# Figure 9 ----------------------------------------------------------------
+
+
+# Figure 10 ---------------------------------------------------------------
+
+
+# Figure 11 ---------------------------------------------------------------
 
 
 # Figure 12 - peak and net zero year --------------------------------------
