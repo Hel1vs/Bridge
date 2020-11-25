@@ -97,34 +97,50 @@ emissions=spread(emissions,period,value)
 write.xlsx2(emissions,paste("Stocktaketool","/002v_gst20.xlsx",sep=""),sheetName="data",append=F,row.names = F)
 
 
-# Figure 3 ----------------------------------------------------------------
+# Figure 3 - emissions by country----------------------------------------------------------------
+# 003v_gst19.xlsx --> 
+# variable, scenario, region, unit, source, statistic, years as columns
+# Emissions|CH4, CO2|AFOLU, N2O, F-Gases, CO2|Excl. AFOLU, Kyoto Gases
+# mean
+
+emissionsc = rbind(emissions,kyotorange)
+emisc=data.table(gather(emissionsc,year,value, c('2005','2010','2015','2020','2025','2030','2035','2040','2045','2050')))
+emisc$year=as.numeric(emisc$year)
+emisc=spread(emisc,region,value)
+emisc=emisc%>%mutate(ROW=World-AUS-BRA-CAN-CHN-EU-IND-IDN-JPN-ROK-RUS-USA) #for now calculating ROW as world minus the shown countries, using the COMMIT countries to be shown
+emisc=data.table(gather(emisc,region,value,c("World","ROW","AUS","BRA","CAN","CHN","EU","IND","IDN","JPN","ROK","RUS","USA","TUR","R5OECD90+EU","R5LAM","R5MAF","R5ASIA","R5REF")))
+emisc=spread(emisc,year,value)
+setcolorder(emisc,c("variable","scenario","region","unit","source","statistic"))
+
+# save
+write.xlsx2(emisc,paste("Stocktaketool","/003v_gst20.xlsx",sep=""),sheetName="data",append=F,row.names = F)
 
 
-# Figure 4 ----------------------------------------------------------------
+# Figure 4 - GHG/carbon intensity----------------------------------------------------------------
 
 
 
 
-# Figure 5 ----------------------------------------------------------------
+# Figure 5 - budget depletion----------------------------------------------------------------
 
 
-# Figure 6 ----------------------------------------------------------------
+# Figure 6 - innovation----------------------------------------------------------------
 
 
-# Figure 7 ----------------------------------------------------------------
+# Figure 7 - investments----------------------------------------------------------------
+# Investments based on McCollum - no R action needed? Or try to deliver COMMIT data?
+
+# Figure 8 - air pollution ----------------------------------------------------------------
 
 
-# Figure 8 ----------------------------------------------------------------
+# Figure 9 - land cover----------------------------------------------------------------
 
 
-# Figure 9 ----------------------------------------------------------------
+# Figure 10 - policy 1---------------------------------------------------------------
+# Policy - based on Iacobuta et al., so no R action needed
 
-
-# Figure 10 ---------------------------------------------------------------
-
-
-# Figure 11 ---------------------------------------------------------------
-
+# Figure 11 - policy 2---------------------------------------------------------------
+# Policy - based on Iacobuta et al., so no R action needed
 
 # Figure 12 - peak and net zero year --------------------------------------
 # 012v_gst19.xlsx --> 
