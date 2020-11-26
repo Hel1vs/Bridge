@@ -202,13 +202,13 @@ for(icat in c(1)){
       #                      labels=c(tt[1], paste0(tt[2],"\n",labcat[2]), "Supply","Industry","Buildings","Transport","Industrial processes","AFOLU","Non-CO2",paste0(tt[2],"\n",labcat[icat]))) #bquote(paste("Non-", CO[2]))
     if(model=="PROMETHEUS"){
       scale_x_continuous(breaks=unique(dtn_all$bar_position),minor_breaks = NULL,
-                         labels=c(tt[1], paste0(tt[2],"\n",labcat[2]), "Supply","Industry","Buildings","Transport","Industrial Processes",paste0(tt[2],"\n",labcat[icat])))
+                         labels=c(tt[1], paste0(labcat[2],"\n",tt[2]), "Supply","Industry","Buildings","Transport","Industrial Processes",paste0(labcat[icat],"\n",tt[2])))
     }else{if(model=="TIAM_Grantham_v3.2"){
       scale_x_continuous(breaks=unique(dtn_all$bar_position),minor_breaks = NULL,
-                         labels=c(tt[1], paste0(tt[2],"\n",labcat[2]), "Supply","Industry","Buildings","Transport",paste0(tt[2],"\n",labcat[icat])))
+                         labels=c(tt[1], paste0(labcat[2],"\n",tt[2]), "Supply","Industry","Buildings","Transport",paste0(labcat[icat],"\n",tt[2])))
     }else{
       scale_x_continuous(breaks=unique(dtn_all$bar_position),minor_breaks = NULL,
-                         labels=c(tt[1], paste0(tt[2],"\n",labcat[2]), "Supply","Industry","Buildings","Transport","Industrial processes","AFOLU","Non-CO2",paste0(tt[2],"\n",labcat[icat])))
+                         labels=c(tt[1], paste0(labcat[2],"\n",tt[2]), "Supply","Industry","Buildings","Transport","Industrial processes","AFOLU","Non-CO2",paste0(labcat[icat],"\n",tt[2])))
     }}
     
     ggsave(filename=paste0("~/disks/y/Project/E555163_COMMIT/Data/Database/Snapshots/Scripts/R/Bridge/Bridge/output/",file.prefix,unique(cdata$model),"-",labcat[icat],"_",tt[2],".png"),width=5, height=3.5)  
