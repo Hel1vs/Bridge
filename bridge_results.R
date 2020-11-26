@@ -1029,7 +1029,7 @@ scens = c("CurPol","NDCplus","Bridge","2Deg2020")
 ### Figure elements
 # Figure 2a Sectors
 # select data
-cdata=all[model=="POLES GECO2019"&region=="World"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, PROMETHEUS, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0, TIAM_Grantham_v3.2
+cdata=all[model=="IMAGE 3.0"&region=="World"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, PROMETHEUS, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0, TIAM_Grantham_v3.2
 model=unique(cdata$model)
 
 # add non-CO2
@@ -1060,6 +1060,50 @@ source("waterfall_bridge_regions.R")
 
 ### Figure collection
 #TODO: models as panel (1 figure sector, 1 figure region, latter to SI?)
+
+### Additional table to show model ranges
+nonco2=all[variable%in%c("Emissions|CH4","Emissions|N2O","Emissions|F-Gases")]
+nonco2$unit<-NULL
+nonco2=spread(nonco2,variable,value)
+nonco2=nonco2%>%mutate(`Emissions|Non-CO2`=((`Emissions|CH4`*25)+(`Emissions|N2O`*298/1000)+`Emissions|F-Gases`))
+nonco2=data.table(gather(nonco2,variable,value,c("Emissions|CH4","Emissions|N2O","Emissions|F-Gases","Emissions|Non-CO2")))
+nonco2=nonco2[variable=="Emissions|Non-CO2"]
+nonco2$unit<-"Mt CO2-equiv/yr"
+setcolorder(nonco2,colnames(all))
+sect=rbind(all,nonco2)
+sectoral = sect[variable%in%c("Emissions|CO2|Energy|Supply","Emissions|CO2|Energy|Demand|Industry","Emissions|CO2|Energy|Demand|Residential and Commercial","Emissions|CO2|Energy|Demand|Transportation",
+                             "Emissions|CO2|Industrial Processes","Emissions|CO2|AFOLU","Emissions|Non-CO2")&
+                 period%in%c(2030,2050)&Scope=="global"&region=="World"&Category%in%c("NDCplus","Bridge")&!model%in%c("PROMETHEUS","TIAM_Grantham_v3.2")]
+sectoral = spread(sectoral[,!c('unit'),with=FALSE],variable,value)
+sectoral = sectoral%>%mutate(total=`Emissions|CO2|Energy|Supply`+`Emissions|CO2|Energy|Demand|Industry`+`Emissions|CO2|Energy|Demand|Residential and Commercial`+`Emissions|CO2|Energy|Demand|Transportation`+
+                               `Emissions|CO2|Industrial Processes`+`Emissions|CO2|AFOLU`+`Emissions|Non-CO2`)
+sectoral = data.table(gather(sectoral,variable,value,c("Emissions|CO2|Energy|Supply","Emissions|CO2|Energy|Demand|Industry","Emissions|CO2|Energy|Demand|Residential and Commercial","Emissions|CO2|Energy|Demand|Transportation",
+                                                       "Emissions|CO2|Industrial Processes","Emissions|CO2|AFOLU","Emissions|Non-CO2","total")))
+sectoral = spread(sectoral[,!c('Baseline','scenario'),with=F],Category,value)
+sectoral = sectoral%>%mutate(reduction=NDCplus-Bridge)
+total = sectoral[,`:=`(NDCplus = NULL, Bridge = NULL)]
+total = total[variable=="total"]
+sectoral = merge(sectoral,total,by=c("model","region","period","Scope"))
+sectoral = sectoral%>%mutate(share=reduction.x/reduction.y*100)
+sectoralrange = sectoral[,list(min=min(share,na.rm=T),max=max(share,na.rm=T),med=median(share,na.rm=T)),by=c("region","period","Scope","variable.x")]
+sectoralrange=sectoralrange[!variable.x=="total"]
+sectoralrange$min <- round(sectoralrange$min,digits=1)
+sectoralrange$max <- round(sectoralrange$max,digits=1)
+sectoralrange$med <- round(sectoralrange$med,digits=1)
+sectoralrange$display = paste(sectoralrange$min,"-",sectoralrange$max,"(",sectoralrange$med,")")
+sectoralrange=sectoralrange[,`:=`(region=NULL,Scope=NULL,min=NULL,med=NULL,max=NULL)]
+setnames(sectoralrange,"period","Year")
+sectoralrange=spread(sectoralrange,variable.x,display)
+setnames(sectoralrange,"Emissions|CO2|AFOLU","AFOLU")
+setnames(sectoralrange,"Emissions|CO2|Energy|Demand|Industry","Industry")
+setnames(sectoralrange,"Emissions|CO2|Energy|Demand|Transportation","Transport")
+setnames(sectoralrange,"Emissions|CO2|Energy|Demand|Residential and Commercial","Buildings")
+setnames(sectoralrange,"Emissions|CO2|Energy|Supply","Supply")
+setnames(sectoralrange,"Emissions|CO2|Industrial Processes","Industrial Processes")
+setnames(sectoralrange,"Emissions|Non-CO2","Non-CO2")
+setcolorder(sectoralrange,c("Year","Supply","Industry","Buildings","Transport","Industrial Processes","AFOLU","Non-CO2"))
+
+write.xlsx2(sectoralrange,paste(cfg$outdir,"/waterfall_range.xlsx",sep=""),sheetName="data",append=F,row.names = F)
 
   # Emissions ---------------------------------------------------------------
 
