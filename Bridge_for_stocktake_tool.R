@@ -1,3 +1,6 @@
+# See also https://github.com/CD-LINKS/factsheet/blob/master/src/Indicators/Calculate_indicators_Dec2019.R
+# For Mark's script that was originally used to populate the tool with CD-LINKS data
+
 # Load data ---------------------------------------------------------------
 setwd("~/disks/y/Project/E555163_COMMIT/Data/Database/Snapshots/Scripts/R/Bridge/Bridge")
 config <- "config_bridge" 
@@ -117,24 +120,246 @@ write.xlsx2(emisc,paste("Stocktaketool","/003v_gst20.xlsx",sep=""),sheetName="da
 
 
 # Figure 4 - GHG/carbon intensity----------------------------------------------------------------
+# 004v_gst19.xlsx --> 
+# variable, scenario, region, unit, statistic, years as columns
+# GHG Intensity of GDP|PPP, Carbon Intensity of GDP|PPP (excl AFOLU)
+# %/yr
+# max, mean, median, min, ninetyp, tenp
 
+#TODO update this script for COMMIT data
+if (GDP_MER_PPP == "PPP") { intens=filter(all_cd_links, Scope=="global", variable%in%c("Carbon Intensity of GDP|PPP (excl AFOLU)","GHG Intensity of GDP|PPP"),
+                                          scenario %in% scens_indicators, region %in% regions_indicators, region!="Bunkers", year<=2050)
+} else {intens=filter(all_cd_links, Scope=="global", variable%in%c("Carbon Intensity of GDP|MER (excl AFOLU)","GHG Intensity of GDP|MER"),
+                      scenario %in% scens_indicators, region %in% regions_indicators, region!="Bunkers", year<=2050)
+}
+# delete 2005 MESSage values (previous: Add 2005 data to MESSAGE (median of other models))
+intens=filter(intens, !(year==2005 & model=="MESSAGEix-GLOBIOM_1.0"))
+intens[intens[,"year"]==2005 & intens[,"model"]=="MESSAGEix-GLOBIOM_1.0", "value"] <- 0
+intens <- arrange(intens, variable, scenario, model, region, year)
+write.table(intens,"Indicators/data/stocktake_toolfigure4_GHG_intensity.csv", sep=";", row.names = FALSE)
+intens_stat <- group_by(intens, scenario, region, year, variable, unit) %>% summarise(mean=mean(value,na.rm=TRUE),
+                                                                                      median=median(value,na.rm=TRUE),
+                                                                                      min=min(value, na.rm=TRUE),
+                                                                                      max=max(value, na.rm=TRUE),
+                                                                                      tenp=quantile(value, .10, na.rm=TRUE),
+                                                                                      ninetyp=quantile(value, .90, na.rm=TRUE))
+write.table(intens_stat, paste0("Indicators/data/stocktake_toolGHG_intensity_", GDP_MER_PPP, "_stat.csv"), sep=";", row.names=F)
 
+# calculate annual rate (based on five year periods)
+intensrate <- group_by(intens, scenario, model, region, unit, variable) %>% mutate(prev=lag(value)) %>% 
+  mutate(value=(value/prev)^(1/5)-1) %>%
+  select(variable, scenario, region, unit, model, year, value) %>% 
+  filter(year>=2010)
+#colnames(intensrate)[colnames(intensrate)=="rate"] <- "value"
+intensrate$value <- 100*intensrate$value
+intensrate$unit <- "%/yr"
+intensrate_stat <- group_by(intensrate, variable, scenario, region, year, variable, unit) %>% summarise(median=median(value,na.rm=TRUE),
+                                                                                                        mean=mean(value,na.rm=TRUE),
+                                                                                                        min=min(value, na.rm=TRUE),
+                                                                                                        max=max(value, na.rm=TRUE),
+                                                                                                        tenp=quantile(value, .10, na.rm=TRUE),
+                                                                                                        ninetyp=quantile(value, .90, na.rm=TRUE))
+intensrate_stat <- gather(intensrate_stat, 'mean', 'median', 'min', 'max', 'tenp', 'ninetyp', key='statistic', value=value)
+intensrate_stat <- spread(intensrate_stat, year, value)
+write.table(intensrate_stat,"Indicators/data/stocktake_toolfigure4.csv", sep=";", row.names = FALSE)
 
 
 # Figure 5 - budget depletion----------------------------------------------------------------
+#TODO update this for COMMIT
+
+regions_indicators_PRIMAP_history <- c("BRA", "CAN", "CHN", "EU28", "IDN", "IND", "JPN", "RUS", "USA", "CAN", "TUR", "EARTH")
+start_year_projections_fig5=2010
+end_year_projections_fig5=2050
+# Three steps 1) determine historical emissions (per region) for 1850-2015, 2) determine projections 3) In Excel, determine budgets
+#1. Historical cumulative emissions 1990-2015
+#tmp_data <- (PRIMAP_selec_CO2_1850_2015, 7:ncol(PRIMAP_selec_CO2_1850_2015),key='year',value=value)
+# determine cumulative budgets for historic periods 1850-1990 and 1990-2015
+# make dataframe structure for CO2 emissions equal to data used for figure
+# 1850-1989
+PRIMAP_selec_CO2_1850_2015 <- filter(PRIMAP, country %in% regions_indicators_PRIMAP_history, category=="CAT0", entity=="CO2")
+PRIMAP_selec_CO2_1850_2015 <- select(PRIMAP_selec_CO2_1850_2015, scenario, country, category, entity, unit, num_range("X", 1850:start_year_projections_fig5))
+PRIMAP_selec_CO2_1850_2015 <- cbind(PRIMAP_selec_CO2_1850_2015[1:5], PRIMAP_selec_CO2_1850_2015[, 6:ncol(PRIMAP_selec_CO2_1850_2015)]/1000)
+# make dataframe structure for Kyoto emissions equal to data used for figure
+PRIMAP_selec_CO2_1850_2015$country=str_replace_all(PRIMAP_selec_CO2_1850_2015$country,"EARTH","World")
+PRIMAP_selec_CO2_1850_2015$country=str_replace_all(PRIMAP_selec_CO2_1850_2015$country,"EU28","EU")
+PRIMAP_selec_CO2_1850_2015$scenario=str_replace_all(PRIMAP_selec_CO2_1850_2015$scenario,"HISTORY","History")
+PRIMAP_selec_CO2_1850_2015 <- mutate(PRIMAP_selec_CO2_1850_2015, variable="Emissions|CO2")
+colnames(PRIMAP_selec_CO2_1850_2015)[colnames(PRIMAP_selec_CO2_1850_2015)=="country"] <- "region"
+PRIMAP_selec_CO2_1850_2015$region <- factor(PRIMAP_selec_CO2_1850_2015$region, levels=regions_indicators)
+PRIMAP_selec_CO2_1850_2015$unit <- "Mt CO2"
+PRIMAP_selec_CO2_1850_2015 <- mutate(PRIMAP_selec_CO2_1850_2015, source="PRIMAP")
+PRIMAP_selec_CO2_1850_2015 <- mutate(PRIMAP_selec_CO2_1850_2015, statistic="value")
+PRIMAP_selec_CO2_1850_2015 <- select(PRIMAP_selec_CO2_1850_2015, variable, scenario, region, unit, source, statistic, num_range("X", 1850:start_year_projections_fig5))
+colnames(PRIMAP_selec_CO2_1850_2015) = gsub("X", "", colnames(PRIMAP_selec_CO2_1850_2015))
+
+#2. Remaining emissions depending on budget (400, 1000, 1600)
+d_cd_links_CO2 <- filter(all_cd_links, Scope=="global") %>%
+  select(scenario, model, region, year, value, unit, variable)
+d_cd_links_CO2 <- filter(d_cd_links_CO2, scenario %in% scens_indicators, region %in% regions_indicators, variable=="Emissions|CO2")
+d_cd_links_CO2=data.table(d_cd_links_CO2)
+yy=seq(start_year_projections_fig5,2100)
+d_cd_links_CO2 = d_cd_links_CO2[,list(approx(x=year,y=value,xout=yy)$y,approx(x=year,y=value,xout=yy)$x),by=c('scenario','model','region', 'unit', 'variable')]
+setnames(d_cd_links_CO2,"V1","value")
+setnames(d_cd_links_CO2,"V2","year")
+setcolorder(d_cd_links_CO2,c('scenario','model','region', 'year', 'value', 'unit', 'variable'))
+d_cd_links_CO2 <- filter(d_cd_links_CO2, year>start_year_projections_fig5, year<=end_year_projections_fig5)
+d_cd_links_CO2 <- spread(d_cd_links_CO2, key=year, value=value)
+
+data_figure5_CO2emissions_model <- inner_join(PRIMAP_selec_CO2_1850_2015, d_cd_links_CO2, by=c('region'))
+data_figure5_CO2emissions_model <- select(data_figure5_CO2emissions_model, variable.y, region, scenario.y, model, unit.y, num_range("", 1850:end_year_projections_fig5))
+data_figure5_CO2emissions_model <- rename(data_figure5_CO2emissions_model, variable=variable.y, unit=unit.y)
+data_figure5_CO2emissions_model <- rename(data_figure5_CO2emissions_model, scenario=scenario.y)
+data_figure5_CO2emissions_model$region <- factor(data_figure5_CO2emissions_model$region, levels=regions_indicators)
+data_figure5_CO2emissions_model$scenario <- factor(data_figure5_CO2emissions_model$scenario, levels=scens_indicators)
+
+#data_figure5_CO2emissions_stat <- gather(data_figure5_CO2emissions_model, num_range("", start_year_projections_fig5:end_year_projections_fig5), key="year", value=value)
+data_figure5_CO2emissions_stat <- gather(data_figure5_CO2emissions_model, 6:ncol(data_figure5_CO2emissions_model), key="year", value=value)
+data_figure5_CO2emissions_stat <- group_by(data_figure5_CO2emissions_stat, scenario, region, year, variable, unit) %>% summarise(mean=mean(value,na.rm=TRUE),
+                                                                                                                                 median=median(value,na.rm=TRUE),
+                                                                                                                                 min=min(value, na.rm=TRUE),
+                                                                                                                                 max=max(value, na.rm=TRUE),
+                                                                                                                                 tenp=quantile(value, .10, na.rm=TRUE),
+                                                                                                                                 ninetyp=quantile(value, .90, na.rm=TRUE))
+data_figure5_CO2emissions_stat <- gather(data_figure5_CO2emissions_stat, 'mean', 'median', 'min', 'max', 'tenp', 'ninetyp', key='statistic', value=value)
+data_figure5_CO2emissions_stat <- spread(data_figure5_CO2emissions_stat, key=year, value=value)
+data_figure5_CO2emissions_stat$statistic <- factor(data_figure5_CO2emissions_stat$statistic, level=stats_indicators)
+
+# 3. Determine statistics for 2100 budgets
+data_figure5_CO2budget <- filter(all_cd_links, Scope=="global", scenario %in% scens_indicators, region %in% regions_indicators, year==2100, variable=="Carbon budget")
+data_figure5_CO2budget_stat <- group_by(data_figure5_CO2budget, scenario, region, year, variable, unit) %>% summarise(mean=mean(value,na.rm=TRUE),
+                                                                                                                      median=median(value,na.rm=TRUE),
+                                                                                                                      min=min(value, na.rm=TRUE),
+                                                                                                                      max=max(value, na.rm=TRUE),
+                                                                                                                      tenp=quantile(value, .10, na.rm=TRUE),
+                                                                                                                      ninetyp=quantile(value, .90, na.rm=TRUE))
+data_figure5_CO2budget_stat <- data_figure5_CO2budget_stat %>% ungroup() %>% select(-year)
+data_figure5_CO2budget_stat <- gather(data_figure5_CO2budget_stat, 'mean', 'median', 'min', 'max', 'tenp', 'ninetyp', key='statistic', value=`2100`)
+data_figure5_CO2budget_stat$statistic <- factor(data_figure5_CO2budget_stat$statistic, level=stats_indicators)
+
+#4 Export to Excel (change later to R code) to translate annual CO2 emissions into budgets
+write.table(data_figure5_CO2emissions_model , file="Indicators/data/stocktake_tool/figure5_CO2emissions_model.csv", sep=";", row.names = FALSE) 
+write.table(data_figure5_CO2emissions_stat , file="Indicators/data/stocktake_tool/figure5_CO2emissions_stat.csv", sep=";", row.names = FALSE)
+write.table(data_figure5_CO2budget_stat , file="Indicators/data/stocktake_tool/figure5_CO2budget_stat.csv", sep=";", row.names = FALSE)
+
+#5 Import again in R (effort sharing)
+data_figure5_model <- read.csv("Indicators/data/stocktake_tool/data_figure5_ToR.csv", header=TRUE, sep=";")
+#data_figure5_stat <- data_figure5_model
+colnames(data_figure5_model) = gsub("X", "", colnames(data_figure5_model))
+data_figure5_model <- gather(data_figure5_model, 9:ncol(data_figure5_model), key="year", value=value)
+data_figure5_model$value <- as.numeric(data_figure5_model$value)
+data_figure5_stat <- group_by(data_figure5_model, variable, budget.scenario, budget.effort.sharing, scenario, region, unit, year) %>% summarise(mean=mean(value,na.rm=TRUE),
+                                                                                                                                                median=median(value,na.rm=TRUE),
+                                                                                                                                                min=min(value, na.rm=TRUE),
+                                                                                                                                                max=max(value, na.rm=TRUE),
+                                                                                                                                                tenp=quantile(value, .10, na.rm=TRUE),
+                                                                                                                                                ninetyp=quantile(value, .90, na.rm=TRUE))
+data_figure5_stat <- gather(data_figure5_stat, 'mean', 'median', 'min', 'max', 'tenp', 'ninetyp', key='statistic', value=value)
+#data_figure5_stat <- filter(data_figure5_stat, year>=1990, year<=2050)
+data_figure5_stat$value <- as.numeric(data_figure5_stat$value)
+data_figure5_stat <- spread(data_figure5_stat, key=year, value=value)
+data_figure5_stat$statistic <- factor(data_figure5_stat$statistic, level=stats_indicators)
+colnames(data_figure5_stat) = gsub("X", "", colnames(data_figure5_stat))
+data_figure5_stat_fig <- select(data_figure5_stat, -(num_range("", 1850:1989))) %>% as.data.frame()
+write.table(data_figure5_stat_fig , file="Indicators/data/stocktake_tool/figure5_stat.csv", sep=";", row.names = FALSE)
 
 
 # Figure 6 - innovation----------------------------------------------------------------
+#TODO update this for COMMIT
+# Based on PBL IMAGE data, not other models
+rm(Fig6_elec); rm(Fig6_res); rm(Fig6_transport);
+NoPolicy_fig6_elec <- filter(NoPolicy_i_indicators$NonFossilElecShare, year>=2010, year<=2050) %>% mutate(scenario="No policy") %>% mutate(sector="Electricity")
+NPi_fig6_elec  <- filter(NPi_i_indicators$NonFossilElecShare, year>=2010, year<=2050) %>% mutate(scenario="National policies") %>% mutate(sector="Electricity")
+INDCi_fig6_elec <- filter(INDCi_i_indicators$NonFossilElecShare, year>=2010, year<=2050) %>% mutate(scenario="NDC") %>% mutate(sector="Electricity")
+INDC2030i_1000_fig6_elec <- filter(INDC2030i_1000_i_indicators$NonFossilElecShare, year>=2010, year<=2050) %>% mutate(scenario="2C_66 (2030)") %>% mutate(sector="Electricity")
+NPi2020_1600_fig6_elec <- filter(NPi2020_1600_i_indicators$NonFossilElecShare, year>=2010, year<=2050) %>% mutate(scenario="2C_50") %>% mutate(sector="Electricity")
+NPi2020_1000_fig6_elec <- filter(NPi2020_1000_i_indicators$NonFossilElecShare, year>=2010, year<=2050) %>% mutate(scenario="2C_66") %>% mutate(sector="Electricity")
+NPi2020_400_fig6_elec <- filter(NPi2020_400_i_indicators$NonFossilElecShare, year>=2010, year<=2050) %>% mutate(scenario="1.5C_50") %>% mutate(sector="Electricity")
+Fig6_elec <- rbind(NoPolicy_fig6_elec, NPi_fig6_elec) %>% 
+  rbind(INDCi_fig6_elec) %>% 
+  rbind(INDC2030i_1000_fig6_elec) %>% 
+  rbind(NPi2020_1600_fig6_elec) %>% 
+  rbind(NPi2020_1000_fig6_elec) %>% 
+  rbind(NPi2020_400_fig6_elec)
+Fig6_elec <- mutate(Fig6_elec, variable="Final Energy|Electricity|Non-fossil share")
+Fig6_elec <- select(Fig6_elec, year, region, value, unit, scenario, sector, variable)
+
+NoPolicy_fig6_res <- filter(NoPolicy_i_indicators$NonFossilResBuildingsShare, year>=2010, year<=2050, population_group=="Total") %>% mutate(scenario="No policy") %>% mutate(sector="Residential buildings")
+NPi_fig6_res  <- filter(NPi_i_indicators$NonFossilResBuildingsShare, year>=2010, year<=2050, population_group=="Total") %>% mutate(scenario="National policies") %>% mutate(sector="Residential buildings")
+INDCi_fig6_res <- filter(INDCi_i_indicators$NonFossilResBuildingsShare, year>=2010, year<=2050, population_group=="Total") %>% mutate(scenario="NDC") %>% mutate(sector="Residential buildings")
+INDC2030i_1000_fig6_res <- filter(INDC2030i_1000_i_indicators$NonFossilResBuildingsShare, year>=2010, year<=2050, population_group=="Total") %>% mutate(scenario="2C_66 (2030)", sector="Residential buildings")
+NPi2020_1600_fig6_res <- filter(NPi2020_1600_i_indicators$NonFossilResBuildingsShare, year>=2010, year<=2050, population_group=="Total") %>% mutate(scenario="2C_50") %>% mutate(sector="Residential buildings")
+NPi2020_1000_fig6_res <- filter(NPi2020_1000_i_indicators$NonFossilResBuildingsShare, year>=2010, year<=2050, population_group=="Total") %>% mutate(scenario="2C_66") %>% mutate(sector="Residential buildings")
+NPi2020_400_fig6_res <- filter(NPi2020_400_i_indicators$NonFossilResBuildingsShare, year>=2010, year<=2050, population_group=="Total") %>% mutate(scenario="1.5C_50") %>% mutate(sector="Residential buildings")
+Fig6_res <- rbind(NoPolicy_fig6_res, NPi_fig6_res) %>% 
+  rbind(INDCi_fig6_res) %>% 
+  rbind(INDC2030i_1000_fig6_res) %>% 
+  rbind(NPi2020_1600_fig6_res) %>% 
+  rbind(NPi2020_1000_fig6_res) %>% 
+  rbind(NPi2020_400_fig6_res)
+Fig6_res <- mutate(Fig6_res, variable="Final Energy|Residential buildings|Non-fossil share")
+Fig6_res <- select(Fig6_res, year, region, value, unit, scenario, sector, variable)
+
+NoPolicy_fig6_transport <- filter(NoPolicy_i_indicators$NonFossilTransportShare, year>=2010, year<=2050, travel_mode=="Total", type=="Total") %>% mutate(scenario="No policy") %>% mutate(sector="Transport")
+NPi_fig6_transport  <- filter(NPi_i_indicators$NonFossilTransportShare, year>=2010, year<=2050, travel_mode=="Total", type=="Total") %>% mutate(scenario="National policies") %>% mutate(sector="Transport")
+INDCi_fig6_transport <- filter(INDCi_i_indicators$NonFossilTransportShare, year>=2010, year<=2050, travel_mode=="Total", type=="Total") %>% mutate(scenario="NDC") %>% mutate(sector="Transport")
+INDC2030i_1000_fig6_transport <- filter(INDC2030i_i_1000_indicators$NonFossilTransportShare, year>=2010, year<=2050, travel_mode=="Total", type=="Total") %>% mutate(scenario="2C_66 (2030)") %>% mutate(sector="Transport")
+NPi2020_1600_fig6_transport <- filter(NPi2020_1600_i_indicators$NonFossilTransportShare, year>=2010, year<=2050, travel_mode=="Total", type=="Total") %>% mutate(scenario="2C_50") %>% mutate(sector="Transport")
+NPi2020_1000_fig6_transport <- filter(NPi2020_1000_i_indicators$NonFossilTransportShare, year>=2010, year<=2050, travel_mode=="Total", type=="Total") %>% mutate(scenario="2C_66") %>% mutate(sector="Transport")
+NPi2020_400_fig6_transport <- filter(NPi2020_400_i_indicators$NonFossilTransportShare, year>=2010, year<=2050, travel_mode=="Total", type=="Total") %>% mutate(scenario="1.5C_50") %>% mutate(sector="Transport")
+Fig6_transport <- rbind(NoPolicy_fig6_transport, NPi_fig6_transport) %>% 
+  rbind(INDCi_fig6_transport) %>% 
+  rbind(INDC2030i_1000_fig6_transport) %>% 
+  rbind(NPi2020_1600_fig6_transport) %>% 
+  rbind(NPi2020_1000_fig6_transport) %>% 
+  rbind(NPi2020_400_fig6_transport)
+Fig6_transport <- mutate(Fig6_transport, variable="Final Energy|Transport|Non-fossil share")
+Fig6_transport <- select(Fig6_transport, year, region, value, unit, scenario, sector, variable)
+data_figure6 <- rbind(Fig6_elec, Fig6_res) %>% rbind(Fig6_transport)
+data_figure6 <- mutate(data_figure6, source="PBL")
+data_figure6 <- mutate(data_figure6, statistic="value")
+data_figure6 <- select(data_figure6, variable, scenario, region, unit, source, statistic, year, value)
+data_figure6 <- spread(data_figure6, key=year, value=value)
+data_figure6 <- filter(data_figure6, region %in% regions_indicators_IMAGE)
+write.table(data_figure6 , file="Indicators/data/stocktake_tool/figure6.csv", sep=";", row.names = FALSE)
 
 
 # Figure 7 - investments----------------------------------------------------------------
 # Investments based on McCollum - no R action needed? Or try to deliver COMMIT data?
 
 # Figure 8 - air pollution ----------------------------------------------------------------
+#TODO update this for COMMIT
+data_figure8 <- filter(all_cd_links, Scope=="global", scenario %in% scens_indicators, region %in% regions_indicators, variable%in%c("Emissions|Sulfur", "Emissions|OC", "Emissions|BC"))
+d_cd_links_Air_pollution <- filter(data_figure8, year>=2010, year<=2050)
+d_cd_links_Air_pollution_stat <- group_by(d_cd_links_Air_pollution, scenario, region, year, variable, unit) %>% summarise(mean=mean(value,na.rm=TRUE),
+                                                                                                                          median=median(value,na.rm=TRUE),
+                                                                                                                          min=min(value, na.rm=TRUE),
+                                                                                                                          max=max(value, na.rm=TRUE),
+                                                                                                                          tenp=quantile(value, .10, na.rm=TRUE),
+                                                                                                                          ninetyp=quantile(value, .90, na.rm=TRUE))
+d_cd_links_Air_pollution_stat <- gather(d_cd_links_Air_pollution_stat, 'mean', 'median', 'min', 'max', 'tenp', 'ninetyp', key='statistic', value=value)
+d_cd_links_Air_pollution_stat <- spread(d_cd_links_Air_pollution_stat, key=year, value=value)
+d_cd_links_Air_pollution_stat <- mutate(d_cd_links_Air_pollution_stat, source="CD-LINKS")
+d_cd_links_Air_pollution_stat <- select(d_cd_links_Air_pollution_stat, variable, scenario, region, unit, source, statistic, everything())
+write.table(d_cd_links_Air_pollution_stat , file="Indicators/data/stocktake_tool/figure8.csv", sep=";", row.names = FALSE)
 
 
 # Figure 9 - land cover----------------------------------------------------------------
-
+#TODO update this for COMMIT
+data_figure9 <- filter(all_cd_links, Scope=="global", value>0, scenario %in% scens_indicators, region %in% regions_indicators, variable%in%c("Land Cover|Forest"))
+data_figure9 <- group_by(data_figure9, scenario, model, region, variable) %>% 
+  mutate(growth=value-lag(value), perc_growth=(value/lag(value))^(1/5)-1) %>% filter(year>=2010)
+d_cd_links_Deforestation <- filter(data_figure9, year>=2010, year<=2050)
+d_cd_links_Deforestation_stat <- group_by(d_cd_links_Deforestation, scenario, region, year, variable, unit) %>% summarise(mean=mean(value,na.rm=TRUE),
+                                                                                                                          median=median(value,na.rm=TRUE),
+                                                                                                                          min=min(value, na.rm=TRUE),
+                                                                                                                          max=max(value, na.rm=TRUE),
+                                                                                                                          tenp=quantile(value, .10, na.rm=TRUE),
+                                                                                                                          ninetyp=quantile(value, .90, na.rm=TRUE))
+d_cd_links_Deforestation_stat <- gather(d_cd_links_Deforestation_stat, 'mean', 'median', 'min', 'max', 'tenp', 'ninetyp', key='statistic', value=value)
+d_cd_links_Deforestation_stat <- spread(d_cd_links_Deforestation_stat, key=year, value=value)
+d_cd_links_Deforestation_stat <- mutate(d_cd_links_Deforestation_stat, source="CD-LINKS")
+d_cd_links_Deforestation_stat <- select(d_cd_links_Deforestation_stat, variable, scenario, region, unit, source, statistic, everything())
+write.table(d_cd_links_Deforestation_stat , file="Indicators/data/stocktake_tool/figure9.csv", sep=";", row.names = FALSE)
 
 # Figure 10 - policy 1---------------------------------------------------------------
 # Policy - based on Iacobuta et al., so no R action needed
