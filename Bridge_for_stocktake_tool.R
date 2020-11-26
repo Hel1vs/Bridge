@@ -23,6 +23,7 @@ View(check3)
 all=all[!c(Category=="NDCMCS"&model%in%unique(check3$model))]
 
 # Load functions and library for plotting
+source("functions/calcVariable.R")
 source("functions/plot_LineNationalScens.R")
 source("functions/plotstyle.R")
 library(grid)
@@ -126,43 +127,41 @@ write.xlsx2(emisc,paste("Stocktaketool","/003v_gst20.xlsx",sep=""),sheetName="da
 # %/yr
 # max, mean, median, min, ninetyp, tenp
 
-#TODO update this script for COMMIT data
-if (GDP_MER_PPP == "PPP") { intens=filter(all_cd_links, Scope=="global", variable%in%c("Carbon Intensity of GDP|PPP (excl AFOLU)","GHG Intensity of GDP|PPP"),
-                                          scenario %in% scens_indicators, region %in% regions_indicators, region!="Bunkers", year<=2050)
-} else {intens=filter(all_cd_links, Scope=="global", variable%in%c("Carbon Intensity of GDP|MER (excl AFOLU)","GHG Intensity of GDP|MER"),
-                      scenario %in% scens_indicators, region %in% regions_indicators, region!="Bunkers", year<=2050)
-}
-# delete 2005 MESSage values (previous: Add 2005 data to MESSAGE (median of other models))
-intens=filter(intens, !(year==2005 & model=="MESSAGEix-GLOBIOM_1.0"))
-intens[intens[,"year"]==2005 & intens[,"model"]=="MESSAGEix-GLOBIOM_1.0", "value"] <- 0
-intens <- arrange(intens, variable, scenario, model, region, year)
-write.table(intens,"Indicators/data/stocktake_toolfigure4_GHG_intensity.csv", sep=";", row.names = FALSE)
-intens_stat <- group_by(intens, scenario, region, year, variable, unit) %>% summarise(mean=mean(value,na.rm=TRUE),
+intensity = emis[variable%in%c("Emissions|CO2|Excl. AFOLU")]
+setcolorder(intensity,colnames(all))
+intensity=rbind(intensity,all[variable%in%c("Emissions|Kyoto Gases","GDP|PPP")])
+
+intensity <- calcVariable(intensity,'`Carbon Intensity of GDP|PPP (excl AFOLU)` ~ `Emissions|CO2|Excl. AFOLU`/`GDP|PPP` ' , newUnit='kg CO2/$US 2010')
+intensity <- calcVariable(intensity,'`GHG Intensity of GDP|PPP` ~ `Emissions|Kyoto Gases`/`GDP|PPP` ' , newUnit='kg CO2e/$US 2010')
+
+intens=filter(intensity, Scope=="global", variable%in%c("Carbon Intensity of GDP|PPP (excl AFOLU)","GHG Intensity of GDP|PPP"),period<=2050)
+intens <- arrange(intens, variable, Category, model, region, year)
+write.table(intens,"Stocktaketool/stocktake_toolfigure4_GHG_intensity.csv", sep=";", row.names = FALSE)
+intens_stat <- group_by(intens, Category, region, period, variable, unit) %>% summarise(mean=mean(value,na.rm=TRUE),
                                                                                       median=median(value,na.rm=TRUE),
                                                                                       min=min(value, na.rm=TRUE),
                                                                                       max=max(value, na.rm=TRUE),
                                                                                       tenp=quantile(value, .10, na.rm=TRUE),
                                                                                       ninetyp=quantile(value, .90, na.rm=TRUE))
-write.table(intens_stat, paste0("Indicators/data/stocktake_toolGHG_intensity_", GDP_MER_PPP, "_stat.csv"), sep=";", row.names=F)
+write.table(intens_stat, paste0("Stocktaketool/stocktake_toolGHG_intensity_PPP", "_stat.csv"), sep=";", row.names=F)
 
 # calculate annual rate (based on five year periods)
-intensrate <- group_by(intens, scenario, model, region, unit, variable) %>% mutate(prev=lag(value)) %>% 
+intensrate <- group_by(intens, Category, model, region, unit, variable) %>% mutate(prev=lag(value)) %>% 
   mutate(value=(value/prev)^(1/5)-1) %>%
-  select(variable, scenario, region, unit, model, year, value) %>% 
-  filter(year>=2010)
-#colnames(intensrate)[colnames(intensrate)=="rate"] <- "value"
+  select(variable, Category, region, unit, model, period, value) %>% 
+  filter(period>=2010)
 intensrate$value <- 100*intensrate$value
 intensrate$unit <- "%/yr"
-intensrate_stat <- group_by(intensrate, variable, scenario, region, year, variable, unit) %>% summarise(median=median(value,na.rm=TRUE),
+intensrate_stat <- group_by(intensrate, variable, Category, region, period, unit) %>% summarise(median=median(value,na.rm=TRUE),
                                                                                                         mean=mean(value,na.rm=TRUE),
                                                                                                         min=min(value, na.rm=TRUE),
                                                                                                         max=max(value, na.rm=TRUE),
                                                                                                         tenp=quantile(value, .10, na.rm=TRUE),
                                                                                                         ninetyp=quantile(value, .90, na.rm=TRUE))
 intensrate_stat <- gather(intensrate_stat, 'mean', 'median', 'min', 'max', 'tenp', 'ninetyp', key='statistic', value=value)
-intensrate_stat <- spread(intensrate_stat, year, value)
-write.table(intensrate_stat,"Indicators/data/stocktake_toolfigure4.csv", sep=";", row.names = FALSE)
-
+intensrate_stat <- data.table(spread(intensrate_stat, period, value))
+setnames(intensrate_stat,"Category","scenario")
+write.xlsx2(intensrate_stat,paste("Stocktaketool","/004v_gst20.xlsx",sep=""),sheetName="data",append=F,row.names = F)
 
 # Figure 5 - budget depletion----------------------------------------------------------------
 #TODO update this for COMMIT
