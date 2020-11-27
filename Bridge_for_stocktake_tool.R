@@ -326,7 +326,6 @@ write.table(data_figure6 , file="Indicators/data/stocktake_tool/figure6.csv", se
 # Investments based on McCollum - no R action needed? Or try to deliver COMMIT data?
 
 # Figure 8 - air pollution ----------------------------------------------------------------
-#TODO update this for COMMIT
 data_figure8 <- filter(all, Scope=="global", variable%in%c("Emissions|Sulfur", "Emissions|OC", "Emissions|BC"))
 d_COMMIT_Air_pollution <- filter(data_figure8, year>=2010, year<=2050)
 d_COMMIT_Air_pollution_stat <- group_by(d_COMMIT_Air_pollution, Category, region, period, variable, unit) %>% summarise(mean=mean(value,na.rm=TRUE),
@@ -343,22 +342,22 @@ write.xlsx2(d_COMMIT_Air_pollution_stat,paste("Stocktaketool","/008v_gst20.xlsx"
 
 
 # Figure 9 - land cover----------------------------------------------------------------
-#TODO update this for COMMIT
-data_figure9 <- filter(all_cd_links, Scope=="global", value>0, scenario %in% scens_indicators, region %in% regions_indicators, variable%in%c("Land Cover|Forest"))
-data_figure9 <- group_by(data_figure9, scenario, model, region, variable) %>% 
-  mutate(growth=value-lag(value), perc_growth=(value/lag(value))^(1/5)-1) %>% filter(year>=2010)
-d_cd_links_Deforestation <- filter(data_figure9, year>=2010, year<=2050)
-d_cd_links_Deforestation_stat <- group_by(d_cd_links_Deforestation, scenario, region, year, variable, unit) %>% summarise(mean=mean(value,na.rm=TRUE),
+data_figure9 <- filter(all, Scope=="global", value>0, variable%in%c("Land Cover|Forest"))
+data_figure9 <- group_by(data_figure9, Category, model, region, variable) %>% 
+  mutate(growth=value-lag(value), perc_growth=(value/lag(value))^(1/5)-1) %>% filter(period>=2010)
+d_COMMIT_Deforestation <- filter(data_figure9, period>=2010, period<=2050)
+d_COMMIT_Deforestation_stat <- group_by(d_COMMIT_Deforestation, Category, region, period, variable, unit) %>% summarise(mean=mean(value,na.rm=TRUE),
                                                                                                                           median=median(value,na.rm=TRUE),
                                                                                                                           min=min(value, na.rm=TRUE),
                                                                                                                           max=max(value, na.rm=TRUE),
                                                                                                                           tenp=quantile(value, .10, na.rm=TRUE),
                                                                                                                           ninetyp=quantile(value, .90, na.rm=TRUE))
-d_cd_links_Deforestation_stat <- gather(d_cd_links_Deforestation_stat, 'mean', 'median', 'min', 'max', 'tenp', 'ninetyp', key='statistic', value=value)
-d_cd_links_Deforestation_stat <- spread(d_cd_links_Deforestation_stat, key=year, value=value)
-d_cd_links_Deforestation_stat <- mutate(d_cd_links_Deforestation_stat, source="CD-LINKS")
-d_cd_links_Deforestation_stat <- select(d_cd_links_Deforestation_stat, variable, scenario, region, unit, source, statistic, everything())
-write.table(d_cd_links_Deforestation_stat , file="Indicators/data/stocktake_tool/figure9.csv", sep=";", row.names = FALSE)
+d_COMMIT_Deforestation_stat <- gather(d_COMMIT_Deforestation_stat, 'mean', 'median', 'min', 'max', 'tenp', 'ninetyp', key='statistic', value=value)
+d_COMMIT_Deforestation_stat <- spread(d_COMMIT_Deforestation_stat, key=period, value=value)
+d_COMMIT_Deforestation_stat <- mutate(d_COMMIT_Deforestation_stat, source="COMMIT")
+d_COMMIT_Deforestation_stat <- data.table(select(d_COMMIT_Deforestation_stat, variable, Category, region, unit, source, statistic, everything()))
+setnames(d_COMMIT_Deforestation_stat,"Category","scenario")
+write.xlsx2(d_COMMIT_Deforestation_stat,paste("Stocktaketool","/009v_gst20.xlsx",sep=""),sheetName="data",append=F,row.names = F)
 
 # Figure 10 - policy 1---------------------------------------------------------------
 # Policy - based on Iacobuta et al., so no R action needed
