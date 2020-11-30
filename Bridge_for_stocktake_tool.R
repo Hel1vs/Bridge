@@ -263,63 +263,30 @@ write.table(data_figure5_stat_fig , file="Indicators/data/stocktake_tool/figure5
 
 
 # Figure 6 - innovation----------------------------------------------------------------
+all <- calcVariable(all,'`Renewables Share|Incl. Hydro and Nuclear` ~ ( `Secondary Energy|Electricity|Solar` + `Secondary Energy|Electricity|Wind` + `Secondary Energy|Electricity|Nuclear` + `Secondary Energy|Electricity|Hydro` + `Secondary Energy|Electricity|Biomass` + `Secondary Energy|Electricity|Geothermal`) / `Secondary Energy|Electricity` * 100 ' , newUnit='%')
+
 #TODO update this for COMMIT
-# Based on PBL IMAGE data, not other models
-rm(Fig6_elec); rm(Fig6_res); rm(Fig6_transport);
-NoPolicy_fig6_elec <- filter(NoPolicy_i_indicators$NonFossilElecShare, year>=2010, year<=2050) %>% mutate(scenario="No policy") %>% mutate(sector="Electricity")
-NPi_fig6_elec  <- filter(NPi_i_indicators$NonFossilElecShare, year>=2010, year<=2050) %>% mutate(scenario="National policies") %>% mutate(sector="Electricity")
-INDCi_fig6_elec <- filter(INDCi_i_indicators$NonFossilElecShare, year>=2010, year<=2050) %>% mutate(scenario="NDC") %>% mutate(sector="Electricity")
-INDC2030i_1000_fig6_elec <- filter(INDC2030i_1000_i_indicators$NonFossilElecShare, year>=2010, year<=2050) %>% mutate(scenario="2C_66 (2030)") %>% mutate(sector="Electricity")
-NPi2020_1600_fig6_elec <- filter(NPi2020_1600_i_indicators$NonFossilElecShare, year>=2010, year<=2050) %>% mutate(scenario="2C_50") %>% mutate(sector="Electricity")
-NPi2020_1000_fig6_elec <- filter(NPi2020_1000_i_indicators$NonFossilElecShare, year>=2010, year<=2050) %>% mutate(scenario="2C_66") %>% mutate(sector="Electricity")
-NPi2020_400_fig6_elec <- filter(NPi2020_400_i_indicators$NonFossilElecShare, year>=2010, year<=2050) %>% mutate(scenario="1.5C_50") %>% mutate(sector="Electricity")
-Fig6_elec <- rbind(NoPolicy_fig6_elec, NPi_fig6_elec) %>% 
-  rbind(INDCi_fig6_elec) %>% 
-  rbind(INDC2030i_1000_fig6_elec) %>% 
-  rbind(NPi2020_1600_fig6_elec) %>% 
-  rbind(NPi2020_1000_fig6_elec) %>% 
-  rbind(NPi2020_400_fig6_elec)
-Fig6_elec <- mutate(Fig6_elec, variable="Final Energy|Electricity|Non-fossil share")
-Fig6_elec <- select(Fig6_elec, year, region, value, unit, scenario, sector, variable)
+# Based on PBL IMAGE data, not other models --> to update with add_variables?
 
-NoPolicy_fig6_res <- filter(NoPolicy_i_indicators$NonFossilResBuildingsShare, year>=2010, year<=2050, population_group=="Total") %>% mutate(scenario="No policy") %>% mutate(sector="Residential buildings")
-NPi_fig6_res  <- filter(NPi_i_indicators$NonFossilResBuildingsShare, year>=2010, year<=2050, population_group=="Total") %>% mutate(scenario="National policies") %>% mutate(sector="Residential buildings")
-INDCi_fig6_res <- filter(INDCi_i_indicators$NonFossilResBuildingsShare, year>=2010, year<=2050, population_group=="Total") %>% mutate(scenario="NDC") %>% mutate(sector="Residential buildings")
-INDC2030i_1000_fig6_res <- filter(INDC2030i_1000_i_indicators$NonFossilResBuildingsShare, year>=2010, year<=2050, population_group=="Total") %>% mutate(scenario="2C_66 (2030)", sector="Residential buildings")
-NPi2020_1600_fig6_res <- filter(NPi2020_1600_i_indicators$NonFossilResBuildingsShare, year>=2010, year<=2050, population_group=="Total") %>% mutate(scenario="2C_50") %>% mutate(sector="Residential buildings")
-NPi2020_1000_fig6_res <- filter(NPi2020_1000_i_indicators$NonFossilResBuildingsShare, year>=2010, year<=2050, population_group=="Total") %>% mutate(scenario="2C_66") %>% mutate(sector="Residential buildings")
-NPi2020_400_fig6_res <- filter(NPi2020_400_i_indicators$NonFossilResBuildingsShare, year>=2010, year<=2050, population_group=="Total") %>% mutate(scenario="1.5C_50") %>% mutate(sector="Residential buildings")
-Fig6_res <- rbind(NoPolicy_fig6_res, NPi_fig6_res) %>% 
-  rbind(INDCi_fig6_res) %>% 
-  rbind(INDC2030i_1000_fig6_res) %>% 
-  rbind(NPi2020_1600_fig6_res) %>% 
-  rbind(NPi2020_1000_fig6_res) %>% 
-  rbind(NPi2020_400_fig6_res)
-Fig6_res <- mutate(Fig6_res, variable="Final Energy|Residential buildings|Non-fossil share")
-Fig6_res <- select(Fig6_res, year, region, value, unit, scenario, sector, variable)
-
-NoPolicy_fig6_transport <- filter(NoPolicy_i_indicators$NonFossilTransportShare, year>=2010, year<=2050, travel_mode=="Total", type=="Total") %>% mutate(scenario="No policy") %>% mutate(sector="Transport")
-NPi_fig6_transport  <- filter(NPi_i_indicators$NonFossilTransportShare, year>=2010, year<=2050, travel_mode=="Total", type=="Total") %>% mutate(scenario="National policies") %>% mutate(sector="Transport")
-INDCi_fig6_transport <- filter(INDCi_i_indicators$NonFossilTransportShare, year>=2010, year<=2050, travel_mode=="Total", type=="Total") %>% mutate(scenario="NDC") %>% mutate(sector="Transport")
-INDC2030i_1000_fig6_transport <- filter(INDC2030i_i_1000_indicators$NonFossilTransportShare, year>=2010, year<=2050, travel_mode=="Total", type=="Total") %>% mutate(scenario="2C_66 (2030)") %>% mutate(sector="Transport")
-NPi2020_1600_fig6_transport <- filter(NPi2020_1600_i_indicators$NonFossilTransportShare, year>=2010, year<=2050, travel_mode=="Total", type=="Total") %>% mutate(scenario="2C_50") %>% mutate(sector="Transport")
-NPi2020_1000_fig6_transport <- filter(NPi2020_1000_i_indicators$NonFossilTransportShare, year>=2010, year<=2050, travel_mode=="Total", type=="Total") %>% mutate(scenario="2C_66") %>% mutate(sector="Transport")
-NPi2020_400_fig6_transport <- filter(NPi2020_400_i_indicators$NonFossilTransportShare, year>=2010, year<=2050, travel_mode=="Total", type=="Total") %>% mutate(scenario="1.5C_50") %>% mutate(sector="Transport")
-Fig6_transport <- rbind(NoPolicy_fig6_transport, NPi_fig6_transport) %>% 
-  rbind(INDCi_fig6_transport) %>% 
-  rbind(INDC2030i_1000_fig6_transport) %>% 
-  rbind(NPi2020_1600_fig6_transport) %>% 
-  rbind(NPi2020_1000_fig6_transport) %>% 
-  rbind(NPi2020_400_fig6_transport)
-Fig6_transport <- mutate(Fig6_transport, variable="Final Energy|Transport|Non-fossil share")
-Fig6_transport <- select(Fig6_transport, year, region, value, unit, scenario, sector, variable)
-data_figure6 <- rbind(Fig6_elec, Fig6_res) %>% rbind(Fig6_transport)
-data_figure6 <- mutate(data_figure6, source="PBL")
-data_figure6 <- mutate(data_figure6, statistic="value")
-data_figure6 <- select(data_figure6, variable, scenario, region, unit, source, statistic, year, value)
-data_figure6 <- spread(data_figure6, key=year, value=value)
-data_figure6 <- filter(data_figure6, region %in% regions_indicators_IMAGE)
-write.table(data_figure6 , file="Indicators/data/stocktake_tool/figure6.csv", sep=";", row.names = FALSE)
+# NPi_fig6_elec  <- filter(NPi_i_indicators$NonFossilElecShare, year>=2010, year<=2050) %>% mutate(scenario="National policies") %>% mutate(sector="Electricity")
+# Fig6_elec <- mutate(Fig6_elec, variable="Final Energy|Electricity|Non-fossil share")
+# Fig6_elec <- select(Fig6_elec, year, region, value, unit, scenario, sector, variable)
+# 
+# NPi_fig6_res  <- filter(NPi_i_indicators$NonFossilResBuildingsShare, year>=2010, year<=2050, population_group=="Total") %>% mutate(scenario="National policies") %>% mutate(sector="Residential buildings")
+# Fig6_res <- mutate(Fig6_res, variable="Final Energy|Residential buildings|Non-fossil share")
+# Fig6_res <- select(Fig6_res, year, region, value, unit, scenario, sector, variable)
+# 
+# NPi_fig6_transport  <- filter(NPi_i_indicators$NonFossilTransportShare, year>=2010, year<=2050, travel_mode=="Total", type=="Total") %>% mutate(scenario="National policies") %>% mutate(sector="Transport")
+# Fig6_transport <- mutate(Fig6_transport, variable="Final Energy|Transport|Non-fossil share")
+# Fig6_transport <- select(Fig6_transport, year, region, value, unit, scenario, sector, variable)
+# 
+# data_figure6 <- rbind(Fig6_elec, Fig6_res) %>% rbind(Fig6_transport)
+# data_figure6 <- mutate(data_figure6, source="PBL")
+# data_figure6 <- mutate(data_figure6, statistic="value")
+# data_figure6 <- select(data_figure6, variable, scenario, region, unit, source, statistic, year, value)
+# data_figure6 <- spread(data_figure6, key=year, value=value)
+# data_figure6 <- filter(data_figure6, region %in% regions_indicators_IMAGE)
+# write.table(data_figure6 , file="Indicators/data/stocktake_tool/figure6.csv", sep=";", row.names = FALSE)
 
 
 # Figure 7 - investments----------------------------------------------------------------
