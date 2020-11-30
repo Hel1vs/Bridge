@@ -606,6 +606,7 @@ m14c = m14c + geom_bar(data=cpricebarm[Category%in%c("CurPol","NDCplus","Bridge"
 # m14c = m14c + geom_pointrange(data=emisredm[Category%in%c("CurPol","GPP","Bridge")&variable=="Rate of Change| Emissions|Kyoto Gases"],
 #                         aes(ymin=min,ymax=max,y=median, x=period, colour=Category),alpha=0.5,size=5,fatten=1,position=position_dodge(width=0.66)) #,show.legend = F
 m14c = m14c + geom_point(data=cpricebar[Category%in%c("CurPol","NDCplus","Bridge","2Deg2020","2Deg2030")], aes(x=period,y=value,shape=model,colour=Category,group=Category),size=3,position=position_dodge(width=0.66))
+m14c = m14c + geom_text(aes(x="2030",y=2000),label ="b)",size=10)
 m14c = m14c + ylim(0,2000)
 m14c = m14c + scale_shape_manual(values=cfg$man_shapes)
 m14c = m14c + scale_color_manual(values=plotstyle(scens))
@@ -1295,6 +1296,7 @@ F4b = ggplot()
 F4b = F4b + geom_bar(data=costsGDPm,aes(x=period,y=median,fill=Scenario),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
 F4b = F4b + geom_point(data=costsGDP, aes(x=period,y=value,shape=Model,colour=Scenario,group=Scenario),size=5,position=position_dodge(width=0.66))
 F4b = F4b + geom_errorbar(data=costsGDPm,aes(x=period,ymin=min,ymax=max,colour=Scenario),position=position_dodge(width=0.66),width=0.66)
+F4b = F4b + geom_text(aes(x="2030",y=120),label ="a)",size=10)
 F4b = F4b + scale_shape_manual(values=cfg$man_shapes)
 F4b = F4b + scale_color_manual(values=c("Bridgevs2020"="#56B4E9","Bridgevs2030"="#2860E9"),labels=c("Bridgevs2020"="Bridge vs 2Deg2020","Bridgevs2030"="Bridge vs 2Deg2030"))
 F4b = F4b + scale_fill_manual(values=c("Bridgevs2020"="#56B4E9","Bridgevs2030"="#2860E9"),labels=c("Bridgevs2020"="Bridge vs 2Deg2020","Bridgevs2030"="Bridge vs 2Deg2030"))
