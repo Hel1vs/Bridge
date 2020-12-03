@@ -32,3 +32,4 @@ for(i in unique(cdata[Scope=="global"]$model)){
 # 2. Merged sectoral and regional waterfall -------------------------------
 
 #use region waterfall as basis, build up each region's waterfall element as stack with sectoral reductions?
+# better: use Christoph's original script for Elmar's paper
