@@ -655,14 +655,15 @@ F1a = ggplot()
 F1a = F1a + geom_bar(data=REbarm,aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
 F1a = F1a + geom_point(data=REbar, aes(x=period,y=value,shape=model,colour=Category,group=Category),size=3,position=position_dodge(width=0.66))
 F1a = F1a + geom_errorbar(data=REbarm,aes(x=period,ymin=min,ymax=max,colour=Category),position=position_dodge(width=0.66))
-F1a = F1a + geom_text(aes(x="2030",y=88),label ="a)",size=10)
+#F1a = F1a + geom_text(aes(x="2030",y=88),label ="a)",size=10)
 F1a = F1a + scale_shape_manual(values=cfg$man_shapes)
 F1a = F1a + scale_color_manual(values=plotstyle(scens))
 F1a = F1a + scale_fill_manual(values=plotstyle(scens))
-F1a = F1a + xlab("")
-F1a = F1a + theme_bw() + theme(axis.text.y=element_text(size=18)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=18)) +
-  theme(axis.text.x = element_text(size=18)) + theme(legend.text=element_text(size=16),legend.title=element_text(size=18))
-F1a = F1a +ylab("Share of renewables in electricity (%)")
+F1a = F1a + ggtitle("a) Renewables in electricity")
+F1a = F1a + xlab("")+ylab("Share (%)")
+F1a = F1a + ylim(0,100)
+F1a = F1a + theme_bw() + theme(axis.text.y=element_text(size=18)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=20)) +
+  theme(axis.text.x = element_text(size=18)) + theme(legend.text=element_text(size=16),legend.title=element_text(size=18),plot.title = element_text(size=22))
 #F1a = F1a + ylab(paste(unique(REN$variable),"[",unique(REN$unit),"]"))
 #F1a = F1a + geom_text(aes(x=2030,y=75),label="a)")
 F1a
@@ -686,14 +687,15 @@ F1b = ggplot()
 F1b = F1b + geom_bar(data=EVbarm,aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
 F1b = F1b + geom_point(data=EVbar, aes(x=period,y=value,shape=model,colour=Category,group=Category),size=3,position=position_dodge(width=0.66))
 F1b = F1b + geom_errorbar(data=EVbarm,aes(x=period,ymin=min,ymax=max,colour=Category),position=position_dodge(width=0.66))
-F1b = F1b + geom_text(aes(x="2030",y=30),label ="b)",size=10)
+#F1b = F1b + geom_text(aes(x="2030",y=30),label ="b)",size=10)
 F1b = F1b + scale_shape_manual(values=cfg$man_shapes)
 F1b = F1b + scale_color_manual(values=plotstyle(scens))
 F1b = F1b + scale_fill_manual(values=plotstyle(scens))
-F1b = F1b + xlab("")
-F1b = F1b + theme_bw() + theme(axis.text.y=element_text(size=18)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=18)) +
-  theme(axis.text.x = element_text(size=18)) + theme(legend.text=element_text(size=11),legend.title=element_text(size=12))
-F1b = F1b + ylab(paste("Share of electricity in transportation final energy demand","[",unique(EVbar$unit),"]"))
+F1b = F1b + ggtitle("b) Electricity in transportation final energy demand")
+F1b = F1b + xlab("")+ ylab("Share (%)") #paste("Share","[",unique(EVbar$unit),"]")
+F1b = F1b + ylim(0,100)
+F1b = F1b + theme_bw() + theme(axis.text.y=element_text(size=18)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=20)) +
+  theme(axis.text.x = element_text(size=18)) + theme(legend.text=element_text(size=11),legend.title=element_text(size=12),plot.title = element_text(size=22))
 F1b
 ggsave(file=paste(cfg$outdir,"/F1b_EV-transport_bar.png",sep=""),F1b,width=18,height=12,dpi=300)
 
@@ -754,14 +756,15 @@ F1c2 = ggplot()
 F1c2 = F1c2 + geom_bar(data=IEbarm,aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
 F1c2 = F1c2 + geom_point(data=IEbar, aes(x=period,y=value,shape=model,colour=Category,group=Category),size=3,position=position_dodge(width=0.66))
 F1c2 = F1c2 + geom_errorbar(data=IEbarm,aes(x=period,ymin=min,ymax=max,colour=Category),position=position_dodge(width=0.66))
-F1c2 = F1c2 + geom_text(aes(x="2030",y=80),label ="c)",size=10)
+#F1c2 = F1c2 + geom_text(aes(x="2030",y=80),label ="c)",size=10)
 F1c2 = F1c2 + scale_shape_manual(values=cfg$man_shapes)
 F1c2 = F1c2 + scale_color_manual(values=plotstyle(scens))
 F1c2 = F1c2 + scale_fill_manual(values=plotstyle(scens))
+F1c2 = F1c2 + ggtitle("c) F-Gases and Industrial process CO2 emissions")
 F1c2 = F1c2 + xlab("")
-F1c2 = F1c2 + theme_bw() + theme(axis.text.y=element_text(size=18)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=18)) +
-  theme(axis.text.x = element_text(size=18)) + theme(legend.text=element_text(size=11),legend.title=element_text(size=12))
-F1c2 = F1c2 + ylab(paste("F-Gases and Industrial process CO2 emissions","[relative to 2015, ",unique(IEbar$unit),"]"))
+F1c2 = F1c2 + theme_bw() + theme(axis.text.y=element_text(size=18)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=20)) +
+  theme(axis.text.x = element_text(size=18)) + theme(legend.text=element_text(size=11),legend.title=element_text(size=12),plot.title = element_text(size=22))
+F1c2 = F1c2 + ylab("Relative to 2015 (%)") #paste("[relative to 2015, ",unique(IEbar$unit),"]")
 F1c2
 ggsave(file=paste(cfg$outdir,"/F1c2_emissions-industry_bar.png",sep=""),F1c2,width=18,height=12,dpi=300)
 
@@ -783,14 +786,15 @@ F1d = ggplot()
 F1d = F1d + geom_bar(data=EBbarm,aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
 F1d = F1d + geom_point(data=EBbar, aes(x=period,y=value,shape=model,colour=Category,group=Category),size=3,position=position_dodge(width=0.66))
 F1d = F1d + geom_errorbar(data=EBbarm,aes(x=period,ymin=min,ymax=max,colour=Category),position=position_dodge(width=0.66))
-F1d = F1d + geom_text(aes(x="2030",y=70),label ="d)",size=10)
+#F1d = F1d + geom_text(aes(x="2030",y=70),label ="d)",size=10)
 F1d = F1d + scale_shape_manual(values=cfg$man_shapes)
 F1d = F1d + scale_color_manual(values=plotstyle(scens))
 F1d = F1d + scale_fill_manual(values=plotstyle(scens))
-F1d = F1d + xlab("")
-F1d = F1d + theme_bw() + theme(axis.text.y=element_text(size=18)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=18)) +
-  theme(axis.text.x = element_text(size=18)) + theme(legend.text=element_text(size=11),legend.title=element_text(size=12))
-F1d = F1d + ylab(paste("Share of electricity in buildings final energy demand","[",unique(EBbar$unit),"]"))
+F1d = F1d + ggtitle("d) Electricity in buildings final energy demand")
+F1d = F1d + xlab("") + ylab("Share (%)") #paste("Share","[",unique(EBbar$unit),"]")
+F1d = F1d + ylim(0,100)
+F1d = F1d + theme_bw() + theme(axis.text.y=element_text(size=18)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=20)) +
+  theme(axis.text.x = element_text(size=18)) + theme(legend.text=element_text(size=11),legend.title=element_text(size=12),plot.title = element_text(size=22))
 F1d
 ggsave(file=paste(cfg$outdir,"/F1d_Elec-buildings_bar.png",sep=""),F1d,width=18,height=12,dpi=300)
 
@@ -809,14 +813,15 @@ F1e = ggplot()
 F1e = F1e + geom_bar(data=AFbarm,aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
 F1e = F1e + geom_point(data=AFbar, aes(x=period,y=value,shape=model,colour=Category,group=Category),size=3,position=position_dodge(width=0.66))
 F1e = F1e + geom_errorbar(data=AFbarm,aes(x=period,ymin=min,ymax=max,colour=Category),position=position_dodge(width=0.66))
-F1e = F1e + geom_text(aes(x="2030",y=450),label ="e)",size=10)
+#F1e = F1e + geom_text(aes(x="2030",y=450),label ="e)",size=10)
 F1e = F1e + scale_shape_manual(values=cfg$man_shapes)
 F1e = F1e + scale_color_manual(values=plotstyle(scens))
 F1e = F1e + scale_fill_manual(values=plotstyle(scens))
+F1e = F1e + ggtitle("e) Afforestation and reforestation")
 F1e = F1e + xlab("")
-F1e = F1e + theme_bw() + theme(axis.text.y=element_text(size=18)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=18)) +
-  theme(axis.text.x = element_text(size=18)) + theme(legend.text=element_text(size=11),legend.title=element_text(size=12))
-F1e = F1e + ylab(paste("Afforestation and reforestation","[",unique(AFbar$unit),"]"))
+F1e = F1e + theme_bw() + theme(axis.text.y=element_text(size=18)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=20)) +
+  theme(axis.text.x = element_text(size=18)) + theme(legend.text=element_text(size=11),legend.title=element_text(size=12),plot.title = element_text(size=22))
+F1e = F1e + ylab("Million ha") #paste("[",unique(AFbar$unit),"]")
 F1e
 ggsave(file=paste(cfg$outdir,"/F1e_Afforestation_bar.png",sep=""),F1e,width=18,height=12,dpi=300)
 
@@ -1261,6 +1266,7 @@ ggsave(file=paste(cfg$outdir,"/F3c-GHG-emissions-reduction.png",sep=""),F3c,widt
 # Figure 4a carbon price #TODO check differences between 3 tiers as in protocol
 vars=c("Price|Carbon")
 scens <- c("CurPol","NDCplus","Bridge","2Deg2020")
+# R5 regions
 cpricebar=all[variable%in%vars & Category%in%scens&!Scope=="national"&region%in%c("R5OECD90+EU","R5LAM","R5MAF")&period%in%c(2030,2050)]
 cpricebarm=cpricebar[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Category","region","variable","period")]
 
@@ -1281,6 +1287,37 @@ F4a = F4a + theme_bw() + theme(axis.text.y=element_text(size=16)) + theme(strip.
 F4a = F4a + ylab("Carbon price (US$2010/tCO2")
 F4a
 ggsave(file=paste(cfg$outdir,"/F4a_Carbon_price_bar.png",sep=""),F4a,width=18,height=12,dpi=300)
+
+#individual countries rather than R5
+cpricebar=all[variable%in%vars & Category%in%scens&!Scope=="national"&region%in%regions&period%in%c(2030,2050)]
+cpricebarm=cpricebar[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Category","region","variable","period")]
+
+cpricebar$period=as.factor(cpricebar$period)
+cpricebarm$period=as.factor(cpricebarm$period)
+cpricebar$Category = factor(cpricebar$Category,levels=c("CurPol","NDCplus","Bridge","2Deg2020"))
+cpricebarm$Category = factor(cpricebarm$Category,levels=c("CurPol","NDCplus","Bridge","2Deg2020"))
+
+F4a1 = ggplot()
+F4a1 = F4a1 + geom_bar(data=cpricebarm,aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
+F4a1 = F4a1 + geom_point(data=cpricebar, aes(x=period,y=value,shape=model,colour=Category,group=Category),size=3,position=position_dodge(width=0.66))
+F4a1 = F4a1 + facet_wrap(~region,nrow=4)
+F4a1 = F4a1 + scale_shape_manual(values=cfg$man_shapes)
+F4a1 = F4a1 + scale_color_manual(values=plotstyle(scens))
+F4a1 = F4a1 + scale_fill_manual(values=plotstyle(scens))
+F4a1 = F4a1 + theme_bw() + theme(axis.text.y=element_text(size=18)) + theme(strip.text=element_text(size=20)) + theme(axis.title=element_text(size=20)) +
+  theme(axis.text.x = element_text(size=18)) + theme(legend.text=element_text(size=18),legend.title=element_text(size=20)) + theme(panel.spacing = unit(0, "lines"))
+F4a1 = F4a1 + ylab("Carbon price (US$2010/tCO2")+xlab("")
+F4a1
+ggsave(file=paste(cfg$outdir,"/F4a1_Carbon_price_bar_country.png",sep=""),F4a1,width=18,height=12,dpi=300)
+
+#TODO fix this
+# F4a1 = F4a1 + theme(legend.box="horizontal")
+# tmp<-ggplot_gtable(ggplot_build(F4a1))
+# leg<-which(sapply(tmp$grobs,function(x) x$name) =="guide-box")
+# legend<-tmp$grobs[[leg]]
+# F4a1=F4a1+theme(legend.position = "none")
+# lay<-rbind(c(1,1,1),c(1,1,2))
+# h=grid.arrange(F4a1,legend,layout_matrix=lay)
 
 # Figure 4b policy costs
 costsGDP = fread("data/policy costs.csv",sep=";", header=T)
