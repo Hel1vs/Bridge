@@ -264,30 +264,29 @@ write.table(data_figure5_stat_fig , file="Indicators/data/stocktake_tool/figure5
 
 # Figure 6 - innovation----------------------------------------------------------------
 all <- calcVariable(all,'`Renewables Share|Incl. Hydro and Nuclear` ~ ( `Secondary Energy|Electricity|Solar` + `Secondary Energy|Electricity|Wind` + `Secondary Energy|Electricity|Nuclear` + `Secondary Energy|Electricity|Hydro` + `Secondary Energy|Electricity|Biomass` + `Secondary Energy|Electricity|Geothermal`) / `Secondary Energy|Electricity` * 100 ' , newUnit='%')
-
 #TODO update this for COMMIT
-# Based on PBL IMAGE data, not other models --> to update with add_variables?
+# calculation of nonfossilresbuildings:
+# # x=%-REN electricity, y=electricity fuel use, x.x = bio fuel use, y.y = total fuel use
+# NonFossilResBuildingsShare <- NonFossilResBuildingsShare %>% mutate(value=(0.01*value.x*value.y+value.x.x)/value.y.y) %>% select(year, region, value, population_group)
+# NonFossilResBuildingsShare$value <- 100*NonFossilResBuildingsShare$value
+# NonFossilResBuildingsShare <- mutate(NonFossilResBuildingsShare, unit= "%")  %>% as.data.frame()
 
-# NPi_fig6_elec  <- filter(NPi_i_indicators$NonFossilElecShare, year>=2010, year<=2050) %>% mutate(scenario="National policies") %>% mutate(sector="Electricity")
-# Fig6_elec <- mutate(Fig6_elec, variable="Final Energy|Electricity|Non-fossil share")
-# Fig6_elec <- select(Fig6_elec, year, region, value, unit, scenario, sector, variable)
-# 
-# NPi_fig6_res  <- filter(NPi_i_indicators$NonFossilResBuildingsShare, year>=2010, year<=2050, population_group=="Total") %>% mutate(scenario="National policies") %>% mutate(sector="Residential buildings")
-# Fig6_res <- mutate(Fig6_res, variable="Final Energy|Residential buildings|Non-fossil share")
-# Fig6_res <- select(Fig6_res, year, region, value, unit, scenario, sector, variable)
-# 
-# NPi_fig6_transport  <- filter(NPi_i_indicators$NonFossilTransportShare, year>=2010, year<=2050, travel_mode=="Total", type=="Total") %>% mutate(scenario="National policies") %>% mutate(sector="Transport")
-# Fig6_transport <- mutate(Fig6_transport, variable="Final Energy|Transport|Non-fossil share")
-# Fig6_transport <- select(Fig6_transport, year, region, value, unit, scenario, sector, variable)
-# 
-# data_figure6 <- rbind(Fig6_elec, Fig6_res) %>% rbind(Fig6_transport)
+# # x=%-NonFossil electricity, y=electricity fuel use, x.x = bio fuel use, y.y = total fuel use
+# NonFossilTransportShare <- NonFossilTransportShare %>% mutate(value=(0.01*value.x*value.y+value.x.x)/value.y.y) %>% select(year, region, value, travel_mode, type)
+# NonFossilTransportShare$value <- 100*NonFossilTransportShare$value
+# NonFossilTransportShare <- mutate(NonFossilTransportShare, unit= "%")  %>% as.data.frame() 
+
+innovation = all[variable%in%c("Renewables Share|Incl. Hydro and Nuclear","NonFossilResBuildingsShare","NonFossilTransportShare")&period%in%c(2010:2050)]
+innovation[variable=="Renewables Share|Incl. Hydro and Nuclear"]$variable<-"Final Energy|Electricity|Non-fossil share"
+innovation[variable=="NonFossilResBuildingsShare"]$variable<-"Final Energy|Residential buildings|Non-fossil share"
+innovation[variable=="NonFossilTransportShare"]$variable<-"Final Energy|Transport|Non-fossil share"
+
 # data_figure6 <- mutate(data_figure6, source="PBL")
 # data_figure6 <- mutate(data_figure6, statistic="value")
 # data_figure6 <- select(data_figure6, variable, scenario, region, unit, source, statistic, year, value)
 # data_figure6 <- spread(data_figure6, key=year, value=value)
-# data_figure6 <- filter(data_figure6, region %in% regions_indicators_IMAGE)
-# write.table(data_figure6 , file="Indicators/data/stocktake_tool/figure6.csv", sep=";", row.names = FALSE)
 
+write.xlsx2(innovation,paste("Stocktaketool","/006v_gst20.xlsx",sep=""),sheetName="data",append=F,row.names = F)
 
 # Figure 7 - investments----------------------------------------------------------------
 # Investments based on McCollum - no R action needed? Or try to deliver COMMIT data?
