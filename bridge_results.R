@@ -5,7 +5,7 @@ scencateg <- "scen_categ_bridge"  #"scen_categ_COMMIT"
 variables <- "variables_bridge"  #"variables_xCut"
 adjust <- "adjust_reporting_COMMIT"
 addvars <- F
-datafile <-"commit_bridge_compare_20201119-151637" #commit_cd-links_compare_20191015-114544
+datafile <-"commit_bridge_compare_20201209-091234" #commit_cd-links_compare_20191015-114544
 source("load_data.R") 
 
 # check whether there's only one scenario per category for each model
@@ -26,6 +26,7 @@ source("functions/plot_LineNationalScens.R")
 source("functions/plotstyle.R")
 library(grid)
 library(gridExtra)
+library(xlsx)
 
 # fix stupid R mystery
 all$period<-as.numeric(as.character(all$period))
@@ -1035,7 +1036,7 @@ scens = c("CurPol","NDCplus","Bridge","2Deg2020")
 ### Figure elements
 # Figure 2a Sectors
 # select data
-cdata=all[model=="IMAGE 3.0"&region=="World"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, PROMETHEUS, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0, TIAM_Grantham_v3.2
+cdata=all[model=="TIAM_Grantham_v3.2"&region=="World"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, PROMETHEUS, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0, TIAM_Grantham_v3.2
 model=unique(cdata$model)
 
 # add non-CO2
