@@ -45,8 +45,8 @@ ylab <-  bquote(paste("Emissions [Gt", CO[2],"eq]"))
 titletag <- "Waterfall_"
 file.prefix <- "Fig2_sector_"
 
-catsnat <- c("GPP","CurPol") #c("2Deg2020","Bridge")
-labcat <-  c("GPP","CurPol") #c("2Deg2020","Bridge")
+catsnat <- c("Bridge","CurPol")
+labcat <-  c("Bridge","CurPol") 
 
 #choose reference scenario INDC or NoPOL
 reference_cat <- catsnat[2]
@@ -59,7 +59,7 @@ for(icat in c(1)){
     
     # defining the stacks
     dtn_1 <- filter(dtn, Category==reference_cat, variable %in% vars, period == "2015") %>%
-      mutate(bar_position = "1") 
+      mutate(bar_position = "1") %>% factor.data.frame()
     
     dtn_2 <- filter(dtn, Category==reference_cat, variable %in% vars, period == tt[2]) %>%
       mutate(bar_position = "2") %>% factor.data.frame()
@@ -212,6 +212,8 @@ for(icat in c(1)){
       }}
     
     ggsave(filename=paste0("~/disks/y/Project/E555163_COMMIT/Data/Database/Snapshots/Scripts/R/Bridge/Bridge/output/Waterfall/",file.prefix,i,"-",j,"-",labcat[icat],"_",tt[2],".png"),width=5, height=3.5)  
-    
+    dtn_all=data.table(dtn_all)
+    #write.xlsx(dtn_all[!region=="ydummy"],paste("~/disks/y/Project/E555163_COMMIT/Data/Database/Snapshots/Scripts/R/Bridge/Bridge/output/Waterfall/","Data-waterfall-",i,"-",j,"-",labcat[icat],"_",tt[2],".xlsx",sep=""),sheetName="data",append=F,row.names = F)
+    write.xlsx(dtn_all[!region=="ydummy"],paste("~/disks/y/Project/E555163_COMMIT/Data/Database/Snapshots/Scripts/R/Bridge/Bridge/output/Waterfall/","Data-waterfall",".xlsx",sep=""),sheetName=paste(j,"-",labcat[icat],"_",tt[2],sep=""),append=T,row.names = F)
   }
 }
