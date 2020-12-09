@@ -700,6 +700,35 @@ F1b = F1b + theme_bw() + theme(axis.text.y=element_text(size=18)) + theme(strip.
 F1b
 ggsave(file=paste(cfg$outdir,"/F1b_EV-transport_bar.png",sep=""),F1b,width=18,height=12,dpi=300)
 
+# Figure 1b extra: biomass in transport
+Biobar=all[variable%in%c("Final Energy|Transportation|Liquids|Biomass","Final Energy|Transportation")&Category%in%scens&!Scope=="national"& region%in%regio &period%in%years]
+Biobar = spread(Biobar,variable,value)
+Biobar = Biobar%>%mutate(Bioshare= `Final Energy|Transportation|Liquids|Biomass`/`Final Energy|Transportation` * 100 )
+Biobar = data.table(gather(Biobar,variable,value,c("Final Energy|Transportation|Liquids|Biomass","Final Energy|Transportation","Bioshare")))
+Biobar = Biobar[variable=="Bioshare"]
+Biobar$unit <- "%"
+
+Biobarm=Biobar[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Category","variable","period")]
+Biobar$period=as.factor(Biobar$period)
+Biobarm$period=as.factor(Biobarm$period)
+Biobar$Category = factor(Biobar$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020")) #,"NDCMCS"
+Biobarm$Category = factor(Biobarm$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020"))
+
+F1b1 = ggplot()
+F1b1 = F1b1 + geom_bar(data=Biobarm,aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
+F1b1 = F1b1 + geom_point(data=Biobar, aes(x=period,y=value,shape=model,colour=Category,group=Category),size=3,position=position_dodge(width=0.66))
+F1b1 = F1b1 + geom_errorbar(data=Biobarm,aes(x=period,ymin=min,ymax=max,colour=Category),position=position_dodge(width=0.66))
+F1b1 = F1b1 + scale_shape_manual(values=cfg$man_shapes)
+F1b1 = F1b1 + scale_color_manual(values=plotstyle(scens))
+F1b1 = F1b1 + scale_fill_manual(values=plotstyle(scens))
+F1b1 = F1b1 + ggtitle("Biomass in transportation final energy demand")
+F1b1 = F1b1 + xlab("")+ ylab("Share (%)") #paste("Share","[",unique(EVbar$unit),"]")
+F1b1 = F1b1 + ylim(0,100)
+F1b1 = F1b1 + theme_bw() + theme(axis.text.y=element_text(size=18)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=20)) +
+  theme(axis.text.x = element_text(size=18)) + theme(legend.text=element_text(size=11),legend.title=element_text(size=12),plot.title = element_text(size=22))
+F1b1
+ggsave(file=paste(cfg$outdir,"/F1bextra_Bio-transport_bar.png",sep=""),F1b1,width=18,height=12,dpi=300)
+
 # Figure 1c Industry efficiency? Need value added... (only reported by IMAGE). For now CCS as it is part of protocol. Maybe add F-gases? 
 CCSbar=all[variable%in%c("Carbon Sequestration|CCS|Fossil|Energy|Demand|Industry","Emissions|CO2|Energy|Demand|Industry")&Category%in%scens&!Scope=="national"& region%in%regio &period%in%years]
 CCSbar = spread(CCSbar,variable,value)
