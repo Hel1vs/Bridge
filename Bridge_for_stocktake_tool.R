@@ -267,6 +267,7 @@ all <- calcVariable(all,'`Renewables Share|Incl. Hydro and Nuclear` ~ ( `Seconda
 #TODO update this for COMMIT
 # calculation of nonfossilresbuildings:
 # # x=%-REN electricity, y=electricity fuel use, x.x = bio fuel use, y.y = total fuel use
+#COMMIT: x = Renewables Share, y= Final Energy|Residential and Commercial|Electricity, x.x = Final Energy|Residential and Commercial|Solids|Biomass? y.y = Final Energy|Residential and Commercial?
 # NonFossilResBuildingsShare <- NonFossilResBuildingsShare %>% mutate(value=(0.01*value.x*value.y+value.x.x)/value.y.y) %>% select(year, region, value, population_group)
 # NonFossilResBuildingsShare$value <- 100*NonFossilResBuildingsShare$value
 # NonFossilResBuildingsShare <- mutate(NonFossilResBuildingsShare, unit= "%")  %>% as.data.frame()
