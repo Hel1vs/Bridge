@@ -36,7 +36,7 @@ cfg$man_shapes=c("AIM V2.1" = 2, #global
                  "*AIM/CGE[Korea]" = 1, #national
                  "*AIM/Enduse[Japan]" = 1, #national
                  "*BLUES" = 1, #national
-                 "COPPE-COFFEE 1.0" = 3, #global
+                 "COPPE-COFFEE 1.1" = 3, #global
                  "*GCAM-USA_COMMIT" = 1, #national
                  "GCAM4" = 4, #SSPs
                  "*GCAM_Canada" = 1, #national
@@ -69,7 +69,7 @@ cfg$man_lines=c("AIM V2.1" = "dashed", #global
                  "*AIM/CGE[Korea]" = "solid", #national
                  "*AIM/Enduse[Japan]" = "solid", #national
                  "*BLUES" = "solid", #national
-                 "COPPE-COFFEE 1.0" = "dotted", #global
+                 "COPPE-COFFEE 1.1" = "dotted", #global
                  "*GCAM-USA_COMMIT" = "solid", #national
                  "GCAM4" = "longdash", #SSPs
                  "*GCAM_Canada" = "solid", #national
