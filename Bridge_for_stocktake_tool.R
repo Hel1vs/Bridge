@@ -263,7 +263,10 @@ write.table(data_figure5_stat_fig , file="Indicators/data/stocktake_tool/figure5
 
 
 # Figure 6 - innovation----------------------------------------------------------------
-all <- calcVariable(all,'`Renewables Share|Incl. Hydro and Nuclear` ~ ( `Secondary Energy|Electricity|Solar` + `Secondary Energy|Electricity|Wind` + `Secondary Energy|Electricity|Nuclear` + `Secondary Energy|Electricity|Hydro` + `Secondary Energy|Electricity|Biomass` + `Secondary Energy|Electricity|Geothermal`) / `Secondary Energy|Electricity` * 100 ' , newUnit='%')
+all <- calcVariable(all,'`Renewables Share|Incl. Hydro and Nuclear` ~ ( `Secondary Energy|Electricity|Solar` + `Secondary Energy|Electricity|Wind` + `Secondary Energy|Electricity|Nuclear` + `Secondary Energy|Electricity|Hydro` + `Secondary Energy|Electricity|Biomass` ) / `Secondary Energy|Electricity` * 100 ' , newUnit='%') #+ `Secondary Energy|Electricity|Geothermal`
+NFbuildings = all[variable%in%c("Renewables Share|Incl. Hydro and Nuclear","Final Energy|Residential and Commercial|Electricity","Final Energy|Residential and Commercial|Solids|Biomass","Final Energy|Residential and Commercial")]
+NFbuildings = spread(NFbuildings[,!c('unit'),with=FALSE],variable,value)
+
 #TODO update this for COMMIT
 # calculation of nonfossilresbuildings:
 # # x=%-REN electricity, y=electricity fuel use, x.x = bio fuel use, y.y = total fuel use
