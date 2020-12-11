@@ -125,6 +125,27 @@ CO2TIAM=all[variable=="Emissions|CO2|Energy"&model=="TIAM_Grantham_v3.2"]
 CO2TIAM$variable<-"Emissions|CO2"
 all=rbind(all,CO2TIAM)
 
+CpriceTIAM <- invisible(fread(paste0("data/","Carbon Price - Fixed",".csv"),header=TRUE))
+CpriceTIAM <- process_data(CpriceTIAM,scens)
+all=rbind(all[!c(variable=="Price|Carbon"&model=="TIAM_Grantham_v3.2")],CpriceTIAM)
+
+#Adding "w/o CCS" PE and SE types to models that don't report them, assuming that there is no CCS (which is probably not true -> ask teams to submit)
+alternatives <- data.frame(plot_var=c("Primary Energy|Biomass",
+                                      "Primary Energy|Coal",
+                                      "Primary Energy|Gas"),
+                           alt_var=c("Primary Energy|Biomass|w/o CCS",
+                                     "Primary Energy|Coal|w/o CCS",
+                                     "Primary Energy|Gas|w/o CCS"
+                           ))
+for (i in (1:dim(alternatives)[1])){
+  tmp1 <- all[model %in% setdiff(unique(all[variable==as.character(alternatives[i,1])]$model),unique(all[variable==as.character(alternatives[i,2])]$model)) &
+                variable == as.character(alternatives[i,1])]
+  setdiff(unique(all[variable==as.character(alternatives[i,1])]$model),unique(all[variable==as.character(alternatives[i,2])]$model))
+  tmp1$variable <- alternatives[i,2]
+  all <- rbind(all,tmp1)
+}
+
+
 
 # Add 2015 for MESSAGE ----------------------------------------------------
 mesg=spread(all[period%in%c(2010,2020)&model%in%c("MESSAGEix-GLOBIOM_1.0","TIAM_Grantham_v3.2")],period,value)
