@@ -45,8 +45,8 @@ ylab <-  bquote(paste("Emissions [Gt", CO[2],"eq]"))
 titletag <- "Waterfall_"
 file.prefix <- "Fig2_sector_"
 
-catsnat <- c("Bridge","NDCplus") #c("2Deg2020","Bridge")
-labcat <-  c("Bridge","NDCplus") #c("2Deg2020","Bridge")
+catsnat <- c("2Deg2020","Bridge") #c("Bridge","NDCplus") 
+labcat <-  c("2Deg2020","Bridge") #c("Bridge","NDCplus") 
 
 #choose reference scenario INDC or NoPOL
 reference_cat <- catsnat[2]
