@@ -35,6 +35,8 @@ all$period<-as.numeric(as.character(all$period))
 #wp2 = all[model%in%c("*PECE V2.0","*IPAC-AIM/technology V1.0")]
 #write.csv(wp2,"WP2_China.csv")
 
+# Adjust COFFEE name manually until 1.1 registered
+all[model=="COPPE-COFFEE 1.0"]$model<-"COPPE-COFFEE 1.1"
 
 # Plot emissions ----------------------------------------------------------
 vars = "Emissions|Kyoto Gases"
@@ -607,15 +609,16 @@ m14c = m14c + geom_bar(data=cpricebarm[Category%in%c("CurPol","NDCplus","Bridge"
 # m14c = m14c + geom_pointrange(data=emisredm[Category%in%c("CurPol","GPP","Bridge")&variable=="Rate of Change| Emissions|Kyoto Gases"],
 #                         aes(ymin=min,ymax=max,y=median, x=period, colour=Category),alpha=0.5,size=5,fatten=1,position=position_dodge(width=0.66)) #,show.legend = F
 m14c = m14c + geom_point(data=cpricebar[Category%in%c("CurPol","NDCplus","Bridge","2Deg2020","2Deg2030")], aes(x=period,y=value,shape=model,colour=Category,group=Category),size=3,position=position_dodge(width=0.66))
-m14c = m14c + geom_text(aes(x="2030",y=2000),label ="b)",size=10)
+m14c = m14c +ggtitle("b) Global carbon price")
+#m14c = m14c + geom_text(aes(x="2030",y=2000),label ="b)",size=10)
 m14c = m14c + ylim(0,2000)
 m14c = m14c + scale_shape_manual(values=cfg$man_shapes)
 m14c = m14c + scale_color_manual(values=plotstyle(scens))
 m14c = m14c + scale_fill_manual(values=plotstyle(scens))
 #m14c = m14c + facet_wrap(~region,scales="free_y")
 m14c = m14c + theme_bw() + theme(axis.text.y=element_text(size=16)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=18)) +
-  theme(axis.text.x = element_text(size=14)) + theme(legend.text=element_text(size=11),legend.title=element_text(size=12))
-m14c = m14c + ylab("Carbon price (US$2010/tCO2")
+  theme(axis.text.x = element_text(size=14)) + theme(legend.text=element_text(size=11),legend.title=element_text(size=12))+theme(plot.title=element_text(size=26))
+m14c = m14c + ylab("US$2010/tCO2")
 m14c
 ggsave(file=paste(cfg$outdir,"/Carbon_price_bar.png",sep=""),m14c,width=18,height=12,dpi=300)
 
@@ -864,7 +867,7 @@ PEstack$Category = factor(PEstack$Category,levels=c("CurPol","NDCplus","NDCMCS",
 
 F1f = ggplot(data=PEstack) #TODO different year? #[!Category=="NDCplus"]
 F1f = F1f + geom_bar(aes(x=Category,y=value,fill=variable),stat="identity", position="stack",width=0.5)
-F1f = F1f + facet_wrap(~model,nrow=1,labeller = labeller(model=c("IMAGE 3.0"="IMAGE","REMIND-MAgPIE 1.7-3.0"="REMIND", "POLES GECO2019"="POLES","AIM/CGE"="AIM/CGE","COPPE-COFFEE 1.0"="COFFEE","PROMETHEUS"="PROMETHEUS","MESSAGEix-GLOBIOM_1.0"="MESSAGE","WITCH 5.0"="WITCH","TIAM_Grantham_v3.2"="TIAM")))
+F1f = F1f + facet_wrap(~model,nrow=1,labeller = labeller(model=c("IMAGE 3.0"="IMAGE","REMIND-MAgPIE 1.7-3.0"="REMIND", "POLES GECO2019"="POLES","AIM/CGE"="AIM/CGE","COPPE-COFFEE 1.1"="COFFEE","PROMETHEUS"="PROMETHEUS","MESSAGEix-GLOBIOM_1.0"="MESSAGE","WITCH 5.0"="WITCH","TIAM_Grantham_v3.2"="TIAM")))
 F1f = F1f + scale_fill_manual(values=plotstyle(vars))
 F1f = F1f + theme_bw() + theme(axis.text.y=element_text(size=18)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=18)) +
   theme(axis.text.x = element_text(size=18,angle=90)) + theme(legend.text=element_text(size=11),legend.title=element_text(size=12)) + theme(panel.spacing = unit(0, "lines"))
@@ -1049,6 +1052,10 @@ tmp<-ggplot_gtable(ggplot_build(F1a))
 leg<-which(sapply(tmp$grobs,function(x) x$name) =="guide-box")
 legend<-tmp$grobs[[leg]]
 F1a=F1a+theme(legend.position = "none",axis.text.x=element_text(size=22),axis.text.y=element_text(size=22))
+F1b=F1b+theme(legend.position = "none")
+F1c2=F1c2+theme(legend.position = "none")
+F1d=F1d+theme(legend.position = "none")
+F1e=F1e+theme(legend.position = "none")
 F1b=F1b+theme(axis.text.x=element_text(size=22),axis.text.y=element_text(size=22))
 F1c2=F1c2+theme(axis.text.x=element_text(size=22),axis.text.y=element_text(size=22))
 F1d=F1d+theme(axis.text.x=element_text(size=22),axis.text.y=element_text(size=22))
@@ -1065,7 +1072,7 @@ scens = c("CurPol","NDCplus","Bridge","2Deg2020")
 ### Figure elements
 # Figure 2a Sectors
 # select data
-cdata=all[model=="TIAM_Grantham_v3.2"&region=="World"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, PROMETHEUS, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0, TIAM_Grantham_v3.2
+cdata=all[model=="COPPE-COFFEE 1.1"&region=="World"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, PROMETHEUS, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.1,MESSAGEix-GLOBIOM_1.0, WITCH 5.0, TIAM_Grantham_v3.2
 model=unique(cdata$model)
 
 # add non-CO2
@@ -1086,7 +1093,7 @@ if(unique(cdata$model=="AIM/CGE")){cdata$model<-"AIM-CGE"}
 source("waterfall_bridge.R")
 
 # Figure 2b countries
-cdata=all[model=="POLES GECO2019"&region%in%c("R5ASIA","R5LAM","R5REF","R5OECD90+EU","R5MAF")&variable=="Emissions|Kyoto Gases"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.0,MESSAGEix-GLOBIOM_1.0, WITCH 5.0
+cdata=all[model=="COPPE-COFFEE 1.1"&region%in%c("R5ASIA","R5LAM","R5REF","R5OECD90+EU","R5MAF")&variable=="Emissions|Kyoto Gases"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.1,MESSAGEix-GLOBIOM_1.0, WITCH 5.0
 if(unique(cdata$model=="AIM/CGE")){cdata$model<-"AIM-CGE"}
 source("waterfall_bridge_regions.R")
 
@@ -1272,6 +1279,8 @@ emisrednew$Category = factor(emisrednew$Category,levels=c("CurPol","NDCplus","Br
 emisrednewm$Category = factor(emisrednewm$Category,levels=c("CurPol","NDCplus","Bridge","2Deg2020"))
 emisrednew$region = factor(emisrednew$region,levels=c("AUS","CAN","EU","JPN","USA","BRA","CHN","IDN","IND","ROK","RUS","World"))
 emisrednewm$region = factor(emisrednewm$region,levels=c("AUS","CAN","EU","JPN","USA","BRA","CHN","IDN","IND","ROK","RUS","World"))
+emisrednew$model = factor(emisrednew$model,levels=c("AIM/CGE","COPPE-COFFEE 1.1","IMAGE 3.0","MESSAGEix-GLOBIOM_1.0","POLES GECO2019","PROMETHEUS","REMIND-MAgPIE 1.7-3.0","TIAM_Grantham_v3.2","WITCH 5.0",
+                                                    "*AIM/CGE[Korea]","*AIM/Enduse[Japan]","*BLUES","*GCAM_Canada","*GCAM-USA_COMMIT", "*India MARKAL","*IPAC-AIM/technology V1.0","*PRIMES_V1","*TIMES-AUS"))
 
 F3c = ggplot()
 F3c = F3c + geom_bar(data=emisrednewm[Category%in%scens&variable=="Emissions|Kyoto Gases"&region%in%c(regions,"World")],
@@ -1363,13 +1372,14 @@ F4b = ggplot()
 F4b = F4b + geom_bar(data=costsGDPm,aes(x=period,y=median,fill=Scenario),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
 F4b = F4b + geom_point(data=costsGDP, aes(x=period,y=value,shape=Model,colour=Scenario,group=Scenario),size=5,position=position_dodge(width=0.66))
 F4b = F4b + geom_errorbar(data=costsGDPm,aes(x=period,ymin=min,ymax=max,colour=Scenario),position=position_dodge(width=0.66),width=0.66)
-F4b = F4b + geom_text(aes(x="2030",y=120),label ="a)",size=10)
+F4b = F4b + ggtitle("a) GDP loss per tonne of CO2e abated in Bridge")
+#F4b = F4b + geom_text(aes(x="2030",y=120),label ="a)",size=10)
 F4b = F4b + scale_shape_manual(values=cfg$man_shapes)
 F4b = F4b + scale_color_manual(values=c("Bridgevs2020"="#56B4E9","Bridgevs2030"="#2860E9"),labels=c("Bridgevs2020"="Bridge vs 2Deg2020","Bridgevs2030"="Bridge vs 2Deg2030"))
 F4b = F4b + scale_fill_manual(values=c("Bridgevs2020"="#56B4E9","Bridgevs2030"="#2860E9"),labels=c("Bridgevs2020"="Bridge vs 2Deg2020","Bridgevs2030"="Bridge vs 2Deg2030"))
 F4b = F4b + theme_bw() + theme(axis.text.y=element_text(size=24)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=24)) +
-  theme(axis.text.x = element_text(size=24)) + theme(legend.text=element_text(size=24),legend.title=element_text(size=26))
-F4b = F4b + ylab("GDP loss in Bridge relative to 2Deg2020 or 2Deg2030 (%)")+xlab("")
+  theme(axis.text.x = element_text(size=24)) + theme(legend.text=element_text(size=24),legend.title=element_text(size=26)) + theme(plot.title=element_text(size=26))
+F4b = F4b + ylab("Relative to 2Deg2020 or 2Deg2030 (%)")+xlab("")
 F4b
 ggsave(file=paste(cfg$outdir,"/F4b_policy_costs_GDP_bar.png",sep=""),F4b,width=18,height=12,dpi=300)
 
