@@ -266,31 +266,45 @@ write.table(data_figure5_stat_fig , file="Indicators/data/stocktake_tool/figure5
 all <- calcVariable(all,'`Renewables Share|Incl. Hydro and Nuclear` ~ ( `Secondary Energy|Electricity|Solar` + `Secondary Energy|Electricity|Wind` + `Secondary Energy|Electricity|Nuclear` + `Secondary Energy|Electricity|Hydro` + `Secondary Energy|Electricity|Biomass` ) / `Secondary Energy|Electricity` * 100 ' , newUnit='%') #+ `Secondary Energy|Electricity|Geothermal`
 NFbuildings = all[variable%in%c("Renewables Share|Incl. Hydro and Nuclear","Final Energy|Residential and Commercial|Electricity","Final Energy|Residential and Commercial|Solids|Biomass","Final Energy|Residential and Commercial")]
 NFbuildings = spread(NFbuildings[,!c('unit'),with=FALSE],variable,value)
+NFbuildings = na.omit(NFbuildings)
+NFbuildings = NFbuildings%>%mutate(NonFossilResBuildingsShare = ((0.01*`Renewables Share|Incl. Hydro and Nuclear`*`Final Energy|Residential and Commercial|Electricity`+`Final Energy|Residential and Commercial|Solids|Biomass`)/`Final Energy|Residential and Commercial`)*100)
+NFbuildings = data.table(gather(NFbuildings, variable,value,c("Renewables Share|Incl. Hydro and Nuclear","Final Energy|Residential and Commercial|Electricity","Final Energy|Residential and Commercial|Solids|Biomass","Final Energy|Residential and Commercial","NonFossilResBuildingsShare")))
+NFbuildings = NFbuildings[variable=="NonFossilResBuildingsShare"]
+NFbuildings$unit <- "%"
 
-#TODO update this for COMMIT
-# calculation of nonfossilresbuildings:
-# # x=%-REN electricity, y=electricity fuel use, x.x = bio fuel use, y.y = total fuel use
-#COMMIT: x = Renewables Share, y= Final Energy|Residential and Commercial|Electricity, x.x = Final Energy|Residential and Commercial|Solids|Biomass? y.y = Final Energy|Residential and Commercial?
-# NonFossilResBuildingsShare <- NonFossilResBuildingsShare %>% mutate(value=(0.01*value.x*value.y+value.x.x)/value.y.y) %>% select(year, region, value, population_group)
-# NonFossilResBuildingsShare$value <- 100*NonFossilResBuildingsShare$value
-# NonFossilResBuildingsShare <- mutate(NonFossilResBuildingsShare, unit= "%")  %>% as.data.frame()
+NFtransport = all[variable%in%c("Renewables Share|Incl. Hydro and Nuclear","Final Energy|Transportation|Electricity","Final Energy|Transportation|Liquids|Biomass","Final Energy|Transportation")]
+NFtransport = spread(NFtransport[,!c('unit'),with=FALSE],variable,value)
+NFtransport = na.omit(NFtransport)
+NFtransport = NFtransport%>%mutate(NonFossilTransportShare = ((0.01*`Renewables Share|Incl. Hydro and Nuclear`*`Final Energy|Transportation|Electricity`+`Final Energy|Transportation|Liquids|Biomass`)/`Final Energy|Transportation`)*100)
+NFtransport = data.table(gather(NFtransport, variable,value,c("Renewables Share|Incl. Hydro and Nuclear","Final Energy|Transportation|Electricity","Final Energy|Transportation|Liquids|Biomass","Final Energy|Transportation","NonFossilTransportShare")))
+NFtransport = NFtransport[variable=="NonFossilTransportShare"]
+NFtransport$unit <- "%"
 
-# # x=%-NonFossil electricity, y=electricity fuel use, x.x = bio fuel use, y.y = total fuel use
-# NonFossilTransportShare <- NonFossilTransportShare %>% mutate(value=(0.01*value.x*value.y+value.x.x)/value.y.y) %>% select(year, region, value, travel_mode, type)
-# NonFossilTransportShare$value <- 100*NonFossilTransportShare$value
-# NonFossilTransportShare <- mutate(NonFossilTransportShare, unit= "%")  %>% as.data.frame() 
-
-innovation = all[variable%in%c("Renewables Share|Incl. Hydro and Nuclear","NonFossilResBuildingsShare","NonFossilTransportShare")&period%in%c(2010:2050)]
+innovation = rbind(NFtransport,NFbuildings)
+setcolorder(innovation,colnames(all))
+innovation = rbind(innovation,all[variable=="Renewables Share|Incl. Hydro and Nuclear"])
+innovation = innovation[period%in%c(2010:2050)]
 innovation[variable=="Renewables Share|Incl. Hydro and Nuclear"]$variable<-"Final Energy|Electricity|Non-fossil share"
 innovation[variable=="NonFossilResBuildingsShare"]$variable<-"Final Energy|Residential buildings|Non-fossil share"
 innovation[variable=="NonFossilTransportShare"]$variable<-"Final Energy|Transport|Non-fossil share"
 
-# data_figure6 <- mutate(data_figure6, source="PBL")
-# data_figure6 <- mutate(data_figure6, statistic="value")
-# data_figure6 <- select(data_figure6, variable, scenario, region, unit, source, statistic, year, value)
-# data_figure6 <- spread(data_figure6, key=year, value=value)
+innovationrange=innovation[Scope=="global",list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T),mean=mean(value,na.rm=T),ninetyp=quantile(value,probs=0.9,na.rm=T),tenp=quantile(value,probs=0.1,na.rm=T)),by=c("Category","region","variable","unit","period")]
+innovationrange=data.table(gather(innovationrange,statistic,value,c("min","max","median","mean","ninetyp","tenp")))
+setnames(innovationrange,"Category","scenario")
+innovationrange$source<-"COMMIT_global"
+setcolorder(innovationrange,c("variable","scenario","region","unit","source","statistic","value"))
+innovationrange=spread(innovationrange,period,value)
 
-write.xlsx2(innovation,paste("Stocktaketool","/006v_gst20.xlsx",sep=""),sheetName="data",append=F,row.names = F)
+# innovation = innovation[,`:=`(scenario=NULL,Baseline=NULL,Scope=NULL)]
+# setnames(innovation,"Category","scenario")
+# innovation$source<-"COMMIT"
+# innovation$statistic<-"value"
+# setcolorder(innovation,c("variable","scenario","region","unit","source","statistic","value"))
+# innovation=spread(innovation,period,value)
+# 
+# innovation=rbind(innovation,innovationrange)
+
+write.xlsx2(innovationrange,paste("Stocktaketool","/006v_gst20.xlsx",sep=""),sheetName="data",append=F,row.names = F)
 
 # Figure 7 - investments----------------------------------------------------------------
 # Investments based on McCollum - no R action needed? Or try to deliver COMMIT data?
