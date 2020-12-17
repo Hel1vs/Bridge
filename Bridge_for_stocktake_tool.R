@@ -248,7 +248,7 @@ write.table(data_figure5_CO2emissions_model , file="Stocktaketool/figure5_CO2emi
 write.table(data_figure5_CO2emissions_stat , file="Stocktaketool/figure5_CO2emissions_stat.csv", sep=";", row.names = FALSE)
 write.table(data_figure5_CO2budget_stat , file="Stocktaketool/figure5_CO2budget_stat.csv", sep=";", row.names = FALSE)
 
-#5 Import again in R (effort sharing) TODO continue here
+#5 Import again in R (effort sharing) TODO continue here see Data figure 5.xlsx
 data_figure5_model <- read.csv("Stocktaketool/data_figure5_ToR.csv", header=TRUE, sep=";")
 #data_figure5_stat <- data_figure5_model
 colnames(data_figure5_model) = gsub("X", "", colnames(data_figure5_model))
