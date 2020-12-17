@@ -164,10 +164,16 @@ setnames(intensrate_stat,"Category","scenario")
 write.xlsx2(intensrate_stat,paste("Stocktaketool","/004v_gst20.xlsx",sep=""),sheetName="data",append=F,row.names = F)
 
 # Figure 5 - budget depletion----------------------------------------------------------------
-#TODO update this for COMMIT
+#TODO update this for COMMIT (continue from step 5)
 source("historical_data.R")
+source("functions/calcBudget.R")
+all <- calcBudget(all,'Emissions|CO2','Carbon budget')
 
 regions_indicators_PRIMAP_history <- c("AUS","BRA", "CAN", "CHN", "EU28", "IDN", "IND", "JPN", "RUS", "USA", "KOR", "TUR", "EARTH")
+regions_indicators <- c("CAN", "BRA", "CHN", "EU", "IDN", "IND", "JPN", "RUS", "USA","KOR","AUS", "World", "ROW")
+scens_indicators <- c("BAU","CurPol","NDCMCS","NDCplus","GPP","Bridge","2Deg2020","2Deg2030")
+stats_indicators <- c('mean', 'median', 'min', 'max', 'tenp', 'ninetyp')
+
 start_year_projections_fig5=2010
 end_year_projections_fig5=2050
 # Three steps 1) determine historical emissions (per region) for 1850-2015, 2) determine projections 3) In Excel, determine budgets
@@ -191,30 +197,31 @@ PRIMAP_selec_CO2_1850_2015 <- mutate(PRIMAP_selec_CO2_1850_2015, source="PRIMAP"
 PRIMAP_selec_CO2_1850_2015 <- mutate(PRIMAP_selec_CO2_1850_2015, statistic="value")
 PRIMAP_selec_CO2_1850_2015 <- select(PRIMAP_selec_CO2_1850_2015, variable, scenario, region, unit, source, statistic, num_range("X", 1850:start_year_projections_fig5))
 colnames(PRIMAP_selec_CO2_1850_2015) = gsub("X", "", colnames(PRIMAP_selec_CO2_1850_2015))
+setnames(PRIMAP_selec_CO2_1850_2015,"scenario","Category")
 
 #2. Remaining emissions depending on budget (400, 1000, 1600)
-d_cd_links_CO2 <- filter(all_cd_links, Scope=="global") %>%
-  select(scenario, model, region, year, value, unit, variable)
-d_cd_links_CO2 <- filter(d_cd_links_CO2, scenario %in% scens_indicators, region %in% regions_indicators, variable=="Emissions|CO2")
-d_cd_links_CO2=data.table(d_cd_links_CO2)
+d_COMMIT_CO2 <- filter(all, Scope=="global") %>%
+  select(Category, model, region, period, value, unit, variable)
+d_COMMIT_CO2 <- filter(d_COMMIT_CO2, Category %in% scens_indicators, region %in% regions_indicators, variable=="Emissions|CO2")
+d_COMMIT_CO2=data.table(d_COMMIT_CO2)
 yy=seq(start_year_projections_fig5,2100)
-d_cd_links_CO2 = d_cd_links_CO2[,list(approx(x=year,y=value,xout=yy)$y,approx(x=year,y=value,xout=yy)$x),by=c('scenario','model','region', 'unit', 'variable')]
-setnames(d_cd_links_CO2,"V1","value")
-setnames(d_cd_links_CO2,"V2","year")
-setcolorder(d_cd_links_CO2,c('scenario','model','region', 'year', 'value', 'unit', 'variable'))
-d_cd_links_CO2 <- filter(d_cd_links_CO2, year>start_year_projections_fig5, year<=end_year_projections_fig5)
-d_cd_links_CO2 <- spread(d_cd_links_CO2, key=year, value=value)
+d_COMMIT_CO2 = d_COMMIT_CO2[,list(approx(x=period,y=value,xout=yy)$y,approx(x=period,y=value,xout=yy)$x),by=c('Category','model','region', 'unit', 'variable')]
+setnames(d_COMMIT_CO2,"V1","value")
+setnames(d_COMMIT_CO2,"V2","year")
+setcolorder(d_COMMIT_CO2,c('Category','model','region', 'year', 'value', 'unit', 'variable'))
+d_COMMIT_CO2 <- filter(d_COMMIT_CO2, year>start_year_projections_fig5, year<=end_year_projections_fig5)
+d_COMMIT_CO2 <- spread(d_COMMIT_CO2, key=year, value=value)
 
-data_figure5_CO2emissions_model <- inner_join(PRIMAP_selec_CO2_1850_2015, d_cd_links_CO2, by=c('region'))
-data_figure5_CO2emissions_model <- select(data_figure5_CO2emissions_model, variable.y, region, scenario.y, model, unit.y, num_range("", 1850:end_year_projections_fig5))
+data_figure5_CO2emissions_model <- inner_join(PRIMAP_selec_CO2_1850_2015, d_COMMIT_CO2, by=c('region'))
+data_figure5_CO2emissions_model <- select(data_figure5_CO2emissions_model, variable.y, region, Category.y, model, unit.y, num_range("", 1850:end_year_projections_fig5))
 data_figure5_CO2emissions_model <- rename(data_figure5_CO2emissions_model, variable=variable.y, unit=unit.y)
-data_figure5_CO2emissions_model <- rename(data_figure5_CO2emissions_model, scenario=scenario.y)
+data_figure5_CO2emissions_model <- rename(data_figure5_CO2emissions_model, Category=Category.y)
 data_figure5_CO2emissions_model$region <- factor(data_figure5_CO2emissions_model$region, levels=regions_indicators)
-data_figure5_CO2emissions_model$scenario <- factor(data_figure5_CO2emissions_model$scenario, levels=scens_indicators)
+data_figure5_CO2emissions_model$Category <- factor(data_figure5_CO2emissions_model$Category, levels=scens_indicators)
 
 #data_figure5_CO2emissions_stat <- gather(data_figure5_CO2emissions_model, num_range("", start_year_projections_fig5:end_year_projections_fig5), key="year", value=value)
 data_figure5_CO2emissions_stat <- gather(data_figure5_CO2emissions_model, 6:ncol(data_figure5_CO2emissions_model), key="year", value=value)
-data_figure5_CO2emissions_stat <- group_by(data_figure5_CO2emissions_stat, scenario, region, year, variable, unit) %>% summarise(mean=mean(value,na.rm=TRUE),
+data_figure5_CO2emissions_stat <- group_by(data_figure5_CO2emissions_stat, Category, region, year, variable, unit) %>% summarise(mean=mean(value,na.rm=TRUE),
                                                                                                                                  median=median(value,na.rm=TRUE),
                                                                                                                                  min=min(value, na.rm=TRUE),
                                                                                                                                  max=max(value, na.rm=TRUE),
@@ -225,29 +232,29 @@ data_figure5_CO2emissions_stat <- spread(data_figure5_CO2emissions_stat, key=yea
 data_figure5_CO2emissions_stat$statistic <- factor(data_figure5_CO2emissions_stat$statistic, level=stats_indicators)
 
 # 3. Determine statistics for 2100 budgets
-data_figure5_CO2budget <- filter(all_cd_links, Scope=="global", scenario %in% scens_indicators, region %in% regions_indicators, year==2100, variable=="Carbon budget")
-data_figure5_CO2budget_stat <- group_by(data_figure5_CO2budget, scenario, region, year, variable, unit) %>% summarise(mean=mean(value,na.rm=TRUE),
+data_figure5_CO2budget <- filter(all, Scope=="global", Category %in% scens_indicators, region %in% regions_indicators, period==2100, variable=="Carbon budget")
+data_figure5_CO2budget_stat <- group_by(data_figure5_CO2budget, Category, region, period, variable, unit) %>% summarise(mean=mean(value,na.rm=TRUE),
                                                                                                                       median=median(value,na.rm=TRUE),
                                                                                                                       min=min(value, na.rm=TRUE),
                                                                                                                       max=max(value, na.rm=TRUE),
                                                                                                                       tenp=quantile(value, .10, na.rm=TRUE),
                                                                                                                       ninetyp=quantile(value, .90, na.rm=TRUE))
-data_figure5_CO2budget_stat <- data_figure5_CO2budget_stat %>% ungroup() %>% select(-year)
+data_figure5_CO2budget_stat <- data_figure5_CO2budget_stat %>% ungroup() %>% select(-period)
 data_figure5_CO2budget_stat <- gather(data_figure5_CO2budget_stat, 'mean', 'median', 'min', 'max', 'tenp', 'ninetyp', key='statistic', value=`2100`)
 data_figure5_CO2budget_stat$statistic <- factor(data_figure5_CO2budget_stat$statistic, level=stats_indicators)
 
 #4 Export to Excel (change later to R code) to translate annual CO2 emissions into budgets
-write.table(data_figure5_CO2emissions_model , file="Indicators/data/stocktake_tool/figure5_CO2emissions_model.csv", sep=";", row.names = FALSE) 
-write.table(data_figure5_CO2emissions_stat , file="Indicators/data/stocktake_tool/figure5_CO2emissions_stat.csv", sep=";", row.names = FALSE)
-write.table(data_figure5_CO2budget_stat , file="Indicators/data/stocktake_tool/figure5_CO2budget_stat.csv", sep=";", row.names = FALSE)
+write.table(data_figure5_CO2emissions_model , file="Stocktaketool/figure5_CO2emissions_model.csv", sep=";", row.names = FALSE) 
+write.table(data_figure5_CO2emissions_stat , file="Stocktaketool/figure5_CO2emissions_stat.csv", sep=";", row.names = FALSE)
+write.table(data_figure5_CO2budget_stat , file="Stocktaketool/figure5_CO2budget_stat.csv", sep=";", row.names = FALSE)
 
-#5 Import again in R (effort sharing)
-data_figure5_model <- read.csv("Indicators/data/stocktake_tool/data_figure5_ToR.csv", header=TRUE, sep=";")
+#5 Import again in R (effort sharing) TODO continue here
+data_figure5_model <- read.csv("Stocktaketool/data_figure5_ToR.csv", header=TRUE, sep=";")
 #data_figure5_stat <- data_figure5_model
 colnames(data_figure5_model) = gsub("X", "", colnames(data_figure5_model))
 data_figure5_model <- gather(data_figure5_model, 9:ncol(data_figure5_model), key="year", value=value)
 data_figure5_model$value <- as.numeric(data_figure5_model$value)
-data_figure5_stat <- group_by(data_figure5_model, variable, budget.scenario, budget.effort.sharing, scenario, region, unit, year) %>% summarise(mean=mean(value,na.rm=TRUE),
+data_figure5_stat <- group_by(data_figure5_model, variable, budget.Category, budget.effort.sharing, Category, region, unit, year) %>% summarise(mean=mean(value,na.rm=TRUE),
                                                                                                                                                 median=median(value,na.rm=TRUE),
                                                                                                                                                 min=min(value, na.rm=TRUE),
                                                                                                                                                 max=max(value, na.rm=TRUE),
@@ -260,7 +267,7 @@ data_figure5_stat <- spread(data_figure5_stat, key=year, value=value)
 data_figure5_stat$statistic <- factor(data_figure5_stat$statistic, level=stats_indicators)
 colnames(data_figure5_stat) = gsub("X", "", colnames(data_figure5_stat))
 data_figure5_stat_fig <- select(data_figure5_stat, -(num_range("", 1850:1989))) %>% as.data.frame()
-write.table(data_figure5_stat_fig , file="Indicators/data/stocktake_tool/figure5_stat.csv", sep=";", row.names = FALSE)
+write.table(data_figure5_stat_fig , file="Stocktaketool/figure5_stat.csv", sep=";", row.names = FALSE)
 
 
 # Figure 6 - innovation----------------------------------------------------------------
