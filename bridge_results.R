@@ -637,7 +637,7 @@ ggsave(file=paste(cfg$outdir,"/Carbon_price_bar_2.png",sep=""),m14d,width=18,hei
 
 # Key paper figures -------------------------------------------------------
 # settings
-scens = c("CurPol","NDCplus","Bridge","2Deg2020") #"NDCMCS",
+scens = c("CurPol","NDCplus","Bridge","2Deg2020","2Deg2030") #"NDCMCS",
 regio = c("World")
 regions = c("AUS","BRA","CAN","CHN","EU","IDN","IND","JPN","ROK","RUS","USA")
 year = c("2030")
@@ -652,8 +652,8 @@ REbar=REN[Category%in%scens&region%in%regio&period%in%years] # &!Scope=="nationa
 REbarm=REbar[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Category","variable","period")]
 REbar$period=as.factor(REbar$period)
 REbarm$period=as.factor(REbarm$period)
-REbar$Category = factor(REbar$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020")) #,"NDCMCS"
-REbarm$Category = factor(REbarm$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020"))
+REbar$Category = factor(REbar$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020","2Deg2030")) #,"NDCMCS"
+REbarm$Category = factor(REbarm$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020","2Deg2030"))
 
 F1a = ggplot()
 F1a = F1a + geom_bar(data=REbarm,aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
@@ -684,8 +684,8 @@ EVbar$unit <- "%"
 EVbarm=EVbar[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Category","variable","period")]
 EVbar$period=as.factor(EVbar$period)
 EVbarm$period=as.factor(EVbarm$period)
-EVbar$Category = factor(EVbar$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020")) #,"NDCMCS"
-EVbarm$Category = factor(EVbarm$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020"))
+EVbar$Category = factor(EVbar$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020","2Deg2030")) #,"NDCMCS"
+EVbarm$Category = factor(EVbarm$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020","2Deg2030"))
 
 F1b = ggplot()
 F1b = F1b + geom_bar(data=EVbarm,aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
@@ -714,8 +714,8 @@ Biobar$unit <- "%"
 Biobarm=Biobar[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Category","variable","period")]
 Biobar$period=as.factor(Biobar$period)
 Biobarm$period=as.factor(Biobarm$period)
-Biobar$Category = factor(Biobar$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020")) #,"NDCMCS"
-Biobarm$Category = factor(Biobarm$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020"))
+Biobar$Category = factor(Biobar$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020","2Deg2030")) #,"NDCMCS"
+Biobarm$Category = factor(Biobarm$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020","2Deg2030"))
 
 F1b1 = ggplot()
 F1b1 = F1b1 + geom_bar(data=Biobarm,aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
@@ -782,8 +782,8 @@ IEbar[period=="rel30"]$period<-2030
 IEbarm=IEbar[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Category","variable","period")]
 IEbar$period=as.factor(IEbar$period)
 IEbarm$period=as.factor(IEbarm$period)
-IEbar$Category = factor(IEbar$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020")) #,"NDCMCS"
-IEbarm$Category = factor(IEbarm$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020"))
+IEbar$Category = factor(IEbar$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020","2Deg2030")) #,"NDCMCS"
+IEbarm$Category = factor(IEbarm$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020","2Deg2030"))
 
 F1c2 = ggplot()
 F1c2 = F1c2 + geom_bar(data=IEbarm,aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
@@ -812,8 +812,8 @@ EBbar$unit <- "%"
 EBbarm=EBbar[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Category","variable","period")]
 EBbar$period=as.factor(EBbar$period)
 EBbarm$period=as.factor(EBbarm$period)
-EBbar$Category = factor(EBbar$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020")) #,"NDCMCS"
-EBbarm$Category = factor(EBbarm$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020"))
+EBbar$Category = factor(EBbar$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020","2Deg2030")) #,"NDCMCS"
+EBbarm$Category = factor(EBbarm$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020","2Deg2030"))
 
 F1d = ggplot()
 F1d = F1d + geom_bar(data=EBbarm,aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
@@ -839,8 +839,8 @@ AFbar=all[variable%in%c("Land Cover|Forest|Afforestation and Reforestation")&Cat
 AFbarm=AFbar[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Category","variable","period")]
 AFbar$period=as.factor(AFbar$period)
 AFbarm$period=as.factor(AFbarm$period)
-AFbar$Category = factor(AFbar$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020")) #,"NDCMCS"
-AFbarm$Category = factor(AFbarm$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020"))
+AFbar$Category = factor(AFbar$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020","2Deg2030")) #,"NDCMCS"
+AFbarm$Category = factor(AFbarm$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020","2Deg2030"))
 
 F1e = ggplot()
 F1e = F1e + geom_bar(data=AFbarm,aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
@@ -863,7 +863,7 @@ vars=c("Primary Energy|Biomass|w/ CCS","Primary Energy|Biomass|w/o CCS","Primary
        "Primary Energy|Geothermal","Primary Energy|Hydro","Primary Energy|Nuclear","Primary Energy|Oil|w/ CCS","Primary Energy|Oil|w/o CCS","Primary Energy|Other","Primary Energy|Solar","Primary Energy|Wind",
        "Primary Energy|Ocean","Primary Energy|Secondary Energy Trade")
 PEstack=all[variable%in%vars&Category%in%scens&!Scope=="national"& region%in%regio &period%in%2030]
-PEstack$Category = factor(PEstack$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020"))
+PEstack$Category = factor(PEstack$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020","2Deg2030"))
 
 F1f = ggplot(data=PEstack) #TODO different year? #[!Category=="NDCplus"]
 F1f = F1f + geom_bar(aes(x=Category,y=value,fill=variable),stat="identity", position="stack",width=0.5)
@@ -906,15 +906,15 @@ F1alt=grid.arrange(F1a,F1b,F1c2,F1d,F1e,legend,layout_matrix=lay)
 ggsave(file=paste(cfg$outdir,"/F1_gridarrange_alt.png",sep=""),F1alt,width=24,height=14,dpi=200)
 
 ### Repeat but for NDC convergence
-scens = c("CurPol","NDCplus-conv","Bridge","2Deg2020")
+scens = c("CurPol","NDCplus-conv","Bridge","2Deg2020","2Deg2030")
 
 # Figure 1a share of REN
 REbar=REN[Category%in%scens&region%in%regio&period%in%years] 
 REbarm=REbar[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Category","variable","period")]
 REbar$period=as.factor(REbar$period)
 REbarm$period=as.factor(REbarm$period)
-REbar$Category = factor(REbar$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020")) #,"NDCMCS"
-REbarm$Category = factor(REbarm$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020"))
+REbar$Category = factor(REbar$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020","2Deg2030")) #,"NDCMCS"
+REbarm$Category = factor(REbarm$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020","2Deg2030"))
 
 F1a = ggplot()
 F1a = F1a + geom_bar(data=REbarm,aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
@@ -941,8 +941,8 @@ EVbar$unit <- "%"
 EVbarm=EVbar[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Category","variable","period")]
 EVbar$period=as.factor(EVbar$period)
 EVbarm$period=as.factor(EVbarm$period)
-EVbar$Category = factor(EVbar$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020")) #,"NDCMCS"
-EVbarm$Category = factor(EVbarm$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020"))
+EVbar$Category = factor(EVbar$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020","2Deg2030")) #,"NDCMCS"
+EVbarm$Category = factor(EVbarm$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020","2Deg2030"))
 
 F1b = ggplot()
 F1b = F1b + geom_bar(data=EVbarm,aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
@@ -978,8 +978,8 @@ IEbar[period=="rel30"]$period<-2030
 IEbarm=IEbar[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Category","variable","period")]
 IEbar$period=as.factor(IEbar$period)
 IEbarm$period=as.factor(IEbarm$period)
-IEbar$Category = factor(IEbar$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020")) #,"NDCMCS"
-IEbarm$Category = factor(IEbarm$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020"))
+IEbar$Category = factor(IEbar$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020","2Deg2030")) #,"NDCMCS"
+IEbarm$Category = factor(IEbarm$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020","2Deg2030"))
 
 F1c2 = ggplot()
 F1c2 = F1c2 + geom_bar(data=IEbarm,aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
@@ -1006,8 +1006,8 @@ EBbar$unit <- "%"
 EBbarm=EBbar[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Category","variable","period")]
 EBbar$period=as.factor(EBbar$period)
 EBbarm$period=as.factor(EBbarm$period)
-EBbar$Category = factor(EBbar$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020")) #,"NDCMCS"
-EBbarm$Category = factor(EBbarm$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020"))
+EBbar$Category = factor(EBbar$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020","2Deg2030")) #,"NDCMCS"
+EBbarm$Category = factor(EBbarm$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020","2Deg2030"))
 
 F1d = ggplot()
 F1d = F1d + geom_bar(data=EBbarm,aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
@@ -1029,8 +1029,8 @@ AFbar=all[variable%in%c("Land Cover|Forest|Afforestation and Reforestation")&Cat
 AFbarm=AFbar[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Category","variable","period")]
 AFbar$period=as.factor(AFbar$period)
 AFbarm$period=as.factor(AFbarm$period)
-AFbar$Category = factor(AFbar$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020")) #,"NDCMCS"
-AFbarm$Category = factor(AFbarm$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020"))
+AFbar$Category = factor(AFbar$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020","2Deg2030")) #,"NDCMCS"
+AFbarm$Category = factor(AFbarm$Category,levels=c("CurPol","NDCplus-conv","NDCMCS","Bridge","2Deg2020","2Deg2030"))
 
 F1e = ggplot()
 F1e = F1e + geom_bar(data=AFbarm,aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
@@ -1153,7 +1153,7 @@ write.xlsx2(sectoralrange,paste(cfg$outdir,"/waterfall_range.xlsx",sep=""),sheet
 ### Figure elements
 # Figure 3a GHG emissions pathways
 vars="Emissions|Kyoto Gases"
-scens <- c("CurPol","NDCplus","Bridge","2Deg2020") #"NDCMCS",
+scens <- c("CurPol","NDCplus","Bridge","2Deg2020","2Deg2030") #"NDCMCS",
 
 plotdata=all[variable%in%vars & Category%in%scens&!Scope=="national"&region=="World"]
 #plotdata$period=as.numeric(as.character(plotdata$period))
@@ -1175,35 +1175,45 @@ F3a = F3a + geom_segment(data=range[period %in% c(2050) & Category=="CurPol"], s
 F3a = F3a + geom_segment(data=range[period %in% c(2050) & Category=="NDCplus"], stat="identity", aes(x=2050, xend=2050, y=min, yend=max, size=1.5, colour=Category), show.legend=FALSE) 
 F3a = F3a + geom_segment(data=range[period %in% c(2050) & Category=="Bridge"], stat="identity", aes(x=2050, xend=2050, y=min, yend=max, size=1.5, colour=Category), show.legend=FALSE) 
 F3a = F3a + geom_segment(data=range[period %in% c(2050) & Category=="2Deg2020"], stat="identity", aes(x=2050.5, xend=2050.5, y=min, yend=max, size=1.5, colour=Category), show.legend=FALSE) 
+F3a = F3a + geom_segment(data=range[period %in% c(2050) & Category=="2Deg2030"], stat="identity", aes(x=2051, xend=2051, y=min, yend=max, size=1.5, colour=Category), show.legend=FALSE) 
 F3a = F3a + geom_segment(data=range[period %in% c(2030) & Category=="Bridge"], stat="identity", aes(x=2030, xend=2030, y=min, yend=max, size=1.5, colour=Category), show.legend=FALSE) 
 F3a = F3a + geom_segment(data=range[period %in% c(2030) & Category=="2Deg2020"], stat="identity", aes(x=2030.5, xend=2030.5, y=min, yend=max, size=1.5, colour=Category), show.legend=FALSE) 
+F3a = F3a + geom_segment(data=range[period %in% c(2030) & Category=="2Deg2030"], stat="identity", aes(x=2031, xend=2031, y=min, yend=max, size=1.5, colour=Category), show.legend=FALSE) 
 F3a = F3a + geom_point(data=range[period %in% c(2050)&Category%in%c("2Deg2020")],aes(x=2050.7,y=med,colour=Category,size=1.5),show.legend = FALSE)
+F3a = F3a + geom_point(data=range[period %in% c(2050)&Category%in%c("2Deg2030")],aes(x=2051.2,y=med,colour=Category,size=1.5),show.legend = FALSE)
 F3a = F3a + geom_point(data=range[period %in% c(2050)&Category%in%c("Bridge","CurPol","NDCplus")],aes(x=2050.2,y=med,colour=Category,size=1.5),show.legend = FALSE)
 F3a = F3a + geom_point(data=range[period %in% c(2030)&Category%in%c("2Deg2020")],aes(x=2030.7,y=med,colour=Category,size=1.5),show.legend = FALSE)
 F3a = F3a + geom_point(data=range[period %in% c(2030)&Category%in%c("Bridge")],aes(x=2030.2,y=med,colour=Category,size=1.5),show.legend = FALSE)
-F3a = F3a + xlim(2010,2051)+ scale_y_continuous(breaks=c(0,10,20,30,40,50,60,70,80),limits=c(0,85))
+F3a = F3a + geom_point(data=range[period %in% c(2030)&Category%in%c("2Deg2030")],aes(x=2031.2,y=med,colour=Category,size=1.5),show.legend = FALSE)
+F3a = F3a + xlim(2010,2052)+ scale_y_continuous(breaks=c(0,10,20,30,40,50,60,70,80),limits=c(0,85))
 F3a = F3a + scale_colour_manual(values=plotstyle(scens))
 F3a = F3a + scale_fill_manual(values=plotstyle(scens))
 F3a = F3a + ylab(paste(unique(all[variable%in%vars]$variable),"[",unique(plotdata$unit),"]"))+ xlab("")
 F3a = F3a + theme_bw() + theme(axis.text.y=element_text(size=20)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=20)) +
-  theme(axis.text.x = element_text(size=20,angle=90)) + theme(legend.text=element_text(size=16),legend.title=element_blank(),legend.key.width = unit(1,"cm")) #legend.key.size = unit(1.5, "cm"),
+  theme(axis.text.x = element_text(size=20,angle=90)) + theme(legend.text=element_text(size=14),legend.title=element_blank(),legend.key.width = unit(1,"cm")) #legend.key.size = unit(1.5, "cm"),
 F3a = F3a + theme(legend.position="bottom")
 F3a
 ggsave(file=paste(cfg$outdir,"/F3a_GHG_all_global_models_world_CurPol-NDC-Bridge-2Deg2020_funnel.png",sep=""),F3a,width=16,height=12,dpi=200)
 
-F3aSI = ggplot(all[variable%in%vars & Category%in%scens&!Scope=="national"&region=="World"]) 
+plotdata2=all[variable%in%vars & Category%in%scens&!Scope=="national"&region=="World"]
+plotdata2$value=plotdata2$value/1000
+plotdata2$unit<-"Gt CO2-equiv/yr"
+
+F3aSI = ggplot(plotdata2) 
 F3aSI = F3aSI + geom_line(aes(x=period,y=value,colour=Category, linetype=model),size=1.5)
 #F3aSI = F3aSI + geom_ribbon(data=range,aes(x=period,ymin=min, ymax=max,fill=Category),alpha=0.5)
 F3aSI = F3aSI + geom_segment(data=range[period %in% c(2100) & Category=="CurPol"], stat="identity", aes(x=2100, xend=2100, y=min, yend=max, size=1.5, colour=Category), show.legend=FALSE) 
 F3aSI = F3aSI + geom_segment(data=range[period %in% c(2100) & Category=="NDCplus"], stat="identity", aes(x=2100, xend=2100, y=min, yend=max, size=1.5, colour=Category), show.legend=FALSE) 
 F3aSI = F3aSI + geom_segment(data=range[period %in% c(2100) & Category=="Bridge"], stat="identity", aes(x=2100, xend=2100, y=min, yend=max, size=1.5, colour=Category), show.legend=FALSE) 
 F3aSI = F3aSI + geom_segment(data=range[period %in% c(2100) & Category=="2Deg2020"], stat="identity", aes(x=2100.5, xend=2100.5, y=min, yend=max, size=1.5, colour=Category), show.legend=FALSE) 
+F3aSI = F3aSI + geom_segment(data=range[period %in% c(2100) & Category=="2Deg2030"], stat="identity", aes(x=2101, xend=2101, y=min, yend=max, size=1.5, colour=Category), show.legend=FALSE) 
 F3aSI = F3aSI + geom_point(data=range[period %in% c(2100)&Category%in%c("2Deg2020")],aes(x=2100.7,y=med,colour=Category,size=1.5),show.legend = FALSE)
+F3aSI = F3aSI + geom_point(data=range[period %in% c(2100)&Category%in%c("2Deg2030")],aes(x=2101.2,y=med,colour=Category,size=1.5),show.legend = FALSE)
 F3aSI = F3aSI + geom_point(data=range[period %in% c(2100)&Category%in%c("Bridge","CurPol","NDCplus")],aes(x=2100.2,y=med,colour=Category,size=1.5),show.legend = FALSE)
-F3aSI = F3aSI + xlim(2050,2101) + scale_y_continuous(breaks=c(-20000,-10000,0,10000,20000,30000,40000,50000,60000,70000,80000,90000,100000),limits=c(-20000,100000))
+F3aSI = F3aSI + xlim(2050,2102) + scale_y_continuous(breaks=c(-20,-10,0,10,20,30,40,50,60,70,80,90,100),limits=c(-20,100))
 F3aSI = F3aSI + scale_colour_manual(values=plotstyle(scens))
 F3aSI = F3aSI + scale_fill_manual(values=plotstyle(scens))
-F3aSI = F3aSI + ylab(paste(unique(all[variable%in%vars]$variable),"[",unique(all[variable%in%vars]$unit),"]"))+ xlab("")
+F3aSI = F3aSI + ylab(paste(unique(all[variable%in%vars]$variable),"[",unique(plotdata2$unit),"]"))+ xlab("")
 F3aSI = F3aSI + theme_bw() + theme(axis.text.y=element_text(size=16)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=18)) +
   theme(axis.text.x = element_text(size=16,angle=90)) + theme(legend.text=element_text(size=14),legend.title=element_text(size=14))
 F3aSI = F3aSI + theme(legend.position="bottom")
@@ -1262,7 +1272,7 @@ ggsave(file=paste(cfg$outdir,"/F3aSI4_GHG_all_global_models_world_NDCplus-conver
 # Figure 3b Emissions relative to NDC
 
 # Figure 3c Rate of change
-scens <- c("CurPol","NDCplus","Bridge","2Deg2020") #"NDCMCS",
+scens <- c("CurPol","NDCplus","Bridge","2Deg2020","2Deg2030") #"NDCMCS",
 emisrednew = all[variable%in%c("Emissions|Kyoto Gases","Emissions|CO2")&Category%in%scens&period%in%c(2015,2030,2050)]
 emisrednew = spread(emisrednew,period,value)
 emisrednew=na.omit(emisrednew)
@@ -1275,8 +1285,8 @@ emisrednew[period=="rel30"]$period<-2030
 
 emisrednewm = emisrednew[,list(median=median(value,na.rm=T),min=min(value,na.rm=T),max=max(value,na.rm=T)),
                    by=c("Category","region","variable","unit","period")] #,min=min(value,na.rm=T),max=max(value,na.rm=T)
-emisrednew$Category = factor(emisrednew$Category,levels=c("CurPol","NDCplus","Bridge","2Deg2020"))
-emisrednewm$Category = factor(emisrednewm$Category,levels=c("CurPol","NDCplus","Bridge","2Deg2020"))
+emisrednew$Category = factor(emisrednew$Category,levels=c("CurPol","NDCplus","Bridge","2Deg2020","2Deg2030"))
+emisrednewm$Category = factor(emisrednewm$Category,levels=c("CurPol","NDCplus","Bridge","2Deg2020","2Deg2030"))
 emisrednew$region = factor(emisrednew$region,levels=c("AUS","CAN","EU","JPN","USA","BRA","CHN","IDN","IND","ROK","RUS","World"))
 emisrednewm$region = factor(emisrednewm$region,levels=c("AUS","CAN","EU","JPN","USA","BRA","CHN","IDN","IND","ROK","RUS","World"))
 emisrednew$model = factor(emisrednew$model,levels=c("AIM/CGE","COPPE-COFFEE 1.1","IMAGE 3.0","MESSAGEix-GLOBIOM_1.0","POLES GECO2019","PROMETHEUS","REMIND-MAgPIE 1.7-3.0","TIAM_Grantham_v3.2","WITCH 5.0",
@@ -1304,7 +1314,7 @@ ggsave(file=paste(cfg$outdir,"/F3c-GHG-emissions-reduction.png",sep=""),F3c,widt
 ### Figure elements
 # Figure 4a carbon price #TODO check differences between 3 tiers as in protocol
 vars=c("Price|Carbon")
-scens <- c("CurPol","NDCplus","Bridge","2Deg2020")
+scens <- c("CurPol","NDCplus","Bridge","2Deg2020","2Deg2030")
 # R5 regions
 cpricebar=all[variable%in%vars & Category%in%scens&!Scope=="national"&region%in%c("R5OECD90+EU","R5LAM","R5MAF")&period%in%c(2030,2050)]
 cpricebarm=cpricebar[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Category","region","variable","period")]
@@ -1333,12 +1343,13 @@ cpricebarm=cpricebar[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=
 
 cpricebar$period=as.factor(cpricebar$period)
 cpricebarm$period=as.factor(cpricebarm$period)
-cpricebar$Category = factor(cpricebar$Category,levels=c("CurPol","NDCplus","Bridge","2Deg2020"))
-cpricebarm$Category = factor(cpricebarm$Category,levels=c("CurPol","NDCplus","Bridge","2Deg2020"))
+cpricebar$Category = factor(cpricebar$Category,levels=c("CurPol","NDCplus","Bridge","2Deg2020","2Deg2030"))
+cpricebarm$Category = factor(cpricebarm$Category,levels=c("CurPol","NDCplus","Bridge","2Deg2020","2Deg2030"))
 
 F4a1 = ggplot()
 F4a1 = F4a1 + geom_bar(data=cpricebarm,aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
 F4a1 = F4a1 + geom_point(data=cpricebar, aes(x=period,y=value,shape=model,colour=Category,group=Category),size=3,position=position_dodge(width=0.66))
+F4a1 = F4a1 + ylim(0,2000)
 F4a1 = F4a1 + facet_wrap(~region,nrow=4)
 F4a1 = F4a1 + scale_shape_manual(values=cfg$man_shapes)
 F4a1 = F4a1 + scale_color_manual(values=plotstyle(scens))
@@ -1405,14 +1416,14 @@ ggsave(file=paste(cfg$outdir,"/F4b_policy_costs_GDP_bar.png",sep=""),F4b,width=1
 # xv.	Investment|Energy Demand|Transportation|Passenger|Road|LDV|EV (because of the protocol)
 
 vars=c("Investment|Energy Supply|Electricity|Non-Biomass Renewables","Investment|Energy Supply|Electricity|Fossil") 
-scens <- c("CurPol","NDCplus","Bridge","2Deg2020")
+scens <- c("CurPol","NDCplus","Bridge","2Deg2020","2Deg2030")
 
 INVbar=all[variable%in%vars&Category%in%scens&region%in%regio&period%in%years] 
 INVbarm=INVbar[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Category","variable","period")]
 INVbar$period=as.factor(INVbar$period)
 INVbarm$period=as.factor(INVbarm$period)
-INVbar$Category = factor(INVbar$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020")) 
-INVbarm$Category = factor(INVbarm$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020"))
+INVbar$Category = factor(INVbar$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020","2Deg2030")) 
+INVbarm$Category = factor(INVbarm$Category,levels=c("CurPol","NDCplus","NDCMCS","Bridge","2Deg2020","2Deg2030"))
 
 F4c1 = ggplot()
 F4c1 = F4c1 + geom_bar(data=INVbarm[variable=="Investment|Energy Supply|Electricity|Fossil"],aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
