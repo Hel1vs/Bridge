@@ -165,8 +165,9 @@ write.xlsx2(intensrate_stat,paste("Stocktaketool","/004v_gst20.xlsx",sep=""),she
 
 # Figure 5 - budget depletion----------------------------------------------------------------
 #TODO update this for COMMIT
+source("historical_data.R")
 
-regions_indicators_PRIMAP_history <- c("BRA", "CAN", "CHN", "EU28", "IDN", "IND", "JPN", "RUS", "USA", "CAN", "TUR", "EARTH")
+regions_indicators_PRIMAP_history <- c("AUS","BRA", "CAN", "CHN", "EU28", "IDN", "IND", "JPN", "RUS", "USA", "KOR", "TUR", "EARTH")
 start_year_projections_fig5=2010
 end_year_projections_fig5=2050
 # Three steps 1) determine historical emissions (per region) for 1850-2015, 2) determine projections 3) In Excel, determine budgets
