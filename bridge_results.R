@@ -1459,7 +1459,7 @@ all <- calcBudget(all,'Emissions|CO2|Energy and Industrial Processes','Carbon bu
 all <- calcBudget(all,'Emissions|CO2|Energy','Carbon budget|Energy')
 
 budget = all[variable%in%c("Carbon budget","Carbon budget|Energy and Industry","Carbon budget|Energy")]
-budgetsel= budget[region=='World'&Scope=="global"&period==2100&variable=="Carbon budget"&Category%in%c("Bridge","2Deg2020")] #"Bridge_notax","2Deg2030"
+budgetsel= budget[region=='World'&Scope=="global"&period==2100&variable=="Carbon budget"&Category%in%c("Bridge","2Deg2020","2Deg2030")] #"Bridge_notax","2Deg2030"
 
 # source("functions/calcBudget_2015.R")
 # all <- calcBudget_2015(all,'Emissions|CO2','Carbon budget_2015')
