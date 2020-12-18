@@ -252,9 +252,10 @@ write.table(data_figure5_CO2budget_stat , file="Stocktaketool/figure5_CO2budget_
 data_figure5_model <- read.csv("Stocktaketool/data_figure5_ToR.csv", header=TRUE, sep=";")
 #data_figure5_stat <- data_figure5_model
 colnames(data_figure5_model) = gsub("X", "", colnames(data_figure5_model))
-data_figure5_model <- gather(data_figure5_model, 9:ncol(data_figure5_model), key="year", value=value)
+data_figure5_model <- data.table(gather(data_figure5_model, 9:ncol(data_figure5_model), key="year", value=value))
 data_figure5_model$value <- as.numeric(data_figure5_model$value)
-data_figure5_stat <- group_by(data_figure5_model, variable, budget.Category, budget.effort.sharing, Category, region, unit, year) %>% summarise(mean=mean(value,na.rm=TRUE),
+data_figure5_model=na.omit(data_figure5_model)
+data_figure5_stat <- group_by(data_figure5_model, variable, budget.scenario, budget.effort.sharing, scenario, region, unit, year) %>% summarise(mean=mean(value,na.rm=TRUE),
                                                                                                                                                 median=median(value,na.rm=TRUE),
                                                                                                                                                 min=min(value, na.rm=TRUE),
                                                                                                                                                 max=max(value, na.rm=TRUE),
