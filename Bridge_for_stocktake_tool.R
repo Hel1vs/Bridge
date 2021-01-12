@@ -135,6 +135,7 @@ intensity <- calcVariable(intensity,'`Carbon Intensity of GDP|PPP (excl AFOLU)` 
 intensity <- calcVariable(intensity,'`GHG Intensity of GDP|PPP` ~ `Emissions|Kyoto Gases`/`GDP|PPP` ' , newUnit='kg CO2e/$US 2010')
 
 intens=filter(intensity, Scope=="global", variable%in%c("Carbon Intensity of GDP|PPP (excl AFOLU)","GHG Intensity of GDP|PPP"),period<=2050)
+intens=intens[!c(model=="MESSAGEix-GLOBIOM_1.0"&period==2005)]
 intens <- arrange(intens, variable, Category, model, region, year)
 write.table(intens,"Stocktaketool/stocktake_toolfigure4_GHG_intensity.csv", sep=";", row.names = FALSE)
 intens_stat <- group_by(intens, Category, region, period, variable, unit) %>% summarise(mean=mean(value,na.rm=TRUE),
@@ -331,6 +332,7 @@ d_COMMIT_Air_pollution_stat <- gather(d_COMMIT_Air_pollution_stat, 'mean', 'medi
 d_COMMIT_Air_pollution_stat <- spread(d_COMMIT_Air_pollution_stat, key=period, value=value)
 d_COMMIT_Air_pollution_stat <- mutate(d_COMMIT_Air_pollution_stat, source="COMMIT")
 d_COMMIT_Air_pollution_stat <- data.table(select(d_COMMIT_Air_pollution_stat, variable, Category, region, unit, source, statistic, everything()))
+setnames(d_COMMIT_Air_pollution_stat,"Category","scenario")
 write.xlsx2(d_COMMIT_Air_pollution_stat,paste("Stocktaketool","/008v_gst20.xlsx",sep=""),sheetName="data",append=F,row.names = F)
 
 
