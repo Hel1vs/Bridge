@@ -5,7 +5,8 @@
 # http://dataservices.gfz-potsdam.de/pik/showshort.php?id=escidoc:2959897
 PRIMAP <- read.csv("data/PRIMAP-hist_v1.2_14-Dec-2017.csv", header=TRUE, sep=",") #PRIMAP-hist_v2.1_09-Nov-2019
 PRIMAP_CDLINKS <- PRIMAP
-regions_indicators_CDLINKS_history <- c("AUS","CAN", "BRA", "CHN", "EU28", "IDN", "IND", "JPN", "RUS", "USA","KOR", "EARTH")
+regions_indicators_CDLINKS_history <- c("AUS","CAN", "BRA", "CHN", "EU28", "IDN", "IND", "JPN", "RUS", "TUR","USA","KOR", "EARTH")
+GDP_MER_PPP="PPP"
 #years_indicators_CDLINKS_history <- c("X1990", "X1995", "X2000", "X2005", "X2010", "X2015")
 colnames(PRIMAP_CDLINKS)[colnames(PRIMAP_CDLINKS)=="country"] <- "region"
 PRIMAP_CDLINKS <- filter(PRIMAP_CDLINKS, region %in% regions_indicators_CDLINKS_history)
@@ -206,3 +207,110 @@ PRIMAP_selec_Gases <- arrange(PRIMAP_selec_Gases, variable, region)
 PRIMAP_selec_Gases_output <- select(PRIMAP_selec_Gases, variable, scenario, region, unit, source, statistic, num_range("", 1990:2015))
 write.table(filter(PRIMAP_selec_Gases_output, variable!="Emissions|Kyoto Gases"), file="Stocktaketool/History_fig2.csv", sep=";", row.names = FALSE)
 write.table(PRIMAP_selec_Gases_output, file="Stocktaketool/History_fig3.csv", sep=";", row.names = FALSE)
+
+# Historical data Figure 4------------------------------------------
+Kyoto_hist <- gather(PRIMAP_selec_Kyoto, 7:ncol(PRIMAP_selec_Kyoto), key="year", value=value)
+Kyoto_hist <- filter(Kyoto_hist, year>=1990, year<=2015)
+Kyoto_hist$year <- as.numeric(Kyoto_hist$year)
+Kyoto_hist$region <- factor(Kyoto_hist$region, levels=regions_indicators)
+Kyoto_hist <- select(Kyoto_hist, -source, -statistic)
+#CO2_hist <- gather(PRIMAP_selec_CO2, 5:ncol(PRIMAP_selec_CO2), key="year", value=value)
+PRIMAP_selec_CO2_Excl_AFOLU_CO2_bunkers <- filter(PRIMAP_selec_CO2_Excl_AFOLU_CO2, region!="Bunkers")
+CO2_hist <- gather(PRIMAP_selec_CO2_Excl_AFOLU_CO2_bunkers, 5:ncol(PRIMAP_selec_CO2_Excl_AFOLU_CO2_bunkers), key="year", value=value)
+CO2_hist <- filter(CO2_hist, year>=1990, year<=2015)
+CO2_hist$year <- as.numeric(CO2_hist$year)
+CO2_hist$region <- factor(CO2_hist$region, levels=regions_indicators)
+GHG_hist <- rbind(Kyoto_hist, CO2_hist)
+# Use OECD GDP history from IMAGE model (million $US2010)
+# GDP_MER_IMAGE <- NoPolicy$GDP_MER
+# GDP_MER_IMAGE$region=str_replace_all(GDP_MER_IMAGE$region,"INDIA", "IND")
+# GDP_MER_IMAGE$region=str_replace_all(GDP_MER_IMAGE$region,"JAP", "JPN")
+# GDP_MER_hist <- filter(GDP_MER_IMAGE, year>=1990, year<=2015, region %in% regions_indicators)
+# GDP_MER_hist$region <- factor(GDP_MER_hist$region, levels=regions_indicators)
+# Use World Bank GDP (PPP) SSP2 database (billion $US2005 converted to million $US2010)
+# https://tntcat.iiasa.ac.at/SspDb/dsd?Action=htmlpage&page=30
+# See "GDP PPP from SSP database.xlsx"
+#GDP_PPP_hist <- read.table("Indicators/data/historical_data/GDP_PPP_SSP_hist.csv", header=TRUE, sep=";")
+GDP_PPP_hist <- read.table("data/GDP_PPP_WDI_hist.csv", header=TRUE, sep=";")
+colnames(GDP_PPP_hist) = gsub("X", "", colnames(GDP_PPP_hist))
+GDP_PPP_hist <- gather(GDP_PPP_hist, 3:ncol(GDP_PPP_hist), key="year", value=value)
+#GDP_PPP_hist$value <- 1107.74*GDP_PPP_hist$value #convert to million $2010 dollars
+# https://stats.areppim.com/calc/calc_usdlrxdeflator.php
+GDP_PPP_hist$value <- 0.98*1000*GDP_PPP_hist$value #convert to million $2010 dollars
+GDP_PPP_hist$unit <- "billion US$2010/yr"
+GDP_PPP_hist$year <- as.numeric(GDP_PPP_hist$year)
+
+if(GDP_MER_PPP=="PPP") { GHG_intensity_hist <- inner_join(GHG_hist, GDP_PPP_hist, by=c('year', 'region'))
+GHG_intensity_hist <- mutate(GHG_intensity_hist, value=value.x/value.y)
+GHG_intensity_hist[GHG_intensity_hist[,"variable"]=="Emissions|Kyoto Gases", "variable"] <- "GHG Intensity of GDP|PPP"
+GHG_intensity_hist[GHG_intensity_hist[,"variable"]=="Emissions|CO2|Excl. AFOLU", "variable"] <- "Carbon Intensity (excl AFOLU) of GDP|PPP"
+} else { GHG_intensity_hist <- inner_join(GHG_hist, GDP_MER_hist, by=c('year', 'region'))
+GHG_intensity_hist <- mutate(GHG_intensity_hist, value=value.x/value.y)
+GHG_intensity_hist[GHG_intensity_hist[,"variable"]=="Emissions|Kyoto Gases", "variable"] <- "GHG Intensity of GDP|MER"
+GHG_intensity_hist[GHG_intensity_hist[,"variable"]=="Emissions|CO2|Excl. AFOLU", "variable"] <- "Carbon Intensity of GDP|MER"
+}
+GHG_intensity_hist$scenario <- "History"
+GHG_intensity_hist <- mutate(GHG_intensity_hist, unit="Mt CO2eq/million US($2010)")
+GHG_intensity_hist$source <- "PRIMAP, World Bank"
+GHG_intensity_hist$statistic <- "value"
+GHG_intensity_hist <- select(GHG_intensity_hist, variable, scenario, region, unit, source, statistic, year, value)
+write.table(GHG_intensity_hist, paste0("Stocktaketool/GHG_intensity_", GDP_MER_PPP, "_hist.csv"), sep=";", row.names=F)
+
+# check, this line of code has probabl moved by accident
+#d_selec_Kyoto_stat <- gather(d_selec_Kyoto_stat, 'mean', 'median', 'min', 'max', 'tenp', 'ninetyp', key='statistic', value=value)
+
+# annual intensity improvement
+GHG_intensity_rate_annual_hist <- group_by(GHG_intensity_hist, variable, scenario, region, unit, source) %>% 
+  mutate(value=value/lag(value)-1) %>%
+  select(variable, scenario, region, unit, source, statistic, year, value) %>%
+  filter(year>=1980)
+GHG_intensity_rate_annual_hist <- filter(GHG_intensity_rate_annual_hist, year>=1990)
+GHG_intensity_rate_annual_hist$value <- 100*GHG_intensity_rate_annual_hist$value
+GHG_intensity_rate_annual_hist <- spread(GHG_intensity_rate_annual_hist, key='year', value=value)
+write.table(GHG_intensity_rate_annual_hist, file="Stocktaketool/History_GHG_Intensity_improvement_1yrperiod.csv", sep=";", row.names = FALSE)
+
+# annual intensity improvement based on 5-year periods
+GHG_intensity_5yr_hist <- filter(GHG_intensity_hist, year %in% c(1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015))
+write.table(GHG_intensity_5yr_hist, "Stocktaketool/GHG_intensity_hist_5y.csv", sep=";", row.names=F)
+GHG_intensity_rate_annual5yrperiod_hist <- group_by(GHG_intensity_5yr_hist, variable, scenario, region, unit, source) %>% 
+  mutate(value=(value/lag(value))^(1/5)-1) %>%
+  select(variable, scenario, region, unit, source, statistic, year, value) %>%
+  filter(year>=1980)
+GHG_intensity_rate_annual5yrperiod_hist <- filter(GHG_intensity_rate_annual5yrperiod_hist, year>=1990)
+GHG_intensity_rate_annual5yrperiod_hist$value <- 100*GHG_intensity_rate_annual5yrperiod_hist$value
+GHG_intensity_rate_annual5yrperiod_hist <- spread(GHG_intensity_rate_annual5yrperiod_hist, key='year', value=value)
+write.table(GHG_intensity_rate_annual5yrperiod_hist, file="Stocktaketool/History_GHG_Intensity_improvement_5yrperiod.csv", sep=";", row.names = FALSE)
+
+# Historical data Figure 11 -----------------------------------------------
+# Historical data Figure 11
+all_peak_tmp2 <- filter(all_import_before_add_variables, variable=='Emissions|CO2') %>%
+  group_by(scenario,Category,Baseline,model,region,Scope,unit,variable) %>%
+  arrange(desc(value)) %>%
+  filter(rank(period) == 1) 
+
+# peak_historical_Kyoto <- filter(PRIMAP_selec_Kyoto, region=="World")
+# See Levin and Rich (2017), and UN Environment GAP report 2018
+# https://wriorg.s3.amazonaws.com/s3fs-public/turning-points-trends-countries-reaching-peak-greenhouse-gas-emissions-over-time.pdf
+peak_historical_Kyoto <- gather(PRIMAP_selec_Kyoto, 7:ncol(PRIMAP_selec_Kyoto), key="year", value="value")
+peak_historical_Kyoto$region <- factor(peak_historical_Kyoto$region, levels=regions_indicators)
+peak_historical_Kyoto <- filter(peak_historical_Kyoto, !(region %in% c('CHN', 'IDN', 'IND', 'JPN', 'World'))) %>%
+  group_by(variable, scenario, region, unit, source, statistic) %>%
+  filter(rank(desc(value))==1)
+peak_historical_Kyoto <- select(peak_historical_Kyoto, -value) %>% 
+  ungroup() %>%
+  mutate(value=year, variable="Peak year|Kyoto Gases")
+peak_historical_Kyoto$year <- 2015
+
+peak_historical_CO2 <- mutate(PRIMAP_selec_CO2, source="PRIMAP", statistic="value") %>%
+  select(variable, scenario, region, unit, source, statistic, everything())
+peak_historical_CO2 <- gather(peak_historical_CO2, 7:ncol(peak_historical_CO2), key="year", value="value")
+peak_historical_CO2$region <- factor(peak_historical_CO2$region, levels=regions_indicators)
+peak_historical_CO2 <- filter(peak_historical_CO2, !(region %in% c('CHN', 'IDN', 'IND', 'JPN', 'World'))) %>%
+  group_by(variable, scenario, region, unit, source, statistic) %>%
+  filter(rank(desc(value))==1)
+peak_historical_CO2 <- select(peak_historical_CO2, -value) %>% 
+  ungroup() %>%
+  mutate(value=year, variable="Peak year|CO2")
+peak_historical_CO2$year <- 2015  
+
+peak_historical <- rbind(peak_historical_Kyoto, peak_historical_CO2)

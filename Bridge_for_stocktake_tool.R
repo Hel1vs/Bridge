@@ -171,7 +171,7 @@ source("functions/calcBudget.R")
 all <- calcBudget(all,'Emissions|CO2','Carbon budget')
 
 regions_indicators_PRIMAP_history <- c("AUS","BRA", "CAN", "CHN", "EU28", "IDN", "IND", "JPN", "RUS", "USA", "KOR", "TUR", "EARTH")
-regions_indicators <- c("CAN", "BRA", "CHN", "EU", "IDN", "IND", "JPN", "RUS", "USA","KOR","AUS", "World", "ROW")
+regions_indicators <- c("CAN", "BRA", "CHN", "EU", "IDN", "IND", "JPN", "RUS", "USA","KOR","AUS", "World", "ROW","TUR")
 scens_indicators <- c("BAU","CurPol","NDCMCS","NDCplus","GPP","Bridge","2Deg2020","2Deg2030")
 stats_indicators <- c('mean', 'median', 'min', 'max', 'tenp', 'ninetyp')
 
