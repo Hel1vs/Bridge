@@ -62,6 +62,8 @@ tmp <- spread(tmp, key=year, value=value)
 PRIMAP_selec_Kyoto <- filter(PRIMAP_selec_Kyoto, region!="World")
 PRIMAP_selec_Kyoto <- rbind(PRIMAP_selec_Kyoto, tmp)
 PRIMAP_selec_Kyoto_output <- select(PRIMAP_selec_Kyoto, variable, scenario, region, unit, source, statistic, num_range("", 1990:2015))
+PRIMAP_selec_Kyoto_output=data.table(PRIMAP_selec_Kyoto_output)
+PRIMAP_selec_Kyoto_output[region=="KOR"]$region<-"ROK"
 write.table(PRIMAP_selec_Kyoto_output, file="Stocktaketool/History_Kyoto.csv", sep=";", row.names = FALSE)
 
 # Historical data Figure 2, 3 -----------------------------------------
@@ -78,6 +80,8 @@ PRIMAP_selec_CO2 <- data.frame(PRIMAP_selec_CO2)
 PRIMAP_selec_CO2 <- mutate(PRIMAP_selec_CO2, variable="Emissions|CO2") %>% select(variable, scenario, region, category, entity, unit, everything())
 colnames(PRIMAP_selec_CO2) = gsub("X", "", colnames(PRIMAP_selec_CO2))
 PRIMAP_selec_CO2 <- select(PRIMAP_selec_CO2, -category, -entity)
+PRIMAP_selec_CO2=data.table(PRIMAP_selec_CO2)
+PRIMAP_selec_CO2[region=="KOR"]$region<-"ROK"
 write.table(PRIMAP_selec_CO2, file="Stocktaketool/History_CO2.csv", sep=";", row.names = FALSE)
 
 PRIMAP_selec_Agriculture_CO2 <- filter(PRIMAP_Fig2_3, category=="CAT4", entity=="CO2")
@@ -88,6 +92,8 @@ PRIMAP_selec_Agriculture_CO2 <- data.frame(PRIMAP_selec_Agriculture_CO2)
 PRIMAP_selec_Agriculture_CO2 <- mutate(PRIMAP_selec_Agriculture_CO2, variable="Emissions|CO2|Agriculture") %>% select(variable, scenario, region, category, entity, unit, everything())
 colnames(PRIMAP_selec_Agriculture_CO2) = gsub("X", "", colnames(PRIMAP_selec_Agriculture_CO2))
 PRIMAP_selec_Agriculture_CO2 <- select(PRIMAP_selec_Agriculture_CO2, -category, -entity)
+PRIMAP_selec_Agriculture_CO2=data.table(PRIMAP_selec_Agriculture_CO2)
+PRIMAP_selec_Agriculture_CO2[region=="KOR"]$region<-"ROK"
 write.table(PRIMAP_selec_Agriculture_CO2, file="Stocktaketool/History_CO2_Agriculture.csv", sep=";", row.names = FALSE)
 
 PRIMAP_selec_LULUCF_CO2 <- filter(PRIMAP_Fig2_3, category=="CAT5", entity=="CO2")
@@ -98,6 +104,8 @@ PRIMAP_selec_LULUCF_CO2 <- data.frame(PRIMAP_selec_LULUCF_CO2)
 PRIMAP_selec_LULUCF_CO2 <- mutate(PRIMAP_selec_LULUCF_CO2, variable="Emissions|CO2|LULUCF") %>% select(variable, scenario, region, category, entity, unit, everything())
 colnames(PRIMAP_selec_LULUCF_CO2) = gsub("X", "", colnames(PRIMAP_selec_LULUCF_CO2))
 PRIMAP_selec_LULUCF_CO2 <- select(PRIMAP_selec_LULUCF_CO2, -category, -entity)
+PRIMAP_selec_LULUCF_CO2=data.table(PRIMAP_selec_LULUCF_CO2)
+PRIMAP_selec_LULUCF_CO2[region=="KOR"]$region<-"ROK"
 write.table(PRIMAP_selec_LULUCF_CO2, file="Stocktaketool/History_CO2_LULUCF.csv", sep=";", row.names = FALSE)
 
 # create AFOLU CO2' 
@@ -111,6 +119,8 @@ PRIMAP_selec_AFOLU_CO2 <- data.frame(PRIMAP_selec_AFOLU_CO2)
 PRIMAP_selec_AFOLU_CO2 <- mutate(PRIMAP_selec_AFOLU_CO2, variable="Emissions|CO2|AFOLU") %>% select(variable, scenario, region, unit, everything())
 colnames(PRIMAP_selec_AFOLU_CO2) = gsub("X", "", colnames(PRIMAP_selec_AFOLU_CO2))
 #PRIMAP_selec_AFOLU_CO2 <- select(PRIMAP_selec_AFOLU_CO2, -category, -entity)
+PRIMAP_selec_AFOLU_CO2=data.table(PRIMAP_selec_AFOLU_CO2)
+PRIMAP_selec_AFOLU_CO2[region=="KOR"]$region<-"ROK"
 write.table(PRIMAP_selec_AFOLU_CO2, file="Stocktaketool/History_CO2_AFOLU.csv", sep=";", row.names = FALSE)
 
 # create 'CO2 excl AFOLU CO2'
@@ -141,6 +151,8 @@ tmp_bunkers <- mutate(tmp_bunkers, variable="Emissions|CO2|Excl. AFOLU")
 tmp_bunkers <- mutate(tmp_bunkers, scenario="History")
 tmp_bunkers <- select(tmp_bunkers, variable, scenario, region, unit, everything())
 PRIMAP_selec_CO2_Excl_AFOLU_CO2 <- rbind(PRIMAP_selec_CO2_Excl_AFOLU_CO2, tmp_bunkers)
+PRIMAP_selec_CO2_Excl_AFOLU_CO2=data.table(PRIMAP_selec_CO2_Excl_AFOLU_CO2)
+PRIMAP_selec_CO2_Excl_AFOLU_CO2[region=="KOR"]$region<-"ROK"
 write.table(PRIMAP_selec_CO2_Excl_AFOLU_CO2, file="Stocktaketool/History_CO2_ExclAFOLU.csv", sep=";", row.names = FALSE)
 
 GWPCH4 = 25
@@ -154,6 +166,8 @@ PRIMAP_selec_CH4 <- data.frame(PRIMAP_selec_CH4)
 PRIMAP_selec_CH4 <- mutate(PRIMAP_selec_CH4, variable="Emissions|CH4") %>% select(variable, scenario, region, category, entity, unit, everything())
 colnames(PRIMAP_selec_CH4) = gsub("X", "", colnames(PRIMAP_selec_CH4))
 PRIMAP_selec_CH4 <- select(PRIMAP_selec_CH4, -category, -entity)
+PRIMAP_selec_CH4=data.table(PRIMAP_selec_CH4)
+PRIMAP_selec_CH4[region=="KOR"]$region<-"ROK"
 write.table(PRIMAP_selec_CH4, file="Stocktaketool/History_CH4.csv", sep=";", row.names = FALSE)
 
 PRIMAP_selec_N2O <- filter(PRIMAP_Fig2_3, category=="CAT0", entity=="N2O")
@@ -164,6 +178,8 @@ PRIMAP_selec_N2O <- data.frame(PRIMAP_selec_N2O)
 PRIMAP_selec_N2O <- mutate(PRIMAP_selec_N2O, variable="Emissions|N2O") %>% select(variable, scenario, region, category, entity, unit, everything())
 colnames(PRIMAP_selec_N2O) = gsub("X", "", colnames(PRIMAP_selec_N2O))
 PRIMAP_selec_N2O <- select(PRIMAP_selec_N2O, -category, -entity)
+PRIMAP_selec_N2O=data.table(PRIMAP_selec_N2O)
+PRIMAP_selec_N2O[region=="KOR"]$region<-"ROK"
 write.table(PRIMAP_selec_N2O, file="Stocktaketool/History_N2O.csv", sep=";", row.names = FALSE)
 
 PRIMAP_selec_FGases <- filter(PRIMAP_Fig2_3, category=="CAT0", entity==ifelse(GWPCH4==25, "FGASESAR4", "FGASES"))
@@ -174,6 +190,8 @@ PRIMAP_selec_FGases <- data.frame(PRIMAP_selec_FGases)
 PRIMAP_selec_FGases <- mutate(PRIMAP_selec_FGases, variable="Emissions|F-Gases") %>% select(variable, scenario, region, category, entity, unit, everything())
 colnames(PRIMAP_selec_FGases) = gsub("X", "", colnames(PRIMAP_selec_FGases))
 PRIMAP_selec_FGases <- select(PRIMAP_selec_FGases, -category, -entity)
+PRIMAP_selec_FGases=data.table(PRIMAP_selec_FGases)
+PRIMAP_selec_FGases[region=="KOR"]$region<-"ROK"
 write.table(PRIMAP_selec_FGases, file="Stocktaketool/History_FGases.csv", sep=";", row.names = FALSE)
 
 # add gases to one data frame
@@ -205,6 +223,8 @@ RoW_Gases_hist <- as.data.frame(RoW_Gases_hist)
 PRIMAP_selec_Gases <- rbind(PRIMAP_selec_Gases, RoW_Gases_hist)
 PRIMAP_selec_Gases <- arrange(PRIMAP_selec_Gases, variable, region)
 PRIMAP_selec_Gases_output <- select(PRIMAP_selec_Gases, variable, scenario, region, unit, source, statistic, num_range("", 1990:2015))
+PRIMAP_selec_Gases_output=data.table(PRIMAP_selec_Gases_output)
+PRIMAP_selec_Gases_output[region=="KOR"]$region<-"ROK"
 write.table(filter(PRIMAP_selec_Gases_output, variable!="Emissions|Kyoto Gases"), file="Stocktaketool/History_fig2.csv", sep=";", row.names = FALSE)
 write.table(PRIMAP_selec_Gases_output, file="Stocktaketool/History_fig3.csv", sep=";", row.names = FALSE)
 
@@ -254,6 +274,8 @@ GHG_intensity_hist <- mutate(GHG_intensity_hist, unit="Mt CO2eq/million US($2010
 GHG_intensity_hist$source <- "PRIMAP, World Bank"
 GHG_intensity_hist$statistic <- "value"
 GHG_intensity_hist <- select(GHG_intensity_hist, variable, scenario, region, unit, source, statistic, year, value)
+GHG_intensity_hist=data.table(GHG_intensity_hist)
+GHG_intensity_hist[region=="KOR"]$region<-"ROK"
 write.table(GHG_intensity_hist, paste0("Stocktaketool/GHG_intensity_", GDP_MER_PPP, "_hist.csv"), sep=";", row.names=F)
 
 # check, this line of code has probabl moved by accident
@@ -267,6 +289,8 @@ GHG_intensity_rate_annual_hist <- group_by(GHG_intensity_hist, variable, scenari
 GHG_intensity_rate_annual_hist <- filter(GHG_intensity_rate_annual_hist, year>=1990)
 GHG_intensity_rate_annual_hist$value <- 100*GHG_intensity_rate_annual_hist$value
 GHG_intensity_rate_annual_hist <- spread(GHG_intensity_rate_annual_hist, key='year', value=value)
+GHG_intensity_rate_annual_hist=data.table(GHG_intensity_rate_annual_hist)
+GHG_intensity_rate_annual_hist[region=="KOR"]$region<-"ROK"
 write.table(GHG_intensity_rate_annual_hist, file="Stocktaketool/History_GHG_Intensity_improvement_1yrperiod.csv", sep=";", row.names = FALSE)
 
 # annual intensity improvement based on 5-year periods
@@ -279,6 +303,8 @@ GHG_intensity_rate_annual5yrperiod_hist <- group_by(GHG_intensity_5yr_hist, vari
 GHG_intensity_rate_annual5yrperiod_hist <- filter(GHG_intensity_rate_annual5yrperiod_hist, year>=1990)
 GHG_intensity_rate_annual5yrperiod_hist$value <- 100*GHG_intensity_rate_annual5yrperiod_hist$value
 GHG_intensity_rate_annual5yrperiod_hist <- spread(GHG_intensity_rate_annual5yrperiod_hist, key='year', value=value)
+GHG_intensity_rate_annual5yrperiod_hist=data.table(GHG_intensity_rate_annual5yrperiod_hist)
+GHG_intensity_rate_annual5yrperiod_hist[region=="KOR"]$region<-"ROK"
 write.table(GHG_intensity_rate_annual5yrperiod_hist, file="Stocktaketool/History_GHG_Intensity_improvement_5yrperiod.csv", sep=";", row.names = FALSE)
 
 # Historical data Figure 11 -----------------------------------------------
