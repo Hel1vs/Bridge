@@ -111,13 +111,14 @@ emissionsc = rbind(emissions,kyotorange)
 emisc=data.table(gather(emissionsc,year,value, c('2005','2010','2015','2020','2025','2030','2035','2040','2045','2050')))
 emisc$year=as.numeric(emisc$year)
 emisc=spread(emisc,region,value)
-emisc=emisc%>%mutate(ROW=World-AUS-BRA-CAN-CHN-EU-IND-IDN-JPN-ROK-RUS-USA) #for now calculating ROW as world minus the shown countries, using the COMMIT countries to be shown
-emisc=data.table(gather(emisc,region,value,c("World","ROW","AUS","BRA","CAN","CHN","EU","IND","IDN","JPN","ROK","RUS","USA","TUR","R5OECD90+EU","R5LAM","R5MAF","R5ASIA","R5REF")))
+emisc[!variable%in%c("Emissions|Kyoto Gases","Emissions|CO2")]$Bunkers <- 0
+emisc=emisc%>%mutate(ROW=World-AUS-BRA-CAN-CHN-EU-IND-IDN-JPN-ROK-RUS-USA-Bunkers) #for now calculating ROW as world minus the shown countries, using the COMMIT countries to be shown
+emisc=data.table(gather(emisc,region,value,c("World","ROW","AUS","BRA","CAN","CHN","EU","IND","IDN","JPN","ROK","RUS","USA","TUR","R5OECD90+EU","R5LAM","R5MAF","R5ASIA","R5REF","Bunkers")))
 emisc=spread(emisc,year,value)
 setcolorder(emisc,c("variable","scenario","region","unit","source","statistic"))
 
 # save
-write.xlsx2(emisc,paste("Stocktaketool","/003v_gst20.xlsx",sep=""),sheetName="data",append=F,row.names = F)
+write.xlsx2(emisc,paste("Stocktaketool","/003v_gst20.xlsx",sep=""),sheetName="data_incl_bunkers",append=T,row.names = F)
 
 
 # Figure 4 - GHG/carbon intensity----------------------------------------------------------------
