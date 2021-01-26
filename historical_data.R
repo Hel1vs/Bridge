@@ -234,12 +234,14 @@ Kyoto_hist <- filter(Kyoto_hist, year>=1990, year<=2015)
 Kyoto_hist$year <- as.numeric(Kyoto_hist$year)
 Kyoto_hist$region <- factor(Kyoto_hist$region, levels=regions_indicators)
 Kyoto_hist <- select(Kyoto_hist, -source, -statistic)
+Kyoto_hist=data.table(Kyoto_hist)
+Kyoto_hist[region=="KOR"]$region<-"ROK"
 #CO2_hist <- gather(PRIMAP_selec_CO2, 5:ncol(PRIMAP_selec_CO2), key="year", value=value)
 PRIMAP_selec_CO2_Excl_AFOLU_CO2_bunkers <- filter(PRIMAP_selec_CO2_Excl_AFOLU_CO2, region!="Bunkers")
 CO2_hist <- gather(PRIMAP_selec_CO2_Excl_AFOLU_CO2_bunkers, 5:ncol(PRIMAP_selec_CO2_Excl_AFOLU_CO2_bunkers), key="year", value=value)
 CO2_hist <- filter(CO2_hist, year>=1990, year<=2015)
 CO2_hist$year <- as.numeric(CO2_hist$year)
-CO2_hist$region <- factor(CO2_hist$region, levels=regions_indicators)
+CO2_hist$region <- factor(CO2_hist$region, levels=c("CAN", "BRA", "CHN", "EU", "IDN", "IND", "JPN", "RUS", "USA","ROK","AUS", "World", "ROW","TUR"))
 GHG_hist <- rbind(Kyoto_hist, CO2_hist)
 # Use OECD GDP history from IMAGE model (million $US2010)
 # GDP_MER_IMAGE <- NoPolicy$GDP_MER
@@ -259,6 +261,10 @@ GDP_PPP_hist <- gather(GDP_PPP_hist, 3:ncol(GDP_PPP_hist), key="year", value=val
 GDP_PPP_hist$value <- 0.98*1000*GDP_PPP_hist$value #convert to million $2010 dollars
 GDP_PPP_hist$unit <- "billion US$2010/yr"
 GDP_PPP_hist$year <- as.numeric(GDP_PPP_hist$year)
+GDP_PPP_hist=data.table(GDP_PPP_hist)
+GDP_PPP_hist[region=="KOR"]$region<-"ROK"
+GHG_hist=data.frame(GHG_hist)
+GDP_PPP_hist=data.frame(GDP_PPP_hist)
 
 if(GDP_MER_PPP=="PPP") { GHG_intensity_hist <- inner_join(GHG_hist, GDP_PPP_hist, by=c('year', 'region'))
 GHG_intensity_hist <- mutate(GHG_intensity_hist, value=value.x/value.y)
@@ -275,7 +281,6 @@ GHG_intensity_hist$source <- "PRIMAP, World Bank"
 GHG_intensity_hist$statistic <- "value"
 GHG_intensity_hist <- select(GHG_intensity_hist, variable, scenario, region, unit, source, statistic, year, value)
 GHG_intensity_hist=data.table(GHG_intensity_hist)
-GHG_intensity_hist[region=="KOR"]$region<-"ROK"
 write.table(GHG_intensity_hist, paste0("Stocktaketool/GHG_intensity_", GDP_MER_PPP, "_hist.csv"), sep=";", row.names=F)
 
 # check, this line of code has probabl moved by accident
@@ -290,7 +295,6 @@ GHG_intensity_rate_annual_hist <- filter(GHG_intensity_rate_annual_hist, year>=1
 GHG_intensity_rate_annual_hist$value <- 100*GHG_intensity_rate_annual_hist$value
 GHG_intensity_rate_annual_hist <- spread(GHG_intensity_rate_annual_hist, key='year', value=value)
 GHG_intensity_rate_annual_hist=data.table(GHG_intensity_rate_annual_hist)
-GHG_intensity_rate_annual_hist[region=="KOR"]$region<-"ROK"
 write.table(GHG_intensity_rate_annual_hist, file="Stocktaketool/History_GHG_Intensity_improvement_1yrperiod.csv", sep=";", row.names = FALSE)
 
 # annual intensity improvement based on 5-year periods
@@ -304,7 +308,6 @@ GHG_intensity_rate_annual5yrperiod_hist <- filter(GHG_intensity_rate_annual5yrpe
 GHG_intensity_rate_annual5yrperiod_hist$value <- 100*GHG_intensity_rate_annual5yrperiod_hist$value
 GHG_intensity_rate_annual5yrperiod_hist <- spread(GHG_intensity_rate_annual5yrperiod_hist, key='year', value=value)
 GHG_intensity_rate_annual5yrperiod_hist=data.table(GHG_intensity_rate_annual5yrperiod_hist)
-GHG_intensity_rate_annual5yrperiod_hist[region=="KOR"]$region<-"ROK"
 write.table(GHG_intensity_rate_annual5yrperiod_hist, file="Stocktaketool/History_GHG_Intensity_improvement_5yrperiod.csv", sep=";", row.names = FALSE)
 
 # Historical data Figure 11 -----------------------------------------------
