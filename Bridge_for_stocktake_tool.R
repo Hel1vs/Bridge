@@ -177,6 +177,7 @@ all <- calcBudget(all,'Emissions|CO2','Carbon budget')
 
 regions_indicators_PRIMAP_history <- c("AUS","BRA", "CAN", "CHN", "EU28", "IDN", "IND", "JPN", "RUS", "USA", "KOR", "TUR", "EARTH")
 regions_indicators <- c("CAN", "BRA", "CHN", "EU", "IDN", "IND", "JPN", "RUS", "USA","KOR","AUS", "World", "ROW","TUR")
+regions_indicators_commit <- c("CAN", "BRA", "CHN", "EU", "IDN", "IND", "JPN", "RUS", "USA","ROK","AUS", "World", "ROW","TUR")
 scens_indicators <- c("BAU","CurPol","NDCMCS","NDCplus","GPP","Bridge","2Deg2020","2Deg2030")
 stats_indicators <- c('mean', 'median', 'min', 'max', 'tenp', 'ninetyp')
 
@@ -208,7 +209,7 @@ setnames(PRIMAP_selec_CO2_1850_2015,"scenario","Category")
 #2. Remaining emissions depending on budget (400, 1000, 1600)
 d_COMMIT_CO2 <- filter(all, Scope=="global") %>%
   select(Category, model, region, period, value, unit, variable)
-d_COMMIT_CO2 <- filter(d_COMMIT_CO2, Category %in% scens_indicators, region %in% regions_indicators, variable=="Emissions|CO2")
+d_COMMIT_CO2 <- filter(d_COMMIT_CO2, Category %in% scens_indicators, region %in% c(regions_indicators,"ROK"), variable=="Emissions|CO2")
 d_COMMIT_CO2=data.table(d_COMMIT_CO2)
 yy=seq(start_year_projections_fig5,2100)
 d_COMMIT_CO2 = d_COMMIT_CO2[,list(approx(x=period,y=value,xout=yy)$y,approx(x=period,y=value,xout=yy)$x),by=c('Category','model','region', 'unit', 'variable')]
@@ -218,11 +219,13 @@ setcolorder(d_COMMIT_CO2,c('Category','model','region', 'year', 'value', 'unit',
 d_COMMIT_CO2 <- filter(d_COMMIT_CO2, year>start_year_projections_fig5, year<=end_year_projections_fig5)
 d_COMMIT_CO2 <- spread(d_COMMIT_CO2, key=year, value=value)
 
-data_figure5_CO2emissions_model <- inner_join(PRIMAP_selec_CO2_1850_2015, d_COMMIT_CO2, by=c('region'))
+PRIMAP_selec_CO2_1850_2015_commit =data.table(PRIMAP_selec_CO2_1850_2015)
+PRIMAP_selec_CO2_1850_2015_commit[region=="KOR"]$region<-"ROK"
+data_figure5_CO2emissions_model <- inner_join(PRIMAP_selec_CO2_1850_2015_commit, d_COMMIT_CO2, by=c('region'))
 data_figure5_CO2emissions_model <- select(data_figure5_CO2emissions_model, variable.y, region, Category.y, model, unit.y, num_range("", 1850:end_year_projections_fig5))
 data_figure5_CO2emissions_model <- rename(data_figure5_CO2emissions_model, variable=variable.y, unit=unit.y)
 data_figure5_CO2emissions_model <- rename(data_figure5_CO2emissions_model, Category=Category.y)
-data_figure5_CO2emissions_model$region <- factor(data_figure5_CO2emissions_model$region, levels=regions_indicators)
+data_figure5_CO2emissions_model$region <- factor(data_figure5_CO2emissions_model$region, levels=regions_indicators_commit)
 data_figure5_CO2emissions_model$Category <- factor(data_figure5_CO2emissions_model$Category, levels=scens_indicators)
 
 #data_figure5_CO2emissions_stat <- gather(data_figure5_CO2emissions_model, num_range("", start_year_projections_fig5:end_year_projections_fig5), key="year", value=value)
@@ -238,7 +241,7 @@ data_figure5_CO2emissions_stat <- spread(data_figure5_CO2emissions_stat, key=yea
 data_figure5_CO2emissions_stat$statistic <- factor(data_figure5_CO2emissions_stat$statistic, level=stats_indicators)
 
 # 3. Determine statistics for 2100 budgets
-data_figure5_CO2budget <- filter(all, Scope=="global", Category %in% scens_indicators, region %in% regions_indicators, period==2100, variable=="Carbon budget")
+data_figure5_CO2budget <- filter(all, Scope=="global", Category %in% scens_indicators, region %in% regions_indicators_commit, period==2100, variable=="Carbon budget")
 data_figure5_CO2budget_stat <- group_by(data_figure5_CO2budget, Category, region, period, variable, unit) %>% summarise(mean=mean(value,na.rm=TRUE),
                                                                                                                       median=median(value,na.rm=TRUE),
                                                                                                                       min=min(value, na.rm=TRUE),
