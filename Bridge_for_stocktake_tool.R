@@ -175,6 +175,13 @@ source("historical_data.R")
 source("functions/calcBudget.R")
 all <- calcBudget(all,'Emissions|CO2','Carbon budget')
 
+# add Korea budget based on COMMIT:
+source("functions/calcBudget_2015.R")
+all <- calcBudget_2015(all,'Emissions|CO2','Carbon budget_2015')
+budgets = all[variable%in%c("Carbon budget_2015")&Category%in%c("2Deg2030","2Deg2020")&period%in%c(2050,2100)&region=="ROK"]
+budgets = spread(budgets,variable,value)
+write.csv(budgets,paste("Stocktaketool","/NationalCbudget_KOR.csv",sep=""))
+
 regions_indicators_PRIMAP_history <- c("AUS","BRA", "CAN", "CHN", "EU28", "IDN", "IND", "JPN", "RUS", "USA", "KOR", "TUR", "EARTH")
 regions_indicators <- c("CAN", "BRA", "CHN", "EU", "IDN", "IND", "JPN", "RUS", "USA","KOR","AUS", "World", "ROW","TUR")
 regions_indicators_commit <- c("CAN", "BRA", "CHN", "EU", "IDN", "IND", "JPN", "RUS", "USA","ROK","AUS", "World", "ROW","TUR")
