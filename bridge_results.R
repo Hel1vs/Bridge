@@ -1492,3 +1492,4 @@ AFOLU[period=="red2050"]$period<-2050
 AFOLU$variable<-"Reduction of AFOLU CO2 emissions"
 AFOLUrange = AFOLU[,list(median=median(value,na.rm=T),min=min(value,na.rm=T),max=max(value,na.rm=T)),by=c("Category",'variable','period','region')]
 
+
