@@ -16,6 +16,8 @@ GPP;GPP;#008000;10;2;dotted
 Bridge;Bridge;#009E73;12;2;dotted
 GPP_notax;GPP_notax;#99cc99;10;2;dotted
 Bridge_notax;Bridge_notax;#99c2eb;12;2;dotted
+1p5 SSP;1.5 (SSP);#CC79A7;12;2;dotted
+1p5 CD-LINKS;1.5 (CD-LINKS);#F0E442;12;2;dotted
 Emissions|CH4;Total;#000000;1;2;dotted
 Emissions|CH4|Energy Supply and Demand;CH4 Energy;#cc0000;1;2;dotted
 Emissions|CH4|Land Use;CH4 Land Use;#ff9900;1;2;dotted

@@ -38,6 +38,14 @@ all$period<-as.numeric(as.character(all$period))
 # Adjust COFFEE name manually until 1.1 registered
 all[model=="COPPE-COFFEE 1.0"]$model<-"COPPE-COFFEE 1.1"
 
+# Read in IAMC 1.5 scenario explorer data for comparison
+IPCC15 = fread("data/iamc-1.5c-explorer_snapshot_CD-LINKS_SSP_exGCAM.csv",sep=";", header=T)
+IPCC15 <- gather(IPCC15, 8:ncol(IPCC15), key="period", value=value)
+IPCC15$Scope <-"global"
+IPCC15$period<-as.numeric(as.character(IPCC15$period))
+
+all <- rbind(all,IPCC15)
+
 # Plot emissions ----------------------------------------------------------
 vars = "Emissions|Kyoto Gases"
 scens <- c("BAU","CurPol","NDCplus","NDCMCS","GPP","Bridge","2Deg2030","2Deg2020")
@@ -1153,7 +1161,7 @@ write.xlsx2(sectoralrange,paste(cfg$outdir,"/waterfall_range.xlsx",sep=""),sheet
 ### Figure elements
 # Figure 3a GHG emissions pathways
 vars="Emissions|Kyoto Gases"
-scens <- c("CurPol","NDCplus","Bridge","2Deg2020","2Deg2030") #"NDCMCS",
+scens <- c("CurPol","NDCplus","Bridge","2Deg2020","2Deg2030","1p5 CD-LINKS") #"NDCMCS", ,"1p5 SSP"
 
 plotdata=all[variable%in%vars & Category%in%scens&!Scope=="national"&region=="World"]
 #plotdata$period=as.numeric(as.character(plotdata$period))
