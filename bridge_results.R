@@ -1193,7 +1193,7 @@ F3a = F3a + geom_point(data=range[period %in% c(2050)&Category%in%c("Bridge","Cu
 F3a = F3a + geom_point(data=range[period %in% c(2030)&Category%in%c("2Deg2020")],aes(x=2030.7,y=med,colour=Category,size=1.5),show.legend = FALSE)
 F3a = F3a + geom_point(data=range[period %in% c(2030)&Category%in%c("Bridge")],aes(x=2030.2,y=med,colour=Category,size=1.5),show.legend = FALSE)
 F3a = F3a + geom_point(data=range[period %in% c(2030)&Category%in%c("2Deg2030")],aes(x=2031.2,y=med,colour=Category,size=1.5),show.legend = FALSE)
-F3a = F3a + xlim(2010,2052)+ scale_y_continuous(breaks=c(0,10,20,30,40,50,60,70,80),limits=c(0,85))
+F3a = F3a + xlim(2010,2052) + scale_y_continuous(breaks=c(-10,0,10,20,30,40,50,60,70,80),limits=c(-15,85))
 F3a = F3a + scale_colour_manual(values=plotstyle(scens))
 F3a = F3a + scale_fill_manual(values=plotstyle(scens))
 F3a = F3a + ylab(paste(unique(all[variable%in%vars]$variable),"[",unique(plotdata$unit),"]"))+ xlab("")
@@ -1476,13 +1476,14 @@ budgetsel= budget[region=='World'&Scope=="global"&period==2100&variable=="Carbon
 
 
 # Check gap closure -------------------------------------------------------
+scens <- c("CurPol","NDCplus","Bridge","2Deg2020","1p5 CD-LINKS")
 gap = all[Scope=="global"&variable=="Emissions|Kyoto Gases"&region%in%c(regions,"World")&period%in%c(2030,2050)&Category%in%scens]
 gap$scenario <- NULL
 gap$Baseline <- NULL
 gap = spread(gap,Category,value)
-gap = gap%>%mutate(gap=NDCplus-`2Deg2020`,reduction=NDCplus-Bridge,closure=reduction/gap*100)
-gap2 = data.table(gather(gap,Category,value,c('2Deg2020','Bridge','CurPol','NDCplus','gap','reduction','closure')))
-gap2 =gap2[Category%in%c('gap','reduction','closure')]
+gap = gap%>%mutate(gap=NDCplus-`2Deg2020`,reduction=NDCplus-Bridge,closure=reduction/gap*100, gap15=NDCplus-`1p5 CD-LINKS`,closure15=reduction/gap15*100)
+gap2 = data.table(gather(gap,Category,value,c('2Deg2020','Bridge','CurPol','NDCplus',"1p5 CD-LINKS",'gap','reduction','closure','gap15','closure15')))
+gap2 =gap2[Category%in%c('gap','gap15','reduction','closure','closure15')]
 setnames(gap2,'Category','Indicator')
 gaprange = gap2[,list(median=median(value,na.rm=T),min=min(value,na.rm=T),max=max(value,na.rm=T)),by=c('Indicator','period','region')]
 
