@@ -45,8 +45,8 @@ ylab <-  bquote(paste("Emissions [Gt", CO[2],"eq]"))
 titletag <- "Waterfall_"
 file.prefix <- "Fig2_sector_"
 
-catsnat <- c("2Deg2020","Bridge") #c("Bridge","NDCplus") 
-labcat <-  c("2Deg2020","Bridge") #c("Bridge","NDCplus") 
+catsnat <- c("Bridge","NDCplus") #c("2Deg2020","Bridge")
+labcat <-  c("Bridge","NDCplus") #c("2Deg2020","Bridge")
 
 #choose reference scenario INDC or NoPOL
 reference_cat <- catsnat[2]
@@ -181,6 +181,9 @@ for(icat in c(1)){
     dtn_all$bar_position <- as.numeric(dtn_all$bar_position)
     dtn_all$value <- dtn_all$value/1000
     
+    #TODO fix this
+    #dtn_all$variable = factor(dtn_all$variable, levels=c("Emissions|CO2|Energy|Supply","Emissions|CO2|Energy|Demand|Industry","Emissions|CO2|Energy|Demand|Residential and Commercial","Emissions|CO2|Energy|Demand|Transportation","Emissions|CO2|Industrial Processes","Emissions|CO2|AFOLU","Emissions|Non-CO2"))
+  
     ### waterfall plot - TODO: add 2030 and 2050 in one graph? save plots in environment for grid arrange?
     #TODO: layout Filip
     ggplot()+
