@@ -137,11 +137,12 @@ for(icat in c(1)){
     
     #ydummy region transparent #TODO update this to make it a waterfall again with the new order (dtn_8 = 3, dtn_4 =4, 5=5, 6=6, dtn_3=7, dtn_7=8, dtn_10=9)
     if(!model%in%c("TIAM_Grantham_v3.2","PROMETHEUS")){
-      ydummy8<-data.frame("ydummy",sum(dtn_7_reduced[dtn_7_reduced$region == "ydummy",]$value)-sum(dtn_8_reduced$value),"total-dummy",3)
+      ydummy8<-data.frame("ydummy",sum(dtn_2_reduced$value)-sum(dtn_8_reduced$value),"total-dummy",3)
+      #ydummy8<-data.frame("ydummy",sum(dtn_7_reduced[dtn_7_reduced$region == "ydummy",]$value)-sum(dtn_8_reduced$value),"total-dummy",3)
       names(ydummy8)<-reduction
       dtn_8_reduced = rbind(dtn_8_reduced,ydummy8)
     }
-    ydummy4<-data.frame("ydummy",sum(dtn_3_reduced[dtn_3_reduced$region == "ydummy",]$value)-sum(dtn_4_reduced$value),"total-dummy",4)
+    ydummy4<-data.frame("ydummy",sum(dtn_8_reduced[dtn_8_reduced$region == "ydummy",]$value)-sum(dtn_4_reduced$value),"total-dummy",4)
     names(ydummy4)<-reduction
     dtn_4_reduced = rbind(dtn_4_reduced,ydummy4)
     ydummy5<-data.frame("ydummy",sum(dtn_4_reduced[dtn_4_reduced$region == "ydummy",]$value)-sum(dtn_5_reduced$value),"total-dummy",5)
@@ -150,16 +151,17 @@ for(icat in c(1)){
     ydummy6<-data.frame("ydummy",sum(dtn_5_reduced[dtn_5_reduced$region == "ydummy",]$value)-sum(dtn_6_reduced$value),"total-dummy",6)
     names(ydummy6)<-reduction
     dtn_6_reduced = rbind(dtn_6_reduced,ydummy6)
-    ydummy3<-data.frame("ydummy",sum(dtn_2_reduced$value)-sum(dtn_3_reduced$value),"total-dummy",7)
+    #ydummy3<-data.frame("ydummy",sum(dtn_6_reduced$value)-sum(dtn_3_reduced$value),"total-dummy",7)
+    ydummy3<-data.frame("ydummy",sum(dtn_6_reduced[dtn_6_reduced$region == "ydummy",]$value)-sum(dtn_3_reduced$value),"total-dummy",7)
     names(ydummy3)<-reduction
     dtn_3_reduced = rbind(dtn_3_reduced,ydummy3)
     if(!model%in%c("TIAM_Grantham_v3.2")){
-      ydummy7<-data.frame("ydummy",sum(dtn_6_reduced[dtn_6_reduced$region == "ydummy",]$value)-sum(dtn_7_reduced$value),"total-dummy",8)
+      ydummy7<-data.frame("ydummy",sum(dtn_3_reduced[dtn_3_reduced$region == "ydummy",]$value)-sum(dtn_7_reduced$value),"total-dummy",8)
       names(ydummy7)<-reduction
       dtn_7_reduced = rbind(dtn_7_reduced,ydummy7)
     }
     if(!model%in%c("TIAM_Grantham_v3.2","PROMETHEUS")){
-      ydummy10<-data.frame("ydummy",sum(dtn_8_reduced[dtn_8_reduced$region == "ydummy",]$value)-sum(dtn_10_reduced$value),"total-dummy",9)
+      ydummy10<-data.frame("ydummy",sum(dtn_7_reduced[dtn_7_reduced$region == "ydummy",]$value)-sum(dtn_10_reduced$value),"total-dummy",9)
       names(ydummy10)<-reduction
       dtn_10_reduced = rbind(dtn_10_reduced,ydummy10)
     }
