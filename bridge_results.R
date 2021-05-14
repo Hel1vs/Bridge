@@ -1477,14 +1477,14 @@ budgetsel= budget[region=='World'&Scope=="global"&period==2100&variable=="Carbon
 
 
 # Check gap closure -------------------------------------------------------
-scens <- c("CurPol","NDCplus","Bridge","2Deg2020","1p5 CD-LINKS")
+scens <- c("CurPol","NDCplus","Bridge","2Deg2020","1p5 CD-LINKS","GPP")
 gap = all[Scope=="global"&variable=="Emissions|Kyoto Gases"&region%in%c(regions,"World")&period%in%c(2030,2050)&Category%in%scens]
 gap$scenario <- NULL
 gap$Baseline <- NULL
 gap = spread(gap,Category,value)
-gap = gap%>%mutate(gap=NDCplus-`2Deg2020`,reduction=NDCplus-Bridge,closure=reduction/gap*100, gap15=NDCplus-`1p5 CD-LINKS`,closure15=reduction/gap15*100)
-gap2 = data.table(gather(gap,Category,value,c('2Deg2020','Bridge','CurPol','NDCplus',"1p5 CD-LINKS",'gap','reduction','closure','gap15','closure15')))
-gap2 =gap2[Category%in%c('gap','gap15','reduction','closure','closure15')]
+gap = gap%>%mutate(gap=NDCplus-`2Deg2020`,reduction=NDCplus-Bridge,closure=reduction/gap*100, gap15=NDCplus-`1p5 CD-LINKS`,closure15=reduction/gap15*100, reductionGPP=NDCplus-GPP,closureGPP=reductionGPP/gap*100)
+gap2 = data.table(gather(gap,Category,value,c('2Deg2020','Bridge','CurPol','NDCplus',"1p5 CD-LINKS",'gap','reduction','closure','gap15','closure15','reductionGPP','closureGPP')))
+gap2 =gap2[Category%in%c('gap','gap15','reduction','closure','closure15','reductionGPP', 'closureGPP')]
 setnames(gap2,'Category','Indicator')
 gaprange = gap2[,list(median=median(value,na.rm=T),min=min(value,na.rm=T),max=max(value,na.rm=T)),by=c('Indicator','period','region')]
 
