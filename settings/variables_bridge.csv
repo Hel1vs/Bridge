@@ -163,3 +163,10 @@ Consumption
 Land Cover|Forest|Afforestation and Reforestation
 Investment|Energy Supply|Electricity|Non-Biomass Renewables
 Investment|Energy Supply|Electricity|Fossil
+OM Cost|Fixed|Electricity|Solar|PV
+OM Cost|Fixed|Electricity|Wind
+OM Cost|Fixed|Electricity|Wind|Offshore
+OM Cost|Fixed|Electricity|Wind|Onshore
+Capital Cost|Electricity|Solar|PV
+Capital Cost|Electricity|Wind|Offshore
+Capital Cost|Electricity|Wind|Onshore

@@ -1461,6 +1461,29 @@ F4c2
 ggsave(file=paste(cfg$outdir,"/F4c_Investments_NBR_bar.png",sep=""),F4c2,width=18,height=12,dpi=300)
 
 
+# extra figure on technology costs
+vars = c ("OM Cost|Fixed|Electricity|Solar|PV","OM Cost|Fixed|Electricity|Wind|Onshore","Capital Cost|Electricity|Solar|PV","Capital Cost|Electricity|Wind|Onshore") #"OM Cost|Fixed|Electricity|Wind|Offshore", "Capital Cost|Electricity|Wind|Offshore",
+scens <- c("NDCplus","Bridge","2Deg2030")
+
+plotdata=all[variable%in%vars & Category%in%scens&!Scope=="national"&region=="World"]
+range=plotdata[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),med=median(value,na.rm=T)),by=c("Category","variable","period")]
+
+F4d = ggplot(plotdata) 
+F4d = F4d + facet_wrap(~variable,scales="free")
+F4d = F4d + geom_line(aes(x=period,y=value,colour=Category, linetype=model),size=1)
+#F4d = F4d + geom_line(data=range,aes(x=period,y=med,colour=Category),size=2.5)
+#F4d = F4d + geom_ribbon(data=range,aes(x=period,ymin=min, ymax=max,fill=Category),alpha=0.3)
+F4d = F4d + xlim(2010,2050) #+ scale_y_continuous(breaks=c(-10,0,10,20,30,40,50,60,70,80),limits=c(-15,85))
+F4d = F4d + scale_colour_manual(values=plotstyle(scens))
+F4d = F4d + scale_fill_manual(values=plotstyle(scens))
+F4d = F4d + ylab("US$2010/kW")+ xlab("")
+F4d = F4d + theme_bw() + theme(axis.text.y=element_text(size=20)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=20)) +
+  theme(axis.text.x = element_text(size=20,angle=90)) + theme(legend.text=element_text(size=14),legend.title=element_blank(),legend.key.width = unit(1,"cm")) #legend.key.size = unit(1.5, "cm"),
+F4d = F4d + theme(legend.position="bottom")
+F4d
+ggsave(file=paste(cfg$outdir,"/F4d_tech_costs.png",sep=""),F4d,width=16,height=12,dpi=200)
+
+
 # Check budgets -----------------------------------------------------------
 source("functions/calcBudget.R")
 all <- calcBudget(all,'Emissions|CO2','Carbon budget')
