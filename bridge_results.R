@@ -1531,7 +1531,7 @@ AFOLUrange = AFOLU[,list(median=median(value,na.rm=T),min=min(value,na.rm=T),max
 
 # SDG indicators ----------------------------------------------------------
 # extra figure on health
-vars = c("Emissions|NOx","Emissions|VOC","Emissions|CO","Emissions|Sulfur")
+vars = c("Emissions|NOx","Emissions|VOC","Emissions|CO","Emissions|Sulfur","Emissions|BC","Emissions|OC")
 scens <- c("NDCplus","Bridge")
 
 plotdata=all[variable%in%vars & Category%in%scens&!Scope=="national"&region=="World"]
