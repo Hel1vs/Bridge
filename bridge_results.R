@@ -1527,3 +1527,28 @@ AFOLU$variable<-"Reduction of AFOLU CO2 emissions"
 AFOLUrange = AFOLU[,list(median=median(value,na.rm=T),min=min(value,na.rm=T),max=max(value,na.rm=T)),by=c("Category",'variable','period','region')]
 
 
+
+
+# SDG indicators ----------------------------------------------------------
+# extra figure on health
+vars = c("Emissions|NOx","Emissions|VOC","Emissions|CO","Emissions|Sulfur")
+scens <- c("NDCplus","Bridge")
+
+plotdata=all[variable%in%vars & Category%in%scens&!Scope=="national"&region=="World"]
+range=plotdata[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),med=median(value,na.rm=T)),by=c("Category","variable","period")]
+
+Fx = ggplot(plotdata) 
+Fx = Fx + facet_wrap(~variable,scales="free")
+Fx = Fx + geom_line(aes(x=period,y=value,colour=Category, linetype=model),size=1)
+Fx = Fx + geom_line(data=range,aes(x=period,y=med,colour=Category),size=2.5)
+Fx = Fx + geom_ribbon(data=range,aes(x=period,ymin=min, ymax=max,fill=Category),alpha=0.3)
+Fx = Fx + xlim(2010,2050) #+ scale_y_continuous(breaks=c(-10,0,10,20,30,40,50,60,70,80),limits=c(-15,85))
+Fx = Fx + scale_colour_manual(values=plotstyle(scens))
+Fx = Fx + scale_fill_manual(values=plotstyle(scens))
+Fx = Fx + ylab("Mt/year")+ xlab("")
+Fx = Fx + theme_bw() + theme(axis.text.y=element_text(size=20)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=20)) +
+  theme(axis.text.x = element_text(size=20,angle=90)) + theme(legend.text=element_text(size=14),legend.title=element_blank(),legend.key.width = unit(1,"cm")) #legend.key.size = unit(1.5, "cm"),
+Fx = Fx + theme(legend.position="bottom")
+Fx
+ggsave(file=paste(cfg$outdir,"/Fx_pollutant_emissions.png",sep=""),Fx,width=16,height=12,dpi=200)
+

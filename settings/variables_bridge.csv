@@ -154,6 +154,8 @@ Emissions|Sulfur
 Emissions|N2O|Energy
 Emissions|N2O|Other
 Emissions|NOx
+Emissions|VOC
+Emissions|CO
 Employment
 Employment|Agriculture
 Employment|Industry
@@ -170,3 +172,4 @@ OM Cost|Fixed|Electricity|Wind|Onshore
 Capital Cost|Electricity|Solar|PV
 Capital Cost|Electricity|Wind|Offshore
 Capital Cost|Electricity|Wind|Onshore
+Food Energy Supply
