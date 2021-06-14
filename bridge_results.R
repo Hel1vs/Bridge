@@ -1080,7 +1080,7 @@ scens = c("CurPol","NDCplus","Bridge","2Deg2020")
 ### Figure elements
 # Figure 2a Sectors
 # select data
-cdata=all[model=="POLES GECO2019"&region=="World"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, PROMETHEUS, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.1,MESSAGEix-GLOBIOM_1.0, WITCH 5.0, TIAM_Grantham_v3.2
+cdata=all[model=="WITCH 5.0"&region=="World"] # POLES GECO2019, AIM/CGE, IMAGE 3.0, PROMETHEUS, REMIND-MAgPIE 1.7-3.0, COPPE-COFFEE 1.1,MESSAGEix-GLOBIOM_1.0, WITCH 5.0, TIAM_Grantham_v3.2
 model=unique(cdata$model)
 
 # add non-CO2
@@ -1098,7 +1098,7 @@ cdata=rbind(cdata,nonco2)
 if(unique(cdata$model=="AIM/CGE")){cdata$model<-"AIM-CGE"}
 
 # source script
-source("waterfall_bridge.R")
+#source("waterfall_bridge.R")
 source("waterfall_bridge_paper-layout.R")
 
 # Figure 2b countries
@@ -1194,7 +1194,7 @@ F3a = F3a + geom_point(data=range[period %in% c(2050)&Category%in%c("Bridge","Cu
 F3a = F3a + geom_point(data=range[period %in% c(2030)&Category%in%c("2Deg2020")],aes(x=2030.7,y=med,colour=Category,size=1.5),show.legend = FALSE)
 F3a = F3a + geom_point(data=range[period %in% c(2030)&Category%in%c("Bridge")],aes(x=2030.2,y=med,colour=Category,size=1.5),show.legend = FALSE)
 F3a = F3a + geom_point(data=range[period %in% c(2030)&Category%in%c("2Deg2030")],aes(x=2031.2,y=med,colour=Category,size=1.5),show.legend = FALSE)
-F3a = F3a + xlim(2010,2052) + scale_y_continuous(breaks=c(-10,0,10,20,30,40,50,60,70,80),limits=c(-15,85))
+F3a = F3a + xlim(2010,2052) + scale_y_continuous(breaks=c(0,10,20,30,40,50,60,70),limits=c(-5,75))
 F3a = F3a + scale_colour_manual(values=plotstyle(scens))
 F3a = F3a + scale_fill_manual(values=plotstyle(scens))
 F3a = F3a + scale_linetype_manual(values= c("POLES GECO2019" = "dashed","AIM/CGE" = "solid","IMAGE 3.0"= "dotdash","REMIND-MAgPIE 1.7-3.0"= "twodash","WITCH 5.0"= "dotdash","MESSAGEix-GLOBIOM_1.0"= "longdash","COPPE-COFFEE 1.1"= "dotted"))
