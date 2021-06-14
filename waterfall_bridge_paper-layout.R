@@ -45,8 +45,8 @@ ylab <-  bquote(paste("Emissions [Gt", CO[2],"eq]"))
 titletag <- "Waterfall_"
 file.prefix <- "Fig2_sector_"
 
-catsnat <- c("Bridge","NDCplus") #c("2Deg2020","Bridge")
-labcat <-  c("Bridge","NDCplus") #c("2Deg2020","Bridge")
+catsnat <- c("2Deg2020","Bridge") #c("Bridge","NDCplus")
+labcat <-  c("2Deg2020","Bridge") #c("Bridge","NDCplus")
 
 #choose reference scenario INDC or NoPOL
 reference_cat <- catsnat[2]
@@ -69,10 +69,10 @@ for(icat in c(1)){
     #   mutate(bar_position = "10") %>% factor.data.frame()       
     if(model=="PROMETHEUS"){
       dtn_9 <- filter(dtn, Category==catsnat[1], variable %in% vars, period == tt[2]) %>%
-        mutate(bar_position = "8") %>% factor.data.frame()       
+        mutate(bar_position = "9") %>% factor.data.frame()       
     }else{if(model=="TIAM_Grantham_v3.2"){
       dtn_9 <- filter(dtn, Category==catsnat[1], variable %in% vars, period == tt[2]) %>%
-        mutate(bar_position = "7") %>% factor.data.frame()        
+        mutate(bar_position = "8") %>% factor.data.frame()        
     }else{
       dtn_9 <- filter(dtn, Category==catsnat[1], variable %in% vars, period == tt[2]) %>%
         mutate(bar_position = "10") %>% factor.data.frame()
