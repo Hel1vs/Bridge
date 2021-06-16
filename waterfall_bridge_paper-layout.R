@@ -46,7 +46,7 @@ titletag <- "Waterfall_"
 file.prefix <- "Fig2_sector_"
 
 catsnat <- c("2Deg2020","Bridge") #c("Bridge","NDCplus")
-labcat <-  c("2Deg2020","Bridge") #c("Bridge","NDCplus")
+labcat <-  c("2Deg2020","Bridge") #c("Bridge","NDCplus") 
 
 #choose reference scenario INDC or NoPOL
 reference_cat <- catsnat[2]
@@ -58,9 +58,11 @@ for(icat in c(1)){
     dtn <- filter(cdata, Category %in% catsnat, variable %in% vars, period %in% tt)  %>% group_by(Category,region,variable,period,unit) %>% summarize(value=mean(value)) %>% ungroup()
     
     # defining the stacks
+    # 2015
     dtn_1 <- filter(dtn, Category==reference_cat, variable %in% vars, period == "2015") %>%
       mutate(bar_position = "1") 
     
+    # 2050 reference scenario
     dtn_2 <- filter(dtn, Category==reference_cat, variable %in% vars, period == tt[2]) %>%
       mutate(bar_position = "2") %>% factor.data.frame()
     
@@ -69,10 +71,10 @@ for(icat in c(1)){
     #   mutate(bar_position = "10") %>% factor.data.frame()       
     if(model=="PROMETHEUS"){
       dtn_9 <- filter(dtn, Category==catsnat[1], variable %in% vars, period == tt[2]) %>%
-        mutate(bar_position = "9") %>% factor.data.frame()       
+        mutate(bar_position = "8") %>% factor.data.frame()       
     }else{if(model=="TIAM_Grantham_v3.2"){
       dtn_9 <- filter(dtn, Category==catsnat[1], variable %in% vars, period == tt[2]) %>%
-        mutate(bar_position = "8") %>% factor.data.frame()        
+        mutate(bar_position = "7") %>% factor.data.frame()        
     }else{
       dtn_9 <- filter(dtn, Category==catsnat[1], variable %in% vars, period == tt[2]) %>%
         mutate(bar_position = "10") %>% factor.data.frame()
@@ -86,28 +88,61 @@ for(icat in c(1)){
     setnames(dtn_tmp1,paste0("",catsnat[2],""),"ref")
     dtn_tmp2 <- mutate(dtn_tmp1,diff_to_reference = ref - low)
     
-    dtn_3 <- filter(dtn_tmp2, variable == vars[1], period == tt[2]) %>%
+    # Energy supply
+    if(model%in%c("PROMETHEUS","TIAM_Grantham_v3.2")){
+      dtn_3 <- filter(dtn_tmp2, variable == vars[1], period == tt[2]) %>%
+        mutate(value = diff_to_reference) %>% mutate(bar_position = "6")%>%  factor.data.frame()     
+    }else{
+      dtn_3 <- filter(dtn_tmp2, variable == vars[1], period == tt[2]) %>%
       mutate(value = diff_to_reference) %>% mutate(bar_position = "7")%>%  factor.data.frame()
-    
-    dtn_4 <- filter(dtn_tmp2, variable == vars[2], period == tt[2]) %>%
-      mutate(value = diff_to_reference) %>% mutate(bar_position = "4")%>%  factor.data.frame()
-    
-    dtn_5 <- filter(dtn_tmp2, variable == vars[3], period == tt[2]) %>%
-      mutate(value = diff_to_reference) %>% mutate(bar_position = "5")%>%  factor.data.frame()
-    
-    dtn_6 <- filter(dtn_tmp2, variable == vars[4], period == tt[2]) %>%
-      mutate(value = diff_to_reference) %>% mutate(bar_position = "6")%>%  factor.data.frame()
-    
-    if(!model%in%c("TIAM_Grantham_v3.2")){
-      dtn_7 <- filter(dtn_tmp2, variable == vars[5], period == tt[2]) %>%
-        mutate(value = diff_to_reference) %>% mutate(bar_position = "8")%>%  factor.data.frame()
     }
     
+    # Industry
+    if(model%in%c("PROMETHEUS","TIAM_Grantham_v3.2")){
+      dtn_4 <- filter(dtn_tmp2, variable == vars[2], period == tt[2]) %>%
+        mutate(value = diff_to_reference) %>% mutate(bar_position = "3")%>%  factor.data.frame()
+    }else{
+      dtn_4 <- filter(dtn_tmp2, variable == vars[2], period == tt[2]) %>%
+      mutate(value = diff_to_reference) %>% mutate(bar_position = "4")%>%  factor.data.frame()
+    } 
+    
+    # Buildings  
+    if(model%in%c("PROMETHEUS","TIAM_Grantham_v3.2")){
+      dtn_5 <- filter(dtn_tmp2, variable == vars[3], period == tt[2]) %>%
+        mutate(value = diff_to_reference) %>% mutate(bar_position = "4")%>%  factor.data.frame()
+    }else{
+      dtn_5 <- filter(dtn_tmp2, variable == vars[3], period == tt[2]) %>%
+      mutate(value = diff_to_reference) %>% mutate(bar_position = "5")%>%  factor.data.frame()
+    }
+    
+    # Transport
+    if(model%in%c("PROMETHEUS","TIAM_Grantham_v3.2")){
+      dtn_6 <- filter(dtn_tmp2, variable == vars[4], period == tt[2]) %>%
+        mutate(value = diff_to_reference) %>% mutate(bar_position = "5")%>%  factor.data.frame()
+    }else{
+      dtn_6 <- filter(dtn_tmp2, variable == vars[4], period == tt[2]) %>%
+      mutate(value = diff_to_reference) %>% mutate(bar_position = "6")%>%  factor.data.frame()
+    } 
+    
+    # Industrial processes
+    if(model=="PROMETHEUS"){
+      dtn_7 <- filter(dtn_tmp2, variable == vars[5], period == tt[2]) %>%
+        mutate(value = diff_to_reference) %>% mutate(bar_position = "7")%>%  factor.data.frame()       
+    }else{if(model=="TIAM_Grantham_v3.2"){
+              
+    }else{
+      dtn_7 <- filter(dtn_tmp2, variable == vars[5], period == tt[2]) %>%
+        mutate(value = diff_to_reference) %>% mutate(bar_position = "8")%>%  factor.data.frame()
+    } }
+    
+    
+    # AFOLU
     if(!model%in%c("TIAM_Grantham_v3.2","PROMETHEUS")){
       dtn_8 <- filter(dtn_tmp2, variable == vars[6], period == tt[2]) %>%
         mutate(value = diff_to_reference) %>% mutate(bar_position = "3")%>%  factor.data.frame()
     } 
     
+    # Non-CO2
     if(!model%in%c("TIAM_Grantham_v3.2","PROMETHEUS")){
       dtn_10 <- filter(dtn_tmp2, variable == vars[7], period == tt[2]) %>%
         mutate(value = diff_to_reference) %>% mutate(bar_position = "9")%>%  factor.data.frame()
@@ -136,35 +171,79 @@ for(icat in c(1)){
     dtn_9_stack_reduced <- dtn_9[names(dtn_9) %in% reduction]
     
     #ydummy region transparent #TODO update this to make it a waterfall again with the new order (dtn_8 = 3, dtn_4 =4, 5=5, 6=6, dtn_3=7, dtn_7=8, dtn_10=9)
-    if(!model%in%c("TIAM_Grantham_v3.2","PROMETHEUS")){
+    if(model=="PROMETHEUS"){
+      #industry
+      ydummy4<-data.frame("ydummy",sum(dtn_2_reduced$value)-sum(dtn_4_reduced$value),"total-dummy",3)
+      names(ydummy4)<-reduction
+      dtn_4_reduced = rbind(dtn_4_reduced,ydummy4)
+      #buildings
+      ydummy5<-data.frame("ydummy",sum(dtn_4_reduced[dtn_4_reduced$region == "ydummy",]$value)-sum(dtn_5_reduced$value),"total-dummy",4)
+      names(ydummy5)<-reduction
+      dtn_5_reduced = rbind(dtn_5_reduced,ydummy5)
+      #transport
+      ydummy6<-data.frame("ydummy",sum(dtn_5_reduced[dtn_5_reduced$region == "ydummy",]$value)-sum(dtn_6_reduced$value),"total-dummy",5)
+      names(ydummy6)<-reduction
+      dtn_6_reduced = rbind(dtn_6_reduced,ydummy6)
+      #supply
+      ydummy3<-data.frame("ydummy",sum(dtn_6_reduced[dtn_6_reduced$region == "ydummy",]$value)-sum(dtn_3_reduced$value),"total-dummy",6)
+      names(ydummy3)<-reduction
+      dtn_3_reduced = rbind(dtn_3_reduced,ydummy3)
+      #industrial processes
+      ydummy7<-data.frame("ydummy",sum(dtn_3_reduced[dtn_3_reduced$region == "ydummy",]$value)-sum(dtn_7_reduced$value),"total-dummy",7)
+      names(ydummy7)<-reduction
+      dtn_7_reduced = rbind(dtn_7_reduced,ydummy7)
+    }else{if(model=="TIAM_Grantham_v3.2"){
+      #industry
+      ydummy4<-data.frame("ydummy",sum(dtn_2_reduced$value)-sum(dtn_4_reduced$value),"total-dummy",3)
+      names(ydummy4)<-reduction
+      dtn_4_reduced = rbind(dtn_4_reduced,ydummy4)
+      #buildings
+      ydummy5<-data.frame("ydummy",sum(dtn_4_reduced[dtn_4_reduced$region == "ydummy",]$value)-sum(dtn_5_reduced$value),"total-dummy",4)
+      names(ydummy5)<-reduction
+      dtn_5_reduced = rbind(dtn_5_reduced,ydummy5)
+      #transport
+      ydummy6<-data.frame("ydummy",sum(dtn_5_reduced[dtn_5_reduced$region == "ydummy",]$value)-sum(dtn_6_reduced$value),"total-dummy",5)
+      names(ydummy6)<-reduction
+      dtn_6_reduced = rbind(dtn_6_reduced,ydummy6)
+      #supply
+      ydummy3<-data.frame("ydummy",sum(dtn_6_reduced[dtn_6_reduced$region == "ydummy",]$value)-sum(dtn_3_reduced$value),"total-dummy",6)
+      names(ydummy3)<-reduction
+      dtn_3_reduced = rbind(dtn_3_reduced,ydummy3)
+    }else{
+      #AFOLU
       ydummy8<-data.frame("ydummy",sum(dtn_2_reduced$value)-sum(dtn_8_reduced$value),"total-dummy",3)
-      #ydummy8<-data.frame("ydummy",sum(dtn_7_reduced[dtn_7_reduced$region == "ydummy",]$value)-sum(dtn_8_reduced$value),"total-dummy",3)
       names(ydummy8)<-reduction
       dtn_8_reduced = rbind(dtn_8_reduced,ydummy8)
-    }
-    ydummy4<-data.frame("ydummy",sum(dtn_8_reduced[dtn_8_reduced$region == "ydummy",]$value)-sum(dtn_4_reduced$value),"total-dummy",4)
-    names(ydummy4)<-reduction
-    dtn_4_reduced = rbind(dtn_4_reduced,ydummy4)
-    ydummy5<-data.frame("ydummy",sum(dtn_4_reduced[dtn_4_reduced$region == "ydummy",]$value)-sum(dtn_5_reduced$value),"total-dummy",5)
-    names(ydummy5)<-reduction
-    dtn_5_reduced = rbind(dtn_5_reduced,ydummy5)
-    ydummy6<-data.frame("ydummy",sum(dtn_5_reduced[dtn_5_reduced$region == "ydummy",]$value)-sum(dtn_6_reduced$value),"total-dummy",6)
-    names(ydummy6)<-reduction
-    dtn_6_reduced = rbind(dtn_6_reduced,ydummy6)
-    #ydummy3<-data.frame("ydummy",sum(dtn_6_reduced$value)-sum(dtn_3_reduced$value),"total-dummy",7)
-    ydummy3<-data.frame("ydummy",sum(dtn_6_reduced[dtn_6_reduced$region == "ydummy",]$value)-sum(dtn_3_reduced$value),"total-dummy",7)
-    names(ydummy3)<-reduction
-    dtn_3_reduced = rbind(dtn_3_reduced,ydummy3)
-    if(!model%in%c("TIAM_Grantham_v3.2")){
+      #industry
+      ydummy4<-data.frame("ydummy",sum(dtn_8_reduced[dtn_8_reduced$region == "ydummy",]$value)-sum(dtn_4_reduced$value),"total-dummy",4)
+      names(ydummy4)<-reduction
+      dtn_4_reduced = rbind(dtn_4_reduced,ydummy4)
+      #buildings
+      ydummy5<-data.frame("ydummy",sum(dtn_4_reduced[dtn_4_reduced$region == "ydummy",]$value)-sum(dtn_5_reduced$value),"total-dummy",5)
+      names(ydummy5)<-reduction
+      dtn_5_reduced = rbind(dtn_5_reduced,ydummy5)
+      #transport
+      ydummy6<-data.frame("ydummy",sum(dtn_5_reduced[dtn_5_reduced$region == "ydummy",]$value)-sum(dtn_6_reduced$value),"total-dummy",6)
+      names(ydummy6)<-reduction
+      dtn_6_reduced = rbind(dtn_6_reduced,ydummy6)
+      #supply
+      ydummy3<-data.frame("ydummy",sum(dtn_6_reduced[dtn_6_reduced$region == "ydummy",]$value)-sum(dtn_3_reduced$value),"total-dummy",7)
+      names(ydummy3)<-reduction
+      dtn_3_reduced = rbind(dtn_3_reduced,ydummy3)
+      #industrial processes
       ydummy7<-data.frame("ydummy",sum(dtn_3_reduced[dtn_3_reduced$region == "ydummy",]$value)-sum(dtn_7_reduced$value),"total-dummy",8)
       names(ydummy7)<-reduction
       dtn_7_reduced = rbind(dtn_7_reduced,ydummy7)
-    }
-    if(!model%in%c("TIAM_Grantham_v3.2","PROMETHEUS")){
+      #non-CO2
       ydummy10<-data.frame("ydummy",sum(dtn_7_reduced[dtn_7_reduced$region == "ydummy",]$value)-sum(dtn_10_reduced$value),"total-dummy",9)
       names(ydummy10)<-reduction
       dtn_10_reduced = rbind(dtn_10_reduced,ydummy10)
-    }
+    }}
+      
+    #archive:  
+    #ydummy8<-data.frame("ydummy",sum(dtn_7_reduced[dtn_7_reduced$region == "ydummy",]$value)-sum(dtn_8_reduced$value),"total-dummy",3)
+    #ydummy3<-data.frame("ydummy",sum(dtn_6_reduced$value)-sum(dtn_3_reduced$value),"total-dummy",7)
+    
     
     #dtn_all=bind_rows(dtn_1_stack_reduced,dtn_2_stack_reduced, dtn_3_reduced, dtn_4_reduced, dtn_5_reduced, dtn_6_reduced,dtn_7_reduced,dtn_8_reduced, dtn_10_reduced,dtn_9_stack_reduced)
     if(model%in%c("PROMETHEUS")){
