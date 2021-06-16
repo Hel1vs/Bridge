@@ -1529,6 +1529,21 @@ AFOLUrange = AFOLU[,list(median=median(value,na.rm=T),min=min(value,na.rm=T),max
 
 
 
+# Check negative emissions ------------------------------------------------
+scens = c("Bridge","2Deg2020","2Deg2030")
+NegEmis = all[Scope=="global"&variable%in%c("Emissions|CO2","Carbon Sequestration|Land Use","Carbon Sequestration|CCS")&region%in%c("World")&period%in%c(2050,2100)&Category%in%scens] #Carbon sequestration ccs+land use or emissions co2 <0
+NegEmis$scenario <- NULL
+NegEmis$Baseline <- NULL
+NegEmis = spread(NegEmis,variable,value)
+NegEmis$`Carbon Sequestration|Land Use`[is.na(NegEmis$`Carbon Sequestration|Land Use`)] <- 0
+NegEmis = NegEmis%>%mutate(`Carbon Sequestration` = `Carbon Sequestration|CCS` +  `Carbon Sequestration|Land Use` )
+NegEmis = data.table(gather(NegEmis,variable,value,c('Carbon Sequestration|CCS','Carbon Sequestration|Land Use','Carbon Sequestration','Emissions|CO2')))
+NegEmis = NegEmis[variable%in%c('Carbon Sequestration','Emissions|CO2')]
+NegEmisRange = NegEmis[,list(median=median(value,na.rm=T),min=min(value,na.rm=T),max=max(value,na.rm=T)),by=c("Category",'variable','period','region')]
+NegEmis = spread(NegEmis,Category,value)
+
+
+
 # SDG indicators ----------------------------------------------------------
 # extra figure on health
 vars = c("Emissions|NOx","Emissions|VOC","Emissions|CO","Emissions|Sulfur","Emissions|BC","Emissions|OC")
