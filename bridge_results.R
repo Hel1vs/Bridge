@@ -1484,6 +1484,12 @@ F4d = F4d + theme(legend.position="bottom")
 F4d
 ggsave(file=paste(cfg$outdir,"/F4d_tech_costs.png",sep=""),F4d,width=16,height=12,dpi=200)
 
+techcosts = plotdata
+techcosts$scenario <- NULL
+costreduction = spread(techcosts[Category%in%c("Bridge","NDCplus")&period==2050],Category,value)
+costreduction = costreduction %>% mutate(reduction = (Bridge - NDCplus)/NDCplus *100)
+costredrange=costreduction[,list(min=min(reduction,na.rm=T),max=max(reduction,na.rm=T),med=median(reduction,na.rm=T)),by=c("variable","unit")]
+
 
 # Check budgets -----------------------------------------------------------
 source("functions/calcBudget.R")
