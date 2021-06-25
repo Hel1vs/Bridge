@@ -1397,8 +1397,8 @@ F4b = F4b + geom_errorbar(data=costsGDPm,aes(x=period,ymin=min,ymax=max,colour=S
 F4b = F4b + ggtitle("a) GDP loss per tonne of CO2e abated in Bridge")
 #F4b = F4b + geom_text(aes(x="2030",y=120),label ="a)",size=10)
 F4b = F4b + scale_shape_manual(values=cfg$man_shapes)
-F4b = F4b + scale_color_manual(values=c("Bridgevs2020"="#56B4E9","Bridgevs2030"="#2860E9"),labels=c("Bridgevs2020"="Bridge vs 2Deg2020","Bridgevs2030"="Bridge vs 2Deg2030"))
-F4b = F4b + scale_fill_manual(values=c("Bridgevs2020"="#56B4E9","Bridgevs2030"="#2860E9"),labels=c("Bridgevs2020"="Bridge vs 2Deg2020","Bridgevs2030"="Bridge vs 2Deg2030"))
+F4b = F4b + scale_color_manual(values=c("Bridgevs2020"="#D55E00","Bridgevs2030"="#E69F00"),labels=c("Bridgevs2020"="Bridge vs 2Deg2020","Bridgevs2030"="Bridge vs 2Deg2030"))
+F4b = F4b + scale_fill_manual(values=c("Bridgevs2020"="#D55E00","Bridgevs2030"="#E69F00"),labels=c("Bridgevs2020"="Bridge vs 2Deg2020","Bridgevs2030"="Bridge vs 2Deg2030"))
 F4b = F4b + theme_bw() + theme(axis.text.y=element_text(size=24)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=24)) +
   theme(axis.text.x = element_text(size=24)) + theme(legend.text=element_text(size=24),legend.title=element_text(size=26)) + theme(plot.title=element_text(size=26))
 F4b = F4b + ylab("Relative to 2Deg2020 or 2Deg2030 (%)")+xlab("")

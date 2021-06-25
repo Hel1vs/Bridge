@@ -12,10 +12,10 @@ NDCplus;NDCplus;#56B4E9;4;2;dotted
 2030_low;2030_low;#E69F00;9;1;dotted
 2Deg2030;2Deg2030;#E69F00;9;1;dotted
 2030_high;2030_high;#552288;6;2;dotted
-GPP;GPP;#008000;10;2;dotted
+GPP;GPP;#b44582;10;2;dotted
 Bridge;Bridge;#009E73;12;2;dotted
-GPP_notax;GPP_notax;#99cc99;10;2;dotted
-Bridge_notax;Bridge_notax;#99c2eb;12;2;dotted
+GPP_notax;GPP_notax;#e1b0cb;10;2;dotted
+Bridge_notax;Bridge_notax;#85ffdd;12;2;dotted
 1p5 SSP;1.5 (SSP);#CC79A7;12;2;dotted
 1p5 CD-LINKS;1.5 (CD-LINKS);#999999;12;2;dotted
 Emissions|CH4;Total;#000000;1;2;dotted
