@@ -612,6 +612,11 @@ cpricebarm$period=as.factor(cpricebarm$period)
 cpricebar$Category = factor(cpricebar$Category,levels=c("CurPol","NDCMCS","NDCplus","GPP","Bridge","2Deg2020","2Deg2030"))
 cpricebarm$Category = factor(cpricebarm$Category,levels=c("CurPol","NDCMCS","NDCplus","GPP","Bridge","2Deg2020","2Deg2030"))
 
+shapes_global=c("AIM/CGE" = 2, "COPPE-COFFEE 1.1" = 3, "IMAGE 3.0" = 6, "MESSAGEix-GLOBIOM_1.0" = 7,
+                "POLES GECO2019" = 8,"PROMETHEUS" = 11, "REMIND-MAgPIE 1.7-3.0" = 9,"TIAM_Grantham_v3.2" = 5,
+                "WITCH 5.0" = 10) 
+scens_global=c("CurPol" = "#0072B2",  "NDCplus" = "#56B4E9", "Bridge" = "#009E73",  "2Deg2020" = "#D55E00",  "2Deg2030" = "#E69F00")
+  
 m14c = ggplot()
 m14c = m14c + geom_bar(data=cpricebarm[Category%in%c("CurPol","NDCplus","Bridge","2Deg2020","2Deg2030")],aes(x=period,y=median,fill=Category),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
 # m14c = m14c + geom_pointrange(data=emisredm[Category%in%c("CurPol","GPP","Bridge")&variable=="Rate of Change| Emissions|Kyoto Gases"],
@@ -620,13 +625,13 @@ m14c = m14c + geom_point(data=cpricebar[Category%in%c("CurPol","NDCplus","Bridge
 m14c = m14c +ggtitle("b) Global carbon price")
 #m14c = m14c + geom_text(aes(x="2030",y=2000),label ="b)",size=10)
 m14c = m14c + ylim(0,2000)
-m14c = m14c + scale_shape_manual(values=cfg$man_shapes)
-m14c = m14c + scale_color_manual(values=plotstyle(scens))
-m14c = m14c + scale_fill_manual(values=plotstyle(scens))
+m14c = m14c + scale_shape_manual(values=shapes_global) #cfg$man_shapes
+m14c = m14c + scale_color_manual(values=scens_global) #plotstyle(scens)
+m14c = m14c + scale_fill_manual(values=scens_global) #plotstyle(scens)
 #m14c = m14c + facet_wrap(~region,scales="free_y")
-m14c = m14c + theme_bw() + theme(axis.text.y=element_text(size=16)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=18)) +
-  theme(axis.text.x = element_text(size=14)) + theme(legend.text=element_text(size=11),legend.title=element_text(size=12))+theme(plot.title=element_text(size=26))
-m14c = m14c + ylab("US$2010/tCO2")
+m14c = m14c + theme_bw() + theme(axis.text.y=element_text(size=24)) + theme(strip.text=element_text(size=26)) + theme(axis.title=element_text(size=24)) +
+  theme(axis.text.x = element_text(size=24)) + theme(legend.text=element_text(size=24),legend.title=element_text(size=26))+theme(plot.title=element_text(size=26))
+m14c = m14c + ylab("US$2010/tCO2") + xlab("")
 m14c
 ggsave(file=paste(cfg$outdir,"/Carbon_price_bar.png",sep=""),m14c,width=18,height=12,dpi=300)
 
@@ -1390,6 +1395,7 @@ costsGDP = costsGDP[Scenario%in%c('Bridgevs2020','Bridgevs2030')]
 
 costsGDPm=costsGDP[,list(min=min(value,na.rm=T),max=max(value,na.rm=T),median=median(value,na.rm=T)),by=c("Scenario","period")]
 
+shapes_global=c("AIM/CGE" = 2, "MESSAGEix-GLOBIOM_1.0" = 7, "REMIND-MAgPIE 1.7-3.0" = 9,"WITCH 5.0" = 10) 
 F4b = ggplot()
 F4b = F4b + geom_bar(data=costsGDPm,aes(x=period,y=median,fill=Scenario),stat="identity",alpha=0.5, position=position_dodge(width=0.66),width=0.66)
 F4b = F4b + geom_point(data=costsGDP, aes(x=period,y=value,shape=Model,colour=Scenario,group=Scenario),size=5,position=position_dodge(width=0.66))
@@ -1397,7 +1403,7 @@ F4b = F4b + geom_errorbar(data=costsGDPm,aes(x=period,ymin=min,ymax=max,colour=S
 F4b = F4b + ggtitle("a) GDP loss per tonne of CO2e abated in Bridge")
 F4b = F4b + geom_hline(yintercept=0)
 #F4b = F4b + geom_text(aes(x="2030",y=120),label ="a)",size=10)
-F4b = F4b + scale_shape_manual(values=cfg$man_shapes)
+F4b = F4b + scale_shape_manual(values=shapes_global) #cfg$man_shapes
 F4b = F4b + scale_color_manual(values=c("Bridgevs2020"="#D55E00","Bridgevs2030"="#E69F00"),labels=c("Bridgevs2020"="Bridge vs 2Deg2020","Bridgevs2030"="Bridge vs 2Deg2030"))
 F4b = F4b + scale_fill_manual(values=c("Bridgevs2020"="#D55E00","Bridgevs2030"="#E69F00"),labels=c("Bridgevs2020"="Bridge vs 2Deg2020","Bridgevs2030"="Bridge vs 2Deg2030"))
 F4b = F4b + theme_bw() + theme(axis.text.y=element_text(size=24)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=24)) +
@@ -1405,6 +1411,11 @@ F4b = F4b + theme_bw() + theme(axis.text.y=element_text(size=24)) + theme(strip.
 F4b = F4b + ylab("Relative to 2Deg2020 or 2Deg2030 (%)")+xlab("")
 F4b
 ggsave(file=paste(cfg$outdir,"/F4b_policy_costs_GDP_bar.png",sep=""),F4b,width=18,height=12,dpi=300)
+
+# Grid arrange for figure 4 combined
+lay<-rbind(c(1),c(2))
+F4=grid.arrange(F4b,m14c,layout_matrix=lay)
+ggsave(file=paste(cfg$outdir,"/F4ab_GDP-loss_Carbon-price.png",sep=""),F4,width=14,height=16,dpi=300)
 
 # Figure 4c Investments
 # potential indicators:
