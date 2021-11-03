@@ -46,6 +46,19 @@ IPCC15$period<-as.numeric(as.character(IPCC15$period))
 
 all <- rbind(all,IPCC15)
 
+# Read in IMAGE 2Deg2020 data, corrected on 3 November 2021 because of a reporting error in the carbon price and policy cost
+IMAGE2deg = fread("data/2Deg2020_IMAGE_correction.csv",sep=";", header=T)
+IMAGE2deg <- data.table(gather(IMAGE2deg, 6:ncol(IMAGE2deg), key="period", value=value))
+IMAGE2deg = IMAGE2deg[period%in%c(2005:2100) & variable%in%c("Price|Carbon","Policy Cost|Default for CAV","Policy Cost|Area under MAC Curve")]
+IMAGE2deg$Scope <-"global"
+IMAGE2deg$Category <-"2Deg2020"
+IMAGE2deg$Baseline <- "BAU"
+IMAGE2deg$period<-as.numeric(as.character(IMAGE2deg$period))
+IMAGE2deg$value<-as.numeric(as.character(IMAGE2deg$value))
+setcolorder(IMAGE2deg,colnames(all))
+
+all <- rbind(all[!c(model=="IMAGE 3.0" & variable%in%c("Price|Carbon","Policy Cost|Area under MAC Curve") & Category=="2Deg2020")],IMAGE2deg)
+
 # Plot emissions ----------------------------------------------------------
 vars = "Emissions|Kyoto Gases"
 scens <- c("BAU","CurPol","NDCplus","NDCMCS","GPP","Bridge","2Deg2030","2Deg2020")
