@@ -1221,8 +1221,12 @@ F3a = F3a + ylab(paste(unique(all[variable%in%vars]$variable),"[",unique(plotdat
 F3a = F3a + theme_bw() + theme(axis.text.y=element_text(size=20)) + theme(strip.text=element_text(size=14)) + theme(axis.title=element_text(size=20)) +
   theme(axis.text.x = element_text(size=20,angle=90)) + theme(legend.text=element_text(size=14),legend.title=element_blank(),legend.key.width = unit(1,"cm")) #legend.key.size = unit(1.5, "cm"),
 F3a = F3a + theme(legend.position="bottom")
+#For PhD layout:
+#F3a = F3a + theme(legend.position=c(0.2,0.2)) + theme(legend.text=element_text(size=20))
 F3a
 ggsave(file=paste(cfg$outdir,"/F3a_GHG_all_global_models_world_CurPol-NDC-Bridge-2Deg2020_funnel.png",sep=""),F3a,width=16,height=12,dpi=200)
+#For PhD layout:
+#ggsave(file=paste(cfg$outdir,"/F3a_GHG_all_global_models_world_CurPol-NDC-Bridge-2Deg2020_funnel_PhD.png",sep=""),F3a,width=16,height=12,dpi=200)
 
 plotdata2=all[variable%in%vars & Category%in%scens&!Scope=="national"&region=="World"]
 plotdata2$value=plotdata2$value/1000
